@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="champ_leg" params="leg  " >
+
+        <xacro:if value="${leg == 'lf'}">
+            <xacro:property name="base_to_hip_xyz" value="${base_to_hip_x} ${base_to_hip_y} 0" />
+            <!-- <xacro:property name="base_to_hip_rpy" value="${pi/2} ${pi/2} 0" /> -->
+            <xacro:property name="base_to_hip_rpy" value="${pi/2} ${pi/2} 0" />
+
+            <xacro:property name="lower_leg_rpy" value="0 0 0" />
+        </xacro:if>
+
+        <xacro:if value="${leg == 'rf'}">
+            <xacro:property name="base_to_hip_xyz" value="${base_to_hip_x} -${base_to_hip_y} 0" />
+            <xacro:property name="base_to_hip_rpy" value="-${pi/2} ${pi/2} 0" />
+            <xacro:property name="lower_leg_rpy" value="${pi} 0 0" />
+        </xacro:if>
+
+        <xacro:if value="${leg == 'lr'}">
+            <xacro:property name="base_to_hip_xyz" value="-${base_to_hip_x} ${base_to_hip_y} 0" />
+            <xacro:property name="base_to_hip_rpy" value="${pi/2} ${pi/2} 0" />
+            <xacro:property name="lower_leg_rpy" value="0 0 0" />
+        </xacro:if>
+
+        <xacro:if value="${leg == 'rr'}">
+            <xacro:property name="base_to_hip_xyz" value="-${base_to_hip_x} -${base_to_hip_y} 0" />
+            <xacro:property name="base_to_hip_rpy" value="-${pi/2} ${pi/2} 0" />
+            <xacro:property name="lower_leg_rpy" value="${pi} 0 0" />
+        </xacro:if>
+
+        <link name="${leg}_hip_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="${hip_mesh_path}" scale="0.001 0.001 0.001" />
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <joint name="${leg}_hip_joint" type="revolute">
+            <axis xyz="0 1 0" />
+            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
+            <parent link="base_link" />
+            <child link="${leg}_hip_link" />
+            <origin xyz="${base_to_hip_xyz}" rpy="${base_to_hip_rpy}" />
+        </joint>
+
+        <link name="${leg}_upper_leg_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="${upper_leg_mesh_path}" scale="0.001 0.001 0.001" />
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <joint name="${leg}_upper_leg_joint" type="revolute">
+            <axis xyz="0 0 1" />
+            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
+            <parent link="${leg}_hip_link" />
+            <child link="${leg}_upper_leg_link" />
+            <origin xyz="0 0 ${hip_to_upper_leg_distance}" rpy="0 0 0" />
+        </joint>
+
+        <link name="${leg}_lower_leg_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="${lower_leg_rpy}" />
+                <geometry>
+                    <mesh filename="${lower_leg_mesh_path}" scale="0.001 0.001 0.001" />
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <joint name="${leg}_lower_leg_joint" type="revolute">
+            <axis xyz="0 0 1" />
+            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
+            <parent link="${leg}_upper_leg_link" />
+            <child link="${leg}_lower_leg_link" />
+            <origin xyz="${upper_leg_to_lower_leg_distance} 0 0" rpy="0 0 0" />
+        </joint>
+
+        <link name="${leg}_ee_link" />
+        <joint name="${leg}_ee_joint" type="fixed">
+            <parent link="${leg}_lower_leg_link" />
+            <child link="${leg}_ee_link" />
+            <origin xyz="${lower_leg_to_ee_distance} 0 0" rpy="0 0 0" />
+        </joint>
+    </xacro:macro>
+</robot>

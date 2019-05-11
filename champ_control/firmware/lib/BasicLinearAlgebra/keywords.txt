@@ -1,0 +1,36 @@
+#######################################
+# Syntax Coloring Map For BasicLinearAlgebra
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Slice	KEYWORD1
+IMatrix	KEYWORD1
+Matrix	KEYWORD1
+RefMatrix	KEYWORD1
+SparseMatrix	KEYWORD1
+TriangularMatrix	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+Submatrix	KEYWORD2
+Fill	KEYWORD2
+Inverse	KEYWORD2
+Invert	KEYWORD2
+Rows	KEYWORD2
+Cols	KEYWORD2
+HorzCat	KEYWORD2
+VertCat	KEYWORD2
+Multiply	KEYWORD2
+Add	KEYWORD2
+Subtract	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+

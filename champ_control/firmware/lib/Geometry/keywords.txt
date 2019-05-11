@@ -1,0 +1,35 @@
+#######################################
+# Syntax Coloring Map For Geometry
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Point	KEYWORD1
+Rotation	KEYWORD1
+Transformation	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+SetToIdentity	KEYWORD2
+Magnitude	KEYWORD2
+DotProduct	KEYWORD2
+CrossProduct	KEYWORD2
+X	KEYWORD2
+Y	KEYWORD2
+Z	KEYWORD2
+FromEulerAngles	KEYWORD2
+ToEulerAngles	KEYWORD2
+RotateX	KEYWORD2
+RotateY	KEYWORD2
+RotateZ	KEYWORD2
+Translate	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+

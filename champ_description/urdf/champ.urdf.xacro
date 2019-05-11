@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot name="champ" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+    <xacro:property name="base_to_hip_x" value="0.1675" />
+    <xacro:property name="base_to_hip_y" value="0.105" />
+    <xacro:property name="hip_to_upper_leg_distance" value="-0.071" />
+    <xacro:property name="upper_leg_to_lower_leg_distance" value="0.141" />
+    <xacro:property name="lower_leg_to_ee_distance" value="0.141" />
+    <xacro:property name="hip_mesh_path" value="package://champ_description/meshes/hip.stl" />
+    <xacro:property name="upper_leg_mesh_path" value="package://champ_description/meshes/upper_leg.stl" />
+    <xacro:property name="lower_leg_mesh_path" value="package://champ_description/meshes/lower_leg.stl" />
+
+    <material name="black">
+        <color rgba="0 0 0 0.6" />
+    </material>
+
+    <link name="world" />
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://champ_description/meshes/base.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="base_to_world" type="fixed">
+        <parent link="world" />
+        <child link="base_link" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <xacro:include filename="$(find champ_description)/urdf/leg.urdf.xacro" />
+
+    <xacro:champ_leg leg="lf"/>
+    <xacro:champ_leg leg="lr"/>
+    <xacro:champ_leg leg="rf"/>
+    <xacro:champ_leg leg="rr"/>
+</robot>
