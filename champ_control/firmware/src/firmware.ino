@@ -155,13 +155,9 @@ public:
  // Next let's configure some links to give to the kinematic chain
  //link(d, theta, r, alpha)
  //working from hip link
-//  RevoluteJoint l1(-0.071, 0, 0, 0);
-//  RevoluteJoint l2(0, -0.89, 0.141, 0);
-//  RevoluteJoint l3(0, 1.62, 0.141, 1.5708);
-
- RevoluteJoint l1(0, 0, 0, 0);
- RevoluteJoint l2(-0.071, -0.89, 0.141, 0);
- RevoluteJoint l3(0, 1.62, 0.141, 0);
+ RevoluteJoint l1(0, 0.81, 0, 1.5708);
+ RevoluteJoint l2(-0.071, -0.32, 0.141, 0);
+ RevoluteJoint l3(0, 1.03, 0.141, 0);
 
 ros::NodeHandle nh;
 lino_msgs::Point point_msg;
@@ -197,10 +193,8 @@ void loop() {
      
       Point ee = k.ForwardKinematics().p;
       lf_tf.p = k.ForwardKinematics().p;
-      lf_tf.RotateY(-1.5708 - 0.76);
-      lf_tf.RotateZ(-1.5708);
+      lf_tf.RotateY(-1.5708);
       lf_tf.Translate(0.1675, 0.105, 0.0);
-
 
       point_msg.point.x = lf_tf.X();
       point_msg.point.y = lf_tf.Y(); 
