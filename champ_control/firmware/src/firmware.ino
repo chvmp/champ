@@ -191,7 +191,6 @@ void loop() {
     {
       Transformation lf_tf;
      
-      Point ee = k.ForwardKinematics().p;
       lf_tf.p = k.ForwardKinematics().p;
       lf_tf.RotateY(-1.5708);
       lf_tf.Translate(0.1675, 0.105, 0.0);
