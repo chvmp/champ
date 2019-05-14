@@ -2,6 +2,7 @@
 #include <ros/time.h>
 #include <lino_msgs/Point.h>
 #include <Geometry.h>
+#include <sensor_msgs/JointState.h>
 
 /* This example shows ho you can use the Geometry library to calculate the forward and inverse kinematics of an arbitrary length kinematic chain. The kinematic chain is specified
 * Denavit-Hartenburg parameters, if you're not familiar with them watch this tutorial https://www.youtube.com/watch?v=rA9tm0gTln8 . The forward kinematics calculates the location of the
@@ -54,10 +55,18 @@ template<int maxLinks> class KinematicChain
      for(int i = noOfLinks - 1; i >= 0; i--)
      {
        // These four operations will convert between two coordinate frames defined by D-H parameters, it's pretty standard stuff
-       pose.RotateX(chain[i]->alpha);
+      //  pose.RotateX(chain[i]->alpha);
+      //  pose.Translate(chain[i]->r,0,0);
+      //  pose.Translate(0,0,chain[i]->d);
+      //  pose.RotateZ(chain[i]->theta);
+ 
+
+      //  pose.RotateZ(chain[i]->alpha);
+      //  pose.Translate(0,0,chain[i]->d);
+      pose.RotateX(chain[i]->alpha);
        pose.Translate(chain[i]->r,0,0);
-       pose.Translate(0,0,chain[i]->d);
-       pose.RotateZ(chain[i]->theta);
+        pose.Translate(0,chain[i]->d, 0);
+        pose.RotateY(chain[i]->theta);
      }
 
      return pose;
@@ -148,26 +157,36 @@ public:
 // =======================================START HERE==================================
 // You get the idea. One thing we can't do is specify joints with more than 1DOF. For ball-and-socket joints and so on, just define multiple 1DOF joints on top of each other (D-H parameters all zero).
  
- #define CONTROL_RATE 100
+ #define CONTROL_RATE 110
  KinematicChain<3> k;
  Transformation target;
 
  // Next let's configure some links to give to the kinematic chain
  //link(d, theta, r, alpha)
  //working from hip link
- RevoluteJoint l1(0, 0.81, 0, 1.5708);
- RevoluteJoint l2(-0.071, -0.32, 0.141, 0);
- RevoluteJoint l3(0, 1.03, 0.141, 0);
+//  float joint_pos1 = 0.46;
+//  float joint_pos2 = -0.51;
+//  float joint_pos3 = 1.03;
+ float joint_pos1 = 0.65;
+ float joint_pos2 = 0.51;
+ float joint_pos3 = -0.68;
+ RevoluteJoint l1(0, joint_pos1, 0, 1.5708);
+ RevoluteJoint l2(-0.071, joint_pos2, 0.141, 0);
+ RevoluteJoint l3(0, joint_pos3, 0.141, 0);
 
 ros::NodeHandle nh;
 lino_msgs::Point point_msg;
-ros::Publisher point_pub("point_debug", &point_msg);
+sensor_msgs::JointState joints;
 
+ros::Publisher point_pub("point_debug", &point_msg);
+// ros::Publisher jointstates_pub("champ/joint_states", &joints);
+void get_joint_angles(KinematicChain<3> &leg, Transformation &target, double *joints);
 void setup()
 {
   nh.initNode();
   nh.getHardware()->setBaud(57600);
   nh.advertise(point_pub);
+  // nh.advertise(jointstates_pub);
 
   while (!nh.connected())
   {
@@ -189,18 +208,61 @@ void loop() {
     //this block drives the robot based on defined rate
     if ((millis() - prev_ik_time) >= (1000 / CONTROL_RATE))
     {
-      Transformation lf_tf;
-     
-      lf_tf.p = k.ForwardKinematics().p;
-      lf_tf.RotateY(-1.5708);
-      lf_tf.Translate(0.1675, 0.105, 0.0);
+      unsigned long before = micros();
+      Transformation ee;
+      ee.p = k.ForwardKinematics().p;
+      // ee.RotateZ(-1.5708);
 
-      point_msg.point.x = lf_tf.X();
-      point_msg.point.y = lf_tf.Y(); 
-      point_msg.point.z = lf_tf.Z();
+      // ee.RotateY(-1.5708);
+
+      // Point ee = k.ForwardKinematics().p;
+
+      target.p.X() = 0.166;
+      target.p.Y() = 0.047;
+      target.p.Z() = -0.215;
+      // ee.p.X()-= 0.1;
+      // ee.p.Z()-= 0.1;
+
+      double joints[3];
+      
+      get_joint_angles(k, target, joints);
+
+      char buffer[50];
+      sprintf (buffer, "Joint0  : %f", joints[0]);
+      nh.loginfo(buffer);
+
+      sprintf (buffer, "Joint1  : %f",joints[1]);
+      nh.loginfo(buffer);
+
+      sprintf (buffer, "Joint2  : %f", joints[2]);
+      nh.loginfo(buffer);
+
+
+      sprintf (buffer, "Done Calculating, total iteration  : %lu", micros() - before );
+      nh.loginfo(buffer);
+
+      // target.RotateY(-1.5708);
+      // target.Translate(0.1675, 0.105, 0.0);
+
+      point_msg.point.x = target.X();
+      point_msg.point.y = target.Y(); 
+      point_msg.point.z = target.Z();
       point_pub.publish(&point_msg);
 
       prev_ik_time = millis();
     }
     nh.spinOnce();
+}
+
+
+void get_joint_angles(KinematicChain<3> &leg, Transformation &target, double *joints){
+
+  // joints[0]
+
+  float hypotenuse = sqrt( pow(target.p.X(),2) + pow(target.p.Z() - -0.071, 2) );
+  joints[0] = acos(target.p.X() / hypotenuse);
+  // target.RotateY(joints[0]);
+  joints[2] = acos( (pow(target.p.X(),2) + pow(target.p.Y(),2) - pow(leg.chain[1]->r ,2) - pow(leg.chain[2]->r ,2)) / (2 * leg.chain[1]->r * leg.chain[2]->r) );
+  joints[1] = atan(target.p.Y() / target.p.X()) - atan( (leg.chain[2]->r * sin(joints[2])) / (leg.chain[1]->r + (leg.chain[2]->r * cos(joints[2]))));
+  // target.RotateY(-joints[0]);
 }

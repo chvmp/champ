@@ -31,7 +31,16 @@
         <child link="base_link" />
         <origin xyz="0 0 0" rpy="0 0 0" />
     </joint>
+    
 
+        <link name="hip_debug_link"/>
+    
+
+    <joint name="base_to_debug_link" type="fixed">
+        <parent link="base_link" />
+        <child link="hip_debug_link" />
+        <origin xyz="0.1675 0.105 0" rpy="0 1.5708 -1.5708" />
+    </joint>
     <xacro:include filename="$(find champ_description)/urdf/leg.urdf.xacro" />
 
     <xacro:champ_leg leg="lf"/>
