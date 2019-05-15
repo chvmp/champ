@@ -156,14 +156,14 @@ public:
  // Next let's configure some links to give to the kinematic chain
  //link(d, theta, r, alpha)
  //working from hip link
- RevoluteJoint l1(0, 0, 0, 1.5708);
- RevoluteJoint l2(-0.071, 0.54, 0.141, 0);
+ RevoluteJoint l1(0, -0.89, 0, 1.5708);
+ RevoluteJoint l2(0.071, 0.54, 0.141, 0);
  RevoluteJoint l3(0, -1.19, 0.141, 0);
 
 ros::NodeHandle nh;
 lino_msgs::Point point_msg;
 ros::Publisher point_pub("point_debug", &point_msg);
-void get_joint_angles(KinematicChain<3> &leg, Point &target, double *joints);
+void get_joint_angles(KinematicChain<3> &leg, Transformation &target, double *joints);
 
 void setup()
 {
@@ -195,14 +195,11 @@ void loop() {
        
       lf_tf.p = k.ForwardKinematics().p;
 
-      point_msg.point.x = lf_tf.X();
-      point_msg.point.y = lf_tf.Y(); 
-      point_msg.point.z = lf_tf.Z();
-      point_pub.publish(&point_msg);
+  
 
       double joints[3];
 
-      get_joint_angles(k, lf_tf.p, joints);
+      get_joint_angles(k, lf_tf, joints);
 
       char buffer[50];
       sprintf (buffer, "Joint0  : %f", joints[0]);
@@ -213,13 +210,22 @@ void loop() {
 
       sprintf (buffer, "Joint2  : %f", joints[2]);
       nh.loginfo(buffer);
+
+      point_msg.point.x = lf_tf.X();
+      point_msg.point.y = lf_tf.Y(); 
+      point_msg.point.z = lf_tf.Z();
+      point_pub.publish(&point_msg);
       prev_ik_time = millis();
     }
     nh.spinOnce();
 }
-void get_joint_angles(KinematicChain<3> &leg, Point &target, double *joints){
-  float hypotenuse = sqrt( pow(target.X(),2) + pow(target.Z() - -0.071, 2) );
-  joints[0] = acos(target.X() / hypotenuse);
-  joints[2] = acos( (pow(target.X(),2) + pow(target.Y(),2) - pow(leg.chain[1]->r ,2) - pow(leg.chain[2]->r ,2)) / (2 * leg.chain[1]->r * leg.chain[2]->r) );
-  joints[1] = atan(target.Y() / target.X()) - atan( (leg.chain[2]->r * sin(joints[2])) / (leg.chain[1]->r + (leg.chain[2]->r * cos(joints[2]))));
+void get_joint_angles(KinematicChain<3> &leg, Transformation &target, double *joints){
+  // float hypotenuse = sqrt( pow(target.X(),2) + pow(target.Z() - -0.071, 2) );
+  // joints[0] = acos(target.X() / hypotenuse);
+  joints[0] = -(atan(target.p.Z() / target.p.X()) - ( 1.5708 - acos(k.chain[1]->d / sqrt(pow(target.p.Z(),2) + pow(target.p.X(), 2)))));
+  target.RotateY(joints[0]);
+  joints[2] = acos( (pow(target.p.X(),2) + pow(target.Y(),2) - pow(leg.chain[1]->r ,2) - pow(leg.chain[2]->r ,2)) / (2 * leg.chain[1]->r * leg.chain[2]->r) );
+  joints[1] = atan(target.p.Y() / target.p.X()) - atan( (leg.chain[2]->r * sin(joints[2])) / (leg.chain[1]->r + (leg.chain[2]->r * cos(joints[2]))));
+  target.RotateY(-joints[0]);
+
 } 
