@@ -157,7 +157,7 @@ public:
  //link(d, theta, r, alpha)
  //working from hip link
  RevoluteJoint l1(0, 0.89, 0, 1.5708);
- RevoluteJoint l2(0.071, -0.76, 0.141, 0);
+ RevoluteJoint l2(-0.071, -0.76, 0.141, 0);
  RevoluteJoint l3(0, 1.49, 0.141, 0);
 
 ros::NodeHandle nh;
@@ -195,8 +195,6 @@ void loop() {
        
       lf_tf.p = k.ForwardKinematics().p;
 
-  
-
       double joints[3];
 
       get_joint_angles(k, lf_tf, joints);
@@ -220,12 +218,15 @@ void loop() {
     nh.spinOnce();
 }
 void get_joint_angles(KinematicChain<3> &leg, Transformation &target, double *joints){
-  // float hypotenuse = sqrt( pow(target.X(),2) + pow(target.Z() - -0.071, 2) );
-  // joints[0] = acos(target.X() / hypotenuse);
   joints[0] = -(atan(target.p.Z() / target.p.X()) - ( 1.5708 - acos(k.chain[1]->d / sqrt(pow(target.p.Z(),2) + pow(target.p.X(), 2)))));
   target.RotateY(joints[0]);
-  joints[2] = acos( (pow(target.p.X(),2) + pow(target.Y(),2) - pow(leg.chain[1]->r ,2) - pow(leg.chain[2]->r ,2)) / (2 * leg.chain[1]->r * leg.chain[2]->r) );
-  joints[1] = atan(target.p.Y() / target.p.X()) - atan( (leg.chain[2]->r * sin(joints[2])) / (leg.chain[1]->r + (leg.chain[2]->r * cos(joints[2]))));
+  // ik for knee forward
+  // joints[2] = acos( (pow(target.p.X(),2) + pow(target.Y(),2) - pow(leg.chain[1]->r ,2) - pow(leg.chain[2]->r ,2)) / (2 * leg.chain[1]->r * leg.chain[2]->r) );
+  // joints[1] = atan(target.p.Y() / target.p.X()) - atan( (leg.chain[2]->r * sin(joints[2])) / (leg.chain[1]->r + (leg.chain[2]->r * cos(joints[2]))));
+  
+  // reverse
+  joints[2] = -acos((pow(target.p.X(),2) + pow(target.Y(),2) - pow(leg.chain[1]->r ,2) - pow(leg.chain[2]->r ,2)) / (2 * leg.chain[1]->r * leg.chain[2]->r));
+  joints[1] = (atan(target.p.Y() / target.p.X()) - atan( (leg.chain[2]->r * sin(joints[2])) / (leg.chain[1]->r + (leg.chain[2]->r * cos(joints[2])))));
   target.RotateY(-joints[0]);
 
 } 

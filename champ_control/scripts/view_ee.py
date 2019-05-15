@@ -18,7 +18,7 @@ class Viz:
 
     def debug_callback(self, data):
         point_marker = Marker()
-        point_marker.header.frame_id = "lf_hip_debug_link"
+        point_marker.header.frame_id = "rf_hip_debug_link"
         point_marker.type = Marker.CUBE
         point_marker.action = 0
         point_marker.id = 1
