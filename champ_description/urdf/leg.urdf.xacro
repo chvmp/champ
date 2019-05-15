@@ -73,11 +73,11 @@
             <origin xyz="${upper_leg_to_lower_leg_distance} 0 0" rpy="0 0 0" />
         </joint>
 
-        <link name="${leg}_ee_link" />
-        <joint name="${leg}_ee_joint" type="fixed">
+        <link name="${leg}_foot_link" />
+        <joint name="${leg}_foot_joint" type="fixed">
             <parent link="${leg}_lower_leg_link" />
-            <child link="${leg}_ee_link" />
-            <origin xyz="${lower_leg_to_ee_distance} 0 0" rpy="0 0 0" />
+            <child link="${leg}_foot_link" />
+            <origin xyz="${lower_leg_to_foot_distance} 0 0" rpy="0 0 0" />
         </joint>
     </xacro:macro>
 </robot>

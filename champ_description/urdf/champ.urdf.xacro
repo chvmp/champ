@@ -5,7 +5,7 @@
     <xacro:property name="base_to_hip_y" value="0.105" />
     <xacro:property name="hip_to_upper_leg_distance" value="0.071" />
     <xacro:property name="upper_leg_to_lower_leg_distance" value="0.141" />
-    <xacro:property name="lower_leg_to_ee_distance" value="0.141" />
+    <xacro:property name="lower_leg_to_foot_distance" value="0.141" />
     <xacro:property name="hip_mesh_path" value="package://champ_description/meshes/hip.stl" />
     <xacro:property name="upper_leg_mesh_path" value="package://champ_description/meshes/upper_leg.stl" />
     <xacro:property name="lower_leg_mesh_path" value="package://champ_description/meshes/lower_leg.stl" />
