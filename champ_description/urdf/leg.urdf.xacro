@@ -5,25 +5,21 @@
         <xacro:if value="${leg == 'lf'}">
             <xacro:property name="base_to_hip_xyz" value="${base_to_hip_x} ${base_to_hip_y} 0" />
             <xacro:property name="hip_to_upper_leg" value="${hip_to_upper_leg_distance}" />
-            <xacro:property name="lower_leg_rpy" value="0 0 0" />
+        </xacro:if>
+
+        <xacro:if value="${leg == 'lh'}">
+            <xacro:property name="base_to_hip_xyz" value="-${base_to_hip_x} ${base_to_hip_y} 0" />
+            <xacro:property name="hip_to_upper_leg" value="${hip_to_upper_leg_distance}" />
         </xacro:if>
 
         <xacro:if value="${leg == 'rf'}">
             <xacro:property name="base_to_hip_xyz" value="${base_to_hip_x} -${base_to_hip_y} 0" />
             <xacro:property name="hip_to_upper_leg" value="-${hip_to_upper_leg_distance}" />
-            <xacro:property name="lower_leg_rpy" value="${pi} 0 0" />
         </xacro:if>
 
-        <xacro:if value="${leg == 'lr'}">
-            <xacro:property name="base_to_hip_xyz" value="-${base_to_hip_x} ${base_to_hip_y} 0" />
-            <xacro:property name="hip_to_upper_leg" value="${hip_to_upper_leg_distance}" />
-            <xacro:property name="lower_leg_rpy" value="0 0 0" />
-        </xacro:if>
-
-        <xacro:if value="${leg == 'rr'}">
+        <xacro:if value="${leg == 'rh'}">
             <xacro:property name="base_to_hip_xyz" value="-${base_to_hip_x} -${base_to_hip_y} 0" />
             <xacro:property name="hip_to_upper_leg" value="-${hip_to_upper_leg_distance}" />
-            <xacro:property name="lower_leg_rpy" value="${pi} 0 0" />
         </xacro:if>
 
         <link name="${leg}_hip_link">
@@ -62,7 +58,7 @@
 
         <link name="${leg}_lower_leg_link">
             <visual>
-                <origin xyz="0 0 0" rpy="${lower_leg_rpy}" />
+                <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
                     <mesh filename="${lower_leg_mesh_path}" scale="0.001 0.001 0.001" />
                 </geometry>
