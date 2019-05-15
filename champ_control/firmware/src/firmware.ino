@@ -156,9 +156,9 @@ public:
  // Next let's configure some links to give to the kinematic chain
  //link(d, theta, r, alpha)
  //working from hip link
- RevoluteJoint l1(0, -0.89, 0, 1.5708);
- RevoluteJoint l2(0.071, 0.54, 0.141, 0);
- RevoluteJoint l3(0, -1.19, 0.141, 0);
+ RevoluteJoint l1(0, 0.89, 0, 1.5708);
+ RevoluteJoint l2(0.071, -0.76, 0.141, 0);
+ RevoluteJoint l3(0, 1.49, 0.141, 0);
 
 ros::NodeHandle nh;
 lino_msgs::Point point_msg;
