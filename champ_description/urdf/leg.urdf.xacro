@@ -5,26 +5,28 @@
         <xacro:if value="${leg == 'lf'}">
             <xacro:property name="base_to_hip_xyz" value="${base_to_hip_x} ${base_to_hip_y} 0" />
             <!-- <xacro:property name="base_to_hip_rpy" value="${pi/2} ${pi/2} 0" /> -->
-            <xacro:property name="base_to_hip_rpy" value="${pi/2} ${pi/2} 0" />
-
+            <xacro:property name="hip_to_upper_leg" value="-${hip_to_upper_leg_distance}" />
             <xacro:property name="lower_leg_rpy" value="0 0 0" />
         </xacro:if>
 
         <xacro:if value="${leg == 'rf'}">
             <xacro:property name="base_to_hip_xyz" value="${base_to_hip_x} -${base_to_hip_y} 0" />
-            <xacro:property name="base_to_hip_rpy" value="-${pi/2} ${pi/2} 0" />
+            <!-- <xacro:property name="base_to_hip_rpy" value="${pi/2} ${pi/2} 0" /> -->
+            <xacro:property name="hip_to_upper_leg" value="${hip_to_upper_leg_distance}" />
             <xacro:property name="lower_leg_rpy" value="${pi} 0 0" />
         </xacro:if>
 
         <xacro:if value="${leg == 'lr'}">
             <xacro:property name="base_to_hip_xyz" value="-${base_to_hip_x} ${base_to_hip_y} 0" />
-            <xacro:property name="base_to_hip_rpy" value="${pi/2} ${pi/2} 0" />
+            <!-- <xacro:property name="base_to_hip_rpy" value="${pi/2} ${pi/2} 0" /> -->
+            <xacro:property name="hip_to_upper_leg" value="-${hip_to_upper_leg_distance}" />
             <xacro:property name="lower_leg_rpy" value="0 0 0" />
         </xacro:if>
 
         <xacro:if value="${leg == 'rr'}">
             <xacro:property name="base_to_hip_xyz" value="-${base_to_hip_x} -${base_to_hip_y} 0" />
-            <xacro:property name="base_to_hip_rpy" value="-${pi/2} ${pi/2} 0" />
+            <!-- <xacro:property name="base_to_hip_rpy" value="${pi/2} ${pi/2} 0" /> -->
+            <xacro:property name="hip_to_upper_leg" value="${hip_to_upper_leg_distance}" />
             <xacro:property name="lower_leg_rpy" value="${pi} 0 0" />
         </xacro:if>
 
@@ -42,7 +44,7 @@
             <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
             <parent link="base_link" />
             <child link="${leg}_hip_link" />
-            <origin xyz="${base_to_hip_xyz}" rpy="${base_to_hip_rpy}" />
+            <origin xyz="${base_to_hip_xyz}" rpy="${pi/2} ${pi/2} 0" />
         </joint>
 
         <link name="${leg}_upper_leg_link">
@@ -59,7 +61,7 @@
             <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
             <parent link="${leg}_hip_link" />
             <child link="${leg}_upper_leg_link" />
-            <origin xyz="0 0 ${hip_to_upper_leg_distance}" rpy="0 0 0" />
+            <origin xyz="0 0 ${hip_to_upper_leg}" rpy="0 0 0" />
         </joint>
 
         <link name="${leg}_lower_leg_link">
