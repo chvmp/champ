@@ -1,6 +1,6 @@
 #include <ros.h>
 #include <ros/time.h>
-#include <lino_msgs/Point.h>
+#include <champ_msgs/Point.h>
 #include <Geometry.h>
 
 /* This example shows ho you can use the Geometry library to calculate the forward and inverse kinematics of an arbitrary length kinematic chain. The kinematic chain is specified
@@ -161,7 +161,7 @@ public:
  RevoluteJoint l3(0, 1.49, 0.141, 0);
 
 ros::NodeHandle nh;
-lino_msgs::Point point_msg;
+champ_msgs::Point point_msg;
 ros::Publisher point_pub("point_debug", &point_msg);
 void get_joint_angles(KinematicChain<3> &leg, Transformation &target, double *joints);
 
@@ -209,9 +209,9 @@ void loop() {
       sprintf (buffer, "Joint2  : %f", joints[2]);
       nh.loginfo(buffer);
 
-      point_msg.point.x = lf_tf.X();
-      point_msg.point.y = lf_tf.Y(); 
-      point_msg.point.z = lf_tf.Z();
+      point_msg.x = lf_tf.X();
+      point_msg.y = lf_tf.Y(); 
+      point_msg.z = lf_tf.Z();
       point_pub.publish(&point_msg);
       prev_ik_time = millis();
     }
