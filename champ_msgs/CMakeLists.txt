@@ -10,6 +10,7 @@ add_message_files(
   PID.msg
   Imu.msg
   Point.msg
+  Joints.msg
 )
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)
