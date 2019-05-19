@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <robot name="champ" xmlns:xacro="http://www.ros.org/wiki/xacro">
   
-    <xacro:property name="base_to_hip_x" value="0.1675" />
+    <xacro:property name="base_to_hip_x" value="0.175" />
     <xacro:property name="base_to_hip_y" value="0.105" />
-    <xacro:property name="hip_to_upper_leg_distance" value="0.071" />
+    <xacro:property name="hip_to_upper_leg_distance" value="0.06" />
     <xacro:property name="upper_leg_to_lower_leg_distance" value="0.141" />
     <xacro:property name="lower_leg_to_foot_distance" value="0.141" />
     <xacro:property name="hip_mesh_path" value="package://champ_description/meshes/hip.stl" />
@@ -32,18 +32,32 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
     </joint>
     
-    <!-- <link name="lf_hip_debug_link"/>
-    <joint name="base_to_debug_link" type="fixed">
+    <link name="lf_hip_debug_link"/>
+    <joint name="lf_debug_joint" type="fixed">
         <parent link="base_link" />
         <child link="lf_hip_debug_link" />
-        <origin xyz="0.1675 0.105 0" rpy="0 ${pi/2} ${pi/2}" />
-    </joint> -->
+        <origin xyz="${base_to_hip_x} ${base_to_hip_y} 0" rpy="0 ${pi/2} ${pi/2}" />
+    </joint>
 
     <link name="rf_hip_debug_link"/>
-    <joint name="base_to_debug_link" type="fixed">
+    <joint name="rf_debug_joint" type="fixed">
         <parent link="base_link" />
         <child link="rf_hip_debug_link" />
-        <origin xyz="0.1675 -0.105 0" rpy="0 ${pi/2} ${pi/2}" />
+        <origin xyz="${base_to_hip_x} -${base_to_hip_y} 0" rpy="0 ${pi/2} ${pi/2}" />
+    </joint>
+
+    <link name="lh_hip_debug_link"/>
+    <joint name="lh_debug_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="lh_hip_debug_link" />
+        <origin xyz="-${base_to_hip_x} ${base_to_hip_y} 0" rpy="0 ${pi/2} ${pi/2}" />
+    </joint>
+
+    <link name="rh_hip_debug_link"/>
+    <joint name="rh_debug_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="rh_hip_debug_link" />
+        <origin xyz="-${base_to_hip_x} -${base_to_hip_y} 0" rpy="0 ${pi/2} ${pi/2}" />
     </joint>
 
     <xacro:include filename="$(find champ_description)/urdf/leg.urdf.xacro" />

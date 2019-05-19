@@ -6,15 +6,8 @@
 
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="/use_gui" value="true"/>
-    <!-- <rosparam param="/source_list">[onine/joint_states]</rosparam>
+    <rosparam param="/source_list">[champ/joint_states]</rosparam>
 
-    <rosparam>
-        zeros:
-            torso_joint: 0.21
-            base_joint: 1.570796
-            elbow_joint: 1.570796
-            wrist_pitch_joint: 1.53589
-            gripper_joint: 0.04
-    </rosparam> -->
+
   </node>
 </launch>
