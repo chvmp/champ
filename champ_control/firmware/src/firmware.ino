@@ -7,8 +7,6 @@
 
 #define CONTROL_RATE 100
 
-QuadrupedIK ik;
-
 ros::NodeHandle nh;
 champ_msgs::Point point_msg;
 ros::Publisher point_pub("/champ/ee/raw", &point_msg);
@@ -16,8 +14,12 @@ ros::Publisher point_pub("/champ/ee/raw", &point_msg);
 champ_msgs::Joints joints_msg;
 ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 
+QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
+QuadrupedIK ik;
+
 void setup()
 {
+    joints_msg.position_length = 12;
 
     nh.initNode();
     nh.getHardware()->setBaud(115200);
@@ -42,24 +44,25 @@ void loop() {
         float current_joint_states[12];
 
         // //update joint states of the robot
-        b.lf->joints(0, 0.89, -1.75);
-        b.rf->joints(0, 0.89, -1.75);
-        b.lh->joints(0, 0.89, -1.75);
-        b.rh->joints(0, 0.89, -1.75);
+        base.lf->joints(0, 0.89, -1.75);
+        base.rf->joints(0, 0.89, -1.75);
+        base.lh->joints(0, 0.89, -1.75);
+        base.rh->joints(0, 0.89, -1.75);
 
-        // Transformation target;
+        Transformation target;
+        
         // target.X() = 0.187;
         // target.Y() = -0.012;
         // target.Z() = -0.138;
-        // ik.solveBody(b, target, target, target, target, target_joint_states);
+        // ik.solveBody(base, target, target, target, target, target_joint_states);
         // publishJointStates(target_joint_states);
         
         //publish all joint angles
-        b.joints(current_joint_states);
+        base.joints(current_joint_states);
         publishJointStates(current_joint_states);
-
+   
         //publish ee points
-        publishPoints();
+        publishPoints(base.lf->ee().p);
 
         prev_ik_time = millis();
     }
@@ -68,16 +71,15 @@ void loop() {
 
 void publishJointStates(float *joints)
 {
-    joints_msg.position_length = 12;
     joints_msg.position = joints;
     jointstates_pub.publish(&joints_msg);
 }
 
-void publishPoints()
+void publishPoints(Point p)
 {
-    point_msg.x = b.lf->ee().p.X();
-    point_msg.y = b.lf->ee().p.Y();
-    point_msg.z = b.lf->ee().p.Z();
+    point_msg.x = p.X();
+    point_msg.y = p.Y();
+    point_msg.z = p.Z();
 
     point_pub.publish(&point_msg);
 }

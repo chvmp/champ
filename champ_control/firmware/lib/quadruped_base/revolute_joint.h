@@ -1,15 +1,20 @@
 #ifndef _REVOLUTE_JOINT_H_
 #define  _REVOLUTE_JOINT_H_
 
-#include <link.h>
-
-class RevoluteJoint : public Link
+class RevoluteJoint
 {
+    float d_;
+    float theta_;
+    float r_;
+    float alpha_;
+
     public:
-        RevoluteJoint(float d, float theta, float r, float alpha) : Link(d, theta, r, alpha) { }
-        void Move(float amount) { theta += amount;}
-        float position(){ return d; };
-        void position(float angle){ d = angle;};
+        RevoluteJoint(float d, float theta, float r, float alpha);
+        float &theta();
+        void theta(float angle);
+        float &d();
+        float &r();
+        float &alpha();
 };
 
 #endif

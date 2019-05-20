@@ -4,50 +4,52 @@
 #include <Geometry.h>
 #include <revolute_joint.h>
 
-class QuadrupedLeg: public RevoluteJoint
+class QuadrupedLeg
 {
-    Transformation ee_from_hip;
-    Transformation ee_from_base;
+    Transformation ee_from_hip_;
+    Transformation ee_from_base_;
 
     unsigned int no_of_links_;
     unsigned int leg_id_;
 
-    void addLink(Link &l);
+    float x_; 
+    float y_; 
+    float z_; 
+
+    float roll_; 
+    float pitch_; 
+    float yaw_;
+    
+    void addLink(RevoluteJoint *l);
 
     public:
-        float x; 
-        float y; 
-        float z; 
-        float roll; 
-        float pitch; 
-        float yaw;
+        RevoluteJoint *hip;
+        RevoluteJoint *upper_leg;
+        RevoluteJoint *lower_leg;
+        
+        RevoluteJoint *chain[3];
 
-        Link *chain[3];
-
-        QuadrupedLeg(RevoluteJoint &hip, RevoluteJoint &upper_leg, RevoluteJoint &lower_leg, 
+        QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_link, RevoluteJoint &lower_leg_link, 
                     float pos_x, float pos_y, float pos_z, 
                     float or_r, float or_p, float or_y);
         
+        Transformation forwardKinematics(Transformation &pose);
+
         Transformation ee();
         Transformation ee_to_base();
-
-        Transformation &forwardKinematics(Transformation &pose);
-
-        void inverseKinematics(Transformation &target, float *joints);
         
-        float &hip(){ return chain[0]->theta;};
-        void hip(float joint_angle){chain[0]->theta = joint_angle;};
+        void ee_base_to_hip(Point &point);
 
-        float &upper_leg(){ return chain[1]->theta;};
-        void upper_leg(float joint_angle){chain[1]->theta = joint_angle;};
-
-        float &lower_leg(){ return chain[2]->theta;};
-        void lower_leg(float joint_angle){chain[2]->theta = joint_angle;};
-
-        void joints(float hip, float upper_leg, float lower_leg);
+        void joints(float hip_joint, float upper_leg_joint, float lower_leg_joint);
         void joints(float *joints);
 
-        void ee_base_to_hip(Point &point);
+        void x();
+        void y();
+        void z();
+
+        void roll();
+        void pitch();
+        void yaw();
 };
 
 #endif

@@ -13,4 +13,5 @@ class QuadrupedIK
         void solveBody(const QuadrupedBase &base, Transformation &lf_target, Transformation &rf_target,
                                              Transformation &lh_target, Transformation &rh_target, float *joints);
 };
+
 #endif
