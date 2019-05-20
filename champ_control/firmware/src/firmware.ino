@@ -3,7 +3,11 @@
 #include <champ_msgs/Point.h>
 #include <champ_msgs/Joints.h>
 #include <champ_description.h>
+#include <quadruped_ik.h>
+
 #define CONTROL_RATE 100
+
+QuadrupedIK ik;
 
 ros::NodeHandle nh;
 champ_msgs::Point point_msg;
@@ -14,7 +18,6 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 
 void setup()
 {
-    joints_msg.position_length = 12;
 
     nh.initNode();
     nh.getHardware()->setBaud(115200);
@@ -35,31 +38,46 @@ void loop() {
 
     if ((millis() - prev_ik_time) >= (1000 / CONTROL_RATE))
     {
-        //update joint states of the robot
-        b.lf->joints(0, 89, -1.75);
-        b.rf->joints(0, 89, -1.75);
-        b.lh->joints(0, 89, -1.75);
-        b.rh->joints(0, 89, -1.75);
+        float target_joint_states[12];
+        float current_joint_states[12];
 
+        // //update joint states of the robot
+        b.lf->joints(0, 0.89, -1.75);
+        b.rf->joints(0, 0.89, -1.75);
+        b.lh->joints(0, 0.89, -1.75);
+        b.rh->joints(0, 0.89, -1.75);
+
+        // Transformation target;
+        // target.X() = 0.187;
+        // target.Y() = -0.012;
+        // target.Z() = -0.138;
+        // ik.solveBody(b, target, target, target, target, target_joint_states);
+        // publishJointStates(target_joint_states);
+        
         //publish all joint angles
-        publishJointStates();
+        b.joints(current_joint_states);
+        publishJointStates(current_joint_states);
+
+        //publish ee points
+        publishPoints();
+
         prev_ik_time = millis();
     }
     nh.spinOnce();
 }
 
-void publishJointStates()
+void publishJointStates(float *joints)
 {
-    float joints[12];
-    unsigned int total_joints = 0;
-
-    for(int i = 0; i < 4; i++)
-    {
-        joints[total_joints++] = b.legs[i]->hip();
-        joints[total_joints++] = b.legs[i]->upper_leg();
-        joints[total_joints++] = b.legs[i]->lower_leg();
-    }
-
+    joints_msg.position_length = 12;
     joints_msg.position = joints;
     jointstates_pub.publish(&joints_msg);
+}
+
+void publishPoints()
+{
+    point_msg.x = b.lf->ee().p.X();
+    point_msg.y = b.lf->ee().p.Y();
+    point_msg.z = b.lf->ee().p.Z();
+
+    point_pub.publish(&point_msg);
 }

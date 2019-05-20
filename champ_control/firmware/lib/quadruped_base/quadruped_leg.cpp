@@ -1,8 +1,15 @@
 #include<quadruped_leg.h>
 
-QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip, RevoluteJoint &upper_leg, RevoluteJoint &lower_leg):
+QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip, RevoluteJoint &upper_leg, RevoluteJoint &lower_leg, 
+    float pos_x, float pos_y, float pos_z, float or_r, float or_p, float or_y):
     no_of_links_(0),
-    RevoluteJoint(d, theta, r, alpha)
+    RevoluteJoint(d, theta, r, alpha),
+    x(pos_x), 
+    y(pos_y),
+    z(pos_z),
+    roll(or_r),
+    pitch(or_p),
+    yaw(or_y)
 {
     addLink(hip);
     addLink(upper_leg);
@@ -11,54 +18,61 @@ QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip, RevoluteJoint &upper_leg, Revolut
 
 void QuadrupedLeg::QuadrupedLeg::addLink(Link &l)
 {
-    chain_[no_of_links_++] = &l;
+    chain[no_of_links_++] = &l;
 }
 
 Transformation &QuadrupedLeg::forwardKinematics(Transformation &pose)
 {
     for(int i = no_of_links_ - 1; i >= 0; i--)
     {
-        pose.RotateX(chain_[i]->alpha);
-        pose.Translate(chain_[i]->r, 0,0);
-        pose.Translate(0,0,chain_[i]->d);
-        pose.RotateZ(chain_[i]->theta);
+        pose.RotateX(chain[i]->alpha);
+        pose.Translate(chain[i]->r, 0,0);
+        pose.Translate(0,0,chain[i]->d);
+        pose.RotateZ(chain[i]->theta);
     }
-    pose.RotateX(-1.5708);
+    pose.RotateX(-PI/2);
 
     return pose;
 }
 
 Transformation QuadrupedLeg::ee()
 {
-    currentPose = Identity<4,4>();
-    return forwardKinematics(currentPose);
+    ee_from_hip = Identity<4,4>();
+
+    return forwardKinematics(ee_from_hip);
 }
 
-void QuadrupedLeg::inverseKinematics(Transformation &target, float *joints)
+Transformation QuadrupedLeg::ee_to_base()
 {
-    joints[0] = -(atan(target.p.Z() / target.p.X()) - ( 1.5708 - acos(chain_[1]->d / sqrt(pow(target.p.Z(),2) + pow(target.p.X(), 2)))));
-    target.RotateY(joints[0]);
-    // // ik for knee forward
-    // // joints[2] = acos( (pow(target.p.X(),2) + pow(target.Y(),2) - pow(chain_[1]->r ,2) - pow(chain_[2]->r ,2)) / (2 * chain_[1]->r * chain_[2]->r) );
-    // // joints[1] = atan(target.p.Y() / target.p.X()) - atan( (chain_[2]->r * sin(joints[2])) / (chain_[1]->r + (chain_[2]->r * cos(joints[2]))));
+    ee_from_base.p = ee().p;
+    ee_from_base.RotateY(-pitch);
+    ee_from_base.RotateZ(yaw);
+    ee_from_base.Translate(x, y, z);
 
-    // // reverse
-    joints[2] = -acos((pow(target.p.X(),2) + pow(target.Y(),2) - pow(chain_[1]->r ,2) - pow(chain_[2]->r ,2)) / (2 * chain_[1]->r * chain_[2]->r));
-    joints[1] = (atan(target.p.Y() / target.p.X()) - atan( (chain_[2]->r * sin(joints[2])) / (chain_[1]->r + (chain_[2]->r * cos(joints[2])))));
-    target.RotateY(-joints[0]);
-} 
+    return ee_from_base;
+}
+
+void QuadrupedLeg::ee_base_to_hip(Point &point)
+{
+    Point temp_point;
+    temp_point.X() = -point.Z();
+    temp_point.Y() = x - point.X();
+    temp_point.Z() = point.Y() - y;
+
+    point = temp_point;
+}
 
 void QuadrupedLeg::joints(float hip, float upper_leg, float lower_leg)
 { 
-    chain_[0]->theta = hip; 
-    chain_[1]->theta = upper_leg; 
-    chain_[2]->theta = lower_leg;
+    chain[0]->theta = hip; 
+    chain[1]->theta = upper_leg; 
+    chain[2]->theta = lower_leg;
 };
 
 void QuadrupedLeg::joints(float *joints)
 {
     for(int i = 0; i < 3; i++)
     {
-        chain_[i]->theta = joints[i];
+        chain[i]->theta = joints[i];
     }
 };

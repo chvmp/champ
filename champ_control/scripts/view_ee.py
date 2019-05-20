@@ -35,10 +35,11 @@ class Viz:
         joint_states.position = joints.position
         self.joint_states_pub.publish(joint_states)
 
-
     def ee_callback(self, point):
         point_marker = Marker()
-        point_marker.header.frame_id = "rf_hip_debug_link"
+        point_marker.header.frame_id = "lf_hip_debug_link"
+        # point_marker.header.frame_id = "base_link"
+
         point_marker.type = Marker.CUBE
         point_marker.action = 0
         point_marker.id = 1

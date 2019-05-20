@@ -1,3 +1,6 @@
+#ifndef _REVOLUTE_JOINT_H_
+#define  _REVOLUTE_JOINT_H_
+
 #include <link.h>
 
 class RevoluteJoint : public Link
@@ -7,4 +10,6 @@ class RevoluteJoint : public Link
         void Move(float amount) { theta += amount;}
         float position(){ return d; };
         void position(float angle){ d = angle;};
-};    
+};
+
+#endif
