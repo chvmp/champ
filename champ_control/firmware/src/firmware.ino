@@ -1,6 +1,7 @@
 #include <ros.h>
 #include <ros/time.h>
 #include <champ_msgs/Point.h>
+#include <champ_msgs/PointArray.h>
 #include <champ_msgs/Joints.h>
 #include <champ_description.h>
 #include <quadruped_ik.h>
@@ -8,7 +9,7 @@
 #define CONTROL_RATE 100
 
 ros::NodeHandle nh;
-champ_msgs::Point point_msg;
+champ_msgs::PointArray point_msg;
 ros::Publisher point_pub("/champ/ee/raw", &point_msg);
 
 champ_msgs::Joints joints_msg;
@@ -62,7 +63,7 @@ void loop() {
         publishJointStates(current_joint_states);
    
         //publish ee points
-        publishPoints(base.lf->ee().p);
+        publishPoints(base.lf->ee().p, base.rf->ee().p, base.lh->ee().p, base.rh->ee().p);
 
         prev_ik_time = millis();
     }
@@ -75,11 +76,23 @@ void publishJointStates(float *joints)
     jointstates_pub.publish(&joints_msg);
 }
 
-void publishPoints(Point p)
+void publishPoints(Point p_lf, Point p_rf, Point p_lh, Point p_rh)
 {
-    point_msg.x = p.X();
-    point_msg.y = p.Y();
-    point_msg.z = p.Z();
+    point_msg.lf.x = p_lf.X();
+    point_msg.lf.y = p_lf.Y();
+    point_msg.lf.z = p_lf.Z();
+
+    point_msg.rf.x = p_rf.X();
+    point_msg.rf.y = p_rf.Y();
+    point_msg.rf.z = p_rf.Z();
+
+    point_msg.lh.x = p_lh.X();
+    point_msg.lh.y = p_lh.Y();
+    point_msg.lh.z = p_lh.Z();
+
+    point_msg.rh.x = p_rh.X();
+    point_msg.rh.y = p_rh.Y();
+    point_msg.rh.z = p_rh.Z();
 
     point_pub.publish(&point_msg);
 }

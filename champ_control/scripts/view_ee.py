@@ -2,6 +2,7 @@
 
 import rospy
 from champ_msgs.msg import Point
+from champ_msgs.msg import PointArray
 from champ_msgs.msg import Joints
 from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Quaternion
@@ -16,10 +17,10 @@ class Viz:
         self.ranges = []
         self.last_received = rospy.Time.now().to_sec()
 
-        rospy.Subscriber("/champ/ee/raw", Point, self.ee_callback)
+        rospy.Subscriber("/champ/ee/raw", PointArray, self.ee_callback)
         rospy.Subscriber("/champ/joint_states/raw", Joints, self.joint_states_callback)
 
-        self.marker_pub = rospy.Publisher('/champ/ee', Marker, queue_size = 10)
+        self.marker_array_pub = rospy.Publisher('/champ/ee', MarkerArray, queue_size = 10)
         self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 10)
 
     def joint_states_callback(self, joints):
@@ -35,18 +36,25 @@ class Viz:
         joint_states.position = joints.position
         self.joint_states_pub.publish(joint_states)
 
-    def ee_callback(self, point):
+    def ee_callback(self, points):
+        marker_array = MarkerArray()
+        marker_array.markers.append(self.create_marker(points.lf.x, points.lf.y, points.lf.z, 0, "lf_hip_debug_link"))
+        marker_array.markers.append(self.create_marker(points.rf.x, points.rf.y, points.rf.z, 1, "rf_hip_debug_link"))
+        marker_array.markers.append(self.create_marker(points.lh.x, points.lh.y, points.lh.z, 2, "lh_hip_debug_link"))
+        marker_array.markers.append(self.create_marker(points.rh.x, points.rh.y, points.rh.z, 3, "rh_hip_debug_link"))
+        self.marker_array_pub.publish(marker_array)
+
+    def create_marker(self, x, y, z, id, frame_id):
         point_marker = Marker()
-        point_marker.header.frame_id = "lf_hip_debug_link"
-        # point_marker.header.frame_id = "base_link"
+        point_marker.header.frame_id = frame_id
 
         point_marker.type = Marker.CUBE
-        point_marker.action = 0
-        point_marker.id = 1
+        point_marker.action = Marker.ADD
+        point_marker.id = id
 
-        point_marker.pose.position.x = point.x 
-        point_marker.pose.position.y = point.y
-        point_marker.pose.position.z = point.z 
+        point_marker.pose.position.x = x
+        point_marker.pose.position.y = y
+        point_marker.pose.position.z = z
         point_marker.pose.orientation = Quaternion(*quaternion_from_euler(0.0, 0.0, 0.0))
         
         point_marker.scale.x = (0.025); 
@@ -58,7 +66,7 @@ class Viz:
         point_marker.color.b = 0.521; 
         point_marker.color.a = 0.5; 
 
-        self.marker_pub.publish(point_marker)
+        return point_marker
 
 if __name__ == "__main__":
     rospy.init_node('clustering', anonymous=True)

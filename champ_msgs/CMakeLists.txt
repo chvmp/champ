@@ -10,6 +10,7 @@ add_message_files(
   PID.msg
   Imu.msg
   Point.msg
+  PointArray.msg
   Joints.msg
 )
 
