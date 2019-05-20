@@ -17,6 +17,7 @@ QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_lin
     addLink(hip);
     addLink(upper_leg);
     addLink(lower_leg);
+    nominal_stance_ = ee_to_base().p;
 }
 
 void QuadrupedLeg::addLink(RevoluteJoint *l)
@@ -80,3 +81,37 @@ void QuadrupedLeg::joints(float *joints)
     }
 };
 
+float QuadrupedLeg::x()
+{
+    return x_;
+}
+
+float QuadrupedLeg::y()
+{
+    return y_;
+}
+
+float QuadrupedLeg::z()
+{
+    return z_;
+}
+
+float QuadrupedLeg::roll()
+{
+    return roll_;
+}
+
+float QuadrupedLeg::pitch()
+{
+    return pitch_;
+}
+
+float QuadrupedLeg::yaw()
+{
+    return yaw_;
+}
+
+Point QuadrupedLeg::nominal_stance()
+{
+    return nominal_stance_;
+}

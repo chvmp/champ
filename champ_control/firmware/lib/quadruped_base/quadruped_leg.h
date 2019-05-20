@@ -22,6 +22,8 @@ class QuadrupedLeg
     
     void addLink(RevoluteJoint *l);
 
+    Point nominal_stance_;
+
     public:
         RevoluteJoint *hip;
         RevoluteJoint *upper_leg;
@@ -43,13 +45,15 @@ class QuadrupedLeg
         void joints(float hip_joint, float upper_leg_joint, float lower_leg_joint);
         void joints(float *joints);
 
-        void x();
-        void y();
-        void z();
+        float x();
+        float y();
+        float z();
 
-        void roll();
-        void pitch();
-        void yaw();
+        float roll();
+        float pitch();
+        float yaw();
+        
+        Point nominal_stance();
 };
 
 #endif
