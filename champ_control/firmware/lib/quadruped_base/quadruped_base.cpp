@@ -24,3 +24,40 @@ void QuadrupedBase::joints(float *joints)
         joints[total_joints++] = legs[i]->lower_leg->theta();
     }
 }
+
+float QuadrupedBase::roll()
+{
+    return roll_;
+}
+
+void QuadrupedBase::roll(float roll)
+{
+    roll_ = roll;
+}
+
+float QuadrupedBase::pitch()
+{
+    return pitch_;
+}
+
+void QuadrupedBase::pitch(float pitch)
+{
+    pitch_ = pitch;
+}
+
+float QuadrupedBase::yaw()
+{
+    return yaw_;
+}
+
+void QuadrupedBase::yaw(float yaw)
+{
+    yaw_ = yaw;
+}
+
+void QuadrupedBase::attitude(float roll, float pitch, float yaw)
+{
+    roll_ = roll;
+    pitch_ = pitch;
+    yaw_ = yaw;
+}
