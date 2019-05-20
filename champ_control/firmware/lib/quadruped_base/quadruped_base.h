@@ -34,7 +34,7 @@ class QuadrupedBase
             addLeg(rh);
         }
 
-        float joints(float *joints)
+        void joints(float *joints)
         {
             unsigned int total_joints = 0;
 
