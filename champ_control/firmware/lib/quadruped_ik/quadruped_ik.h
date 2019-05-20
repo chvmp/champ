@@ -2,6 +2,7 @@
 #define _QUADRUPED_IK_H_
 
 #include<quadruped_base.h>
+#include<Geometry.h>
 
 class QuadrupedIK
 {
@@ -9,9 +10,8 @@ class QuadrupedIK
     public:
         QuadrupedIK();
       
-        void solveLeg(const QuadrupedLeg *leg, Transformation &lf_target, float *joints);
-        void solveBody(const QuadrupedBase &base, Transformation &lf_target, Transformation &rf_target,
-                                             Transformation &lh_target, Transformation &rh_target, float *joints);
+        void solveLeg(QuadrupedLeg *leg, Point target, float *joints);
+        void solveBody(QuadrupedBase &base, Point lf_target, Point rf_target, Point lh_target, Point rh_target, float *joints);
 };
 
 #endif

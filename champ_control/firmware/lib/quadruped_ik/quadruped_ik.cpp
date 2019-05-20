@@ -4,25 +4,27 @@ QuadrupedIK::QuadrupedIK()
 {
 }
 
-void QuadrupedIK::solveLeg(const QuadrupedLeg *leg, Transformation &target, float *joints)
+void QuadrupedIK::solveLeg(QuadrupedLeg *leg, Point target, float *joints)
 {
-    joints[0] = -(atan(target.p.Z() / target.p.X()) - ( 1.5708 - acos(leg->upper_leg->d() / sqrt(pow(target.p.Z(),2) + pow(target.p.X(), 2)))));
-    target.RotateY(joints[0]);
+    Rotation hip_theta;
+    joints[0] = -(atan(target.Z() / target.X()) - ( 1.5708 - acos(leg->upper_leg->d() / sqrt(pow(target.Z(),2) + pow(target.X(), 2)))));
+    hip_theta.RotateY(joints[0]);
+    target = hip_theta * target;
+    
     // // ik for knee forward
-    // // joints[2] = acos( (pow(target.p.X(),2) + pow(target.Y(),2) - pow(leg->upper_leg->r() ,2) - pow(leg->lower_leg->r() ,2)) / (2 * leg->upper_leg->r() * leg->lower_leg->r()) );
-    // // joints[1] = atan(target.p.Y() / target.p.X()) - atan( (leg->lower_leg->r() * sin(joints[2])) / (leg->upper_leg->r() + (leg->lower_leg->r() * cos(joints[2]))));
+    // // joints[2] = acos( (pow(target.X(),2) + pow(target.Y(),2) - pow(leg->upper_leg->r() ,2) - pow(leg->lower_leg->r() ,2)) / (2 * leg->upper_leg->r() * leg->lower_leg->r()) );
+    // // joints[1] = atan(target.Y() / target.X()) - atan( (leg->lower_leg->r() * sin(joints[2])) / (leg->upper_leg->r() + (leg->lower_leg->r() * cos(joints[2]))));
 
     // // reverse
-    joints[2] = -acos((pow(target.p.X(),2) + pow(target.Y(),2) - pow(leg->upper_leg->r() ,2) - pow(leg->lower_leg->r() ,2)) / (2 * leg->upper_leg->r() * leg->lower_leg->r()));
-    joints[1] = (atan(target.p.Y() / target.p.X()) - atan( (leg->lower_leg->r() * sin(joints[2])) / (leg->upper_leg->r() + (leg->lower_leg->r() * cos(joints[2])))));
-    target.RotateY(-joints[0]);
+    joints[2] = -acos((pow(target.X(),2) + pow(target.Y(),2) - pow(leg->upper_leg->r() ,2) - pow(leg->lower_leg->r() ,2)) / (2 * leg->upper_leg->r() * leg->lower_leg->r()));
+    joints[1] = (atan(target.Y() / target.X()) - atan( (leg->lower_leg->r() * sin(joints[2])) / (leg->upper_leg->r() + (leg->lower_leg->r() * cos(joints[2])))));
+  
 }
 
-void QuadrupedIK::solveBody(const QuadrupedBase &base, Transformation &lf_target, Transformation &rf_target,
-                                                      Transformation &lh_target, Transformation &rh_target, float *joints)
+void QuadrupedIK::solveBody(QuadrupedBase &base, Point lf_target, Point rf_target, Point lh_target, Point rh_target, float *joints)
 {
     unsigned int total_joints = 0;
-    Transformation *legs[4];
+    Point *legs[4];
 
     legs[0] = &lf_target;
     legs[1] = &rf_target;
