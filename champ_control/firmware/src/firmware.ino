@@ -5,6 +5,7 @@
 #include <champ_msgs/Joints.h>
 #include <champ_description.h>
 #include <quadruped_ik.h>
+#include <quadruped_balancer.h>
 
 #define CONTROL_RATE 100
 
@@ -16,6 +17,7 @@ champ_msgs::Joints joints_msg;
 ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
+QuadrupedBalancer balancer;
 QuadrupedIK ik;
 
 void setup()
@@ -49,22 +51,25 @@ void loop() {
         base.rf->joints(0, 0.89, -1.75);
         base.lh->joints(0, 0.89, -1.75);
         base.rh->joints(0, 0.89, -1.75);
+        base.attitude(0.0, 0.0, 0.0);
 
-        Transformation target;
-        
+        // Point target;
         // target.X() = 0.187;
         // target.Y() = -0.012;
         // target.Z() = -0.138;
         // ik.solveBody(base, target, target, target, target, target_joint_states);
         // publishJointStates(target_joint_states);
         
+        balancer.balance(base, 0.0, 0.0, 0.0, 0.0, 0.0, -0.125);
+        ik.solveBody(base, balancer.lf_stance().p, balancer.rf_stance().p, balancer.lh_stance().p, balancer.rh_stance().p, target_joint_states);
+        publishJointStates(target_joint_states);
+
         //publish all joint angles
         base.joints(current_joint_states);
-        publishJointStates(current_joint_states);
-   
+        // publishJointStates(current_joint_states);
+        
         //publish ee points
-        publishPoints(base.lf->ee().p, base.rf->ee().p, base.lh->ee().p, base.rh->ee().p);
-
+        publishPoints(balancer.lf_stance().p, balancer.rf_stance().p, balancer.lh_stance().p, balancer.rh_stance().p);
         prev_ik_time = millis();
     }
     nh.spinOnce();
