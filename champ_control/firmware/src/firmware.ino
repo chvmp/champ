@@ -47,10 +47,14 @@ void loop() {
         float current_joint_states[12];
 
         // //update joint states of the robot
-        base.lf->joints(0, 0.89, -1.75);
-        base.rf->joints(0, 0.89, -1.75);
-        base.lh->joints(0, 0.89, -1.75);
-        base.rh->joints(0, 0.89, -1.75);
+        // base.lf->joints(0, 0.89, -1.75);
+        // base.rf->joints(0, 0.89, -1.75);
+        // base.lh->joints(0, 0.89, -1.75);
+        // base.rh->joints(0, 0.89, -1.75);
+        base.lf->joints(0, 0, 0);
+        base.rf->joints(0, 0, 0);
+        base.lh->joints(0, 0, 0);
+        base.rh->joints(0, 0, 0);
         base.attitude(0.0, 0.0, 0.0);
 
         // Point target;
@@ -62,12 +66,12 @@ void loop() {
         
         balancer.balance(base, 0.0, 0.0, 0.0, 0.0, 0.0, -0.125);
         ik.solveBody(base, balancer.lf_stance().p, balancer.rf_stance().p, balancer.lh_stance().p, balancer.rh_stance().p, target_joint_states);
-        publishJointStates(target_joint_states);
+        // publishJointStates(target_joint_states);
 
         //publish all joint angles
         base.joints(current_joint_states);
-        // publishJointStates(current_joint_states);
-        
+        publishJointStates(current_joint_states);
+
         //publish ee points
         publishPoints(balancer.lf_stance().p, balancer.rf_stance().p, balancer.lh_stance().p, balancer.rh_stance().p);
         prev_ik_time = millis();
