@@ -482,17 +482,19 @@ template<int dim, class MemT>
 typename MemT::elem_t Determinant(const Matrix<dim,dim,MemT> &A)
 {
     typename MemT::elem_t det;
-
+    //https://www.mathsisfun.com/algebra/matrix-determinant.html
     // Add the determinants of all the minors
     for(int i = 0; i < dim; i++)
     {
         Minor<MemT> del(A.delegate, i, 0);
         Matrix<dim-1,dim-1,Minor<MemT> > m(del);
+        
+        // det += Determinant(m) * (i % 2? -A(i,0) : A(i,0));
 
-        if(!i)
-            det = Determinant(m);
+        if (i%2)
+            det -= Determinant(m) * A(i,0);
         else
-            det += Determinant(m) * (i % 2? -A(i,0) : A(i,0));
+            det += Determinant(m) * A(i,0);
     }
 
     return det;
