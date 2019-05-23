@@ -108,18 +108,18 @@ Rotation &Rotation::RotateY(float theta)
 {
     float tmp1, tmp2;
 
-    tmp1 = (*this)(0,0) * cos(theta) + (*this)(2,0) * sin(theta);
-    tmp2 = (*this)(2,0) * cos(theta) - (*this)(0,0) * sin(theta);
+    tmp1 = (*this)(0,0) * cos(theta) - (*this)(2,0) * sin(theta);
+    tmp2 = (*this)(2,0) * cos(theta) + (*this)(0,0) * sin(theta);
     (*this)(0,0) = tmp1;
     (*this)(2,0) = tmp2;
 
-    tmp1 = (*this)(0,1) * cos(theta) + (*this)(2,1) * sin(theta);
-    tmp2 = (*this)(2,1) * cos(theta) - (*this)(0,1) * sin(theta);
+    tmp1 = (*this)(0,1) * cos(theta) - (*this)(2,1) * sin(theta);
+    tmp2 = (*this)(2,1) * cos(theta) + (*this)(0,1) * sin(theta);
     (*this)(0,1) = tmp1;
     (*this)(2,1) = tmp2;
 
-    tmp1 = (*this)(0,2) * cos(theta) + (*this)(2,2) * sin(theta);
-    tmp2 = (*this)(2,2) * cos(theta) - (*this)(0,2) * sin(theta);
+    tmp1 = (*this)(0,2) * cos(theta) - (*this)(2,2) * sin(theta);
+    tmp2 = (*this)(2,2) * cos(theta) + (*this)(0,2) * sin(theta);
     (*this)(0,2) = tmp1;
     (*this)(2,2) = tmp2;
 
@@ -194,6 +194,7 @@ Transformation &Transformation::RotateX(float phi)
 Transformation &Transformation::RotateY(float theta)
 {
     Point tmp;
+    theta = -theta;
     R.RotateY(theta);
 
     tmp.X() = cos(theta) * p.X() - sin(theta) * p.Z();
