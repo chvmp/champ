@@ -48,7 +48,8 @@ Transformation QuadrupedLeg::ee()
 
 Transformation QuadrupedLeg::ee_to_base()
 {
-    ee_from_base_.p = ee().p;
+    ee_from_base_.Translate(ee().p.X(), ee().p.Y(), ee().p.Z());
+    ee_from_base_.RotateX(roll_);
     ee_from_base_.RotateY(pitch_);
     ee_from_base_.RotateZ(yaw_);
     ee_from_base_.Translate(x_, y_, z_);
