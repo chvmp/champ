@@ -142,7 +142,7 @@ void QuadrupedBalancer::balance(QuadrupedBase &base, float target_roll, float ta
     lf_stance_.p.X() = x_numerator.Det() / denominator.Det();
     lf_stance_.p.Y() = y_numerator.Det() / denominator.Det();
     lf_stance_.p.Z() = z_numerator.Det() / denominator.Det();
-    ee_base_to_hip(base.lf, lf_stance_.p);
+    ee_base_to_hip(base.lf, lf_stance_);
 
 
     // Point test = p0.p;
@@ -172,31 +172,31 @@ void QuadrupedBalancer::balance(QuadrupedBase &base, float target_roll, float ta
     // rf_stance_.RotateY(-target_pitch);
     // rf_stance_.RotateZ(-target_yaw);
     // rf_stance_.Translate(-target_x, -target_y, - target_z);
-    ee_base_to_hip(base.rf, rf_stance_.p);
+    ee_base_to_hip(base.rf, rf_stance_);
 
     lh_stance_.p = base.lh->nominal_stance();
     // lh_stance_.RotateX(-target_roll);
     // lh_stance_.RotateY(-target_pitch);
     // lh_stance_.RotateZ(-target_yaw);
     // lh_stance_.Translate(-target_x, -target_y, - target_z);
-    ee_base_to_hip(base.lh, lh_stance_.p);
+    ee_base_to_hip(base.lh, lh_stance_);
 
     rh_stance_.p = base.rh->nominal_stance();
     // rh_stance_.RotateX(-target_roll);
     // rh_stance_.RotateY(-target_pitch);
     // rh_stance_.RotateZ(-target_yaw);
     // rh_stance_.Translate(-target_x, -target_y, - target_z);
-    ee_base_to_hip(base.rh, rh_stance_.p);
+    ee_base_to_hip(base.rh, rh_stance_);
 }
 
-void QuadrupedBalancer::ee_base_to_hip(QuadrupedLeg *leg, Point &point)
+void QuadrupedBalancer::ee_base_to_hip(QuadrupedLeg *leg, Transformation &ee)
 {
     Point temp_point;
-    temp_point.X() = -point.Z();
-    temp_point.Y() = leg->x() - point.X();
-    temp_point.Z() = point.Y() - leg->y();
+    temp_point.X() = -ee.Z();
+    temp_point.Y() = leg->x() - ee.X();
+    temp_point.Z() = ee.Y() - leg->y();
 
-    point = temp_point;
+    ee.p = temp_point;
 }
 
 Transformation QuadrupedBalancer::lf_stance()

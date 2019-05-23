@@ -16,7 +16,7 @@ class QuadrupedBalancer
         void balance(QuadrupedBase &base, float target_roll, float target_pitch, 
                         float target_yaw, float target_x, float target_y, float target_z);
 
-        void ee_base_to_hip(QuadrupedLeg *leg, Point &point);
+        void ee_base_to_hip(QuadrupedLeg *leg, Transformation &ee);
         Transformation lf_stance();
         Transformation rf_stance();
         Transformation lh_stance();
