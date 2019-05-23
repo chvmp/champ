@@ -17,7 +17,7 @@ QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_lin
     addLink(hip);
     addLink(upper_leg);
     addLink(lower_leg);
-    nominal_stance_ = ee_to_base().p;
+    nominal_stance_ = ee_to_base();
 }
 
 void QuadrupedLeg::addLink(RevoluteJoint *l)
@@ -48,8 +48,8 @@ Transformation QuadrupedLeg::ee()
 
 Transformation QuadrupedLeg::ee_to_base()
 {
-    ee_from_base_.Translate(ee().p.X(), ee().p.Y(), ee().p.Z());
-    ee_from_base_.RotateX(roll_);
+    ee_from_base_.p = ee().p;
+    ee_from_base_.RotateZ(roll_);
     ee_from_base_.RotateY(pitch_);
     ee_from_base_.RotateZ(yaw_);
     ee_from_base_.Translate(x_, y_, z_);
@@ -72,7 +72,7 @@ void QuadrupedLeg::joints(float hip_joint, float upper_leg_joint, float lower_le
     hip->theta(hip_joint);
     upper_leg->theta(upper_leg_joint);
     lower_leg->theta(lower_leg_joint);
-};
+}
 
 void QuadrupedLeg::joints(float *joints)
 {
@@ -80,7 +80,7 @@ void QuadrupedLeg::joints(float *joints)
     {
         chain[i]->theta(joints[i]);
     }
-};
+}
 
 float QuadrupedLeg::x()
 {
@@ -112,7 +112,7 @@ float QuadrupedLeg::yaw()
     return yaw_;
 }
 
-Point QuadrupedLeg::nominal_stance()
+Transformation QuadrupedLeg::nominal_stance()
 {
     return nominal_stance_;
 }

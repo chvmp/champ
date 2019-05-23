@@ -22,7 +22,7 @@ class QuadrupedLeg
     
     void addLink(RevoluteJoint *l);
 
-    Point nominal_stance_;
+    Transformation nominal_stance_;
 
     public:
         RevoluteJoint *hip;
@@ -53,7 +53,7 @@ class QuadrupedLeg
         float pitch();
         float yaw();
         
-        Point nominal_stance();
+        Transformation nominal_stance();
 };
 
 #endif
