@@ -40,8 +40,6 @@ class QuadrupedLeg
         Transformation ee();
         Transformation ee_to_base();
         
-        void ee_base_to_hip(Point &point);
-
         void joints(float hip_joint, float upper_leg_joint, float lower_leg_joint);
         void joints(float *joints);
 

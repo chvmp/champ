@@ -57,16 +57,6 @@ Transformation QuadrupedLeg::ee_to_base()
     return ee_from_base_;
 }
 
-void QuadrupedLeg::ee_base_to_hip(Point &point)
-{
-    Point temp_point;
-    temp_point.X() = -point.Z();
-    temp_point.Y() = x_ - point.X();
-    temp_point.Z() = point.Y() - y_;
-
-    point = temp_point;
-}
-
 void QuadrupedLeg::joints(float hip_joint, float upper_leg_joint, float lower_leg_joint)
 { 
     hip->theta(hip_joint);
