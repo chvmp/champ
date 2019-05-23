@@ -16,13 +16,12 @@ void QuadrupedBalancer::balance(float target_roll, float target_pitch,
 {
     for(int i = 0; i < 4; i++)
     {
-        legGroundIntersection(base->legs[i], i, target_roll, target_pitch, target_yaw, target_x, target_y, target_z);
-        ee_base_to_hip(base->legs[i], *leg_stances_[i]);
+        legGroundIntersection(base->legs[i], leg_stances_[i], target_roll, target_pitch, target_yaw, target_x, target_y, target_z);
+        ee_base_to_hip(base->legs[i], leg_stances_[i]);
     }
 }
 
-
-void QuadrupedBalancer::legGroundIntersection(QuadrupedLeg *leg, unsigned int leg_id, float target_roll, float target_pitch, 
+void QuadrupedBalancer::legGroundIntersection(QuadrupedLeg *leg, Transformation *leg_stance, float target_roll, float target_pitch, 
                         float target_yaw, float target_x, float target_y, float target_z)
 {
     Transformation normal_vector;
@@ -106,19 +105,19 @@ void QuadrupedBalancer::legGroundIntersection(QuadrupedLeg *leg, unsigned int le
                         0,                 0,                   1, leg->nominal_stance().Z()
     };
 
-    leg_stances_[leg_id]->p.X() = x_numerator.Det() / denominator.Det();
-    leg_stances_[leg_id]->p.Y() = y_numerator.Det() / denominator.Det();
-    leg_stances_[leg_id]->p.Z() = z_numerator.Det() / denominator.Det();
+    leg_stance->p.X() = x_numerator.Det() / denominator.Det();
+    leg_stance->p.Y() = y_numerator.Det() / denominator.Det();
+    leg_stance->p.Z() = z_numerator.Det() / denominator.Det();
 }
 
-void QuadrupedBalancer::ee_base_to_hip(QuadrupedLeg *leg, Transformation &ee)
+void QuadrupedBalancer::ee_base_to_hip(QuadrupedLeg *leg, Transformation *ee)
 {
     Point temp_point;
-    temp_point.X() = -ee.Z();
-    temp_point.Y() = leg->x() - ee.X();
-    temp_point.Z() = ee.Y() - leg->y();
+    temp_point.X() = -ee->Z();
+    temp_point.Y() = leg->x() - ee->X();
+    temp_point.Z() = ee->Y() - leg->y();
 
-    ee.p = temp_point;
+    ee->p = temp_point;
 }
 
 Transformation QuadrupedBalancer::lf_stance()
