@@ -1,192 +1,114 @@
 #include<quadruped_balancer.h>
 #include <BasicLinearAlgebra.h>
 
-QuadrupedBalancer::QuadrupedBalancer()
+QuadrupedBalancer::QuadrupedBalancer(QuadrupedBase &quadruped_base)
 {
+    base = &quadruped_base;
+    int total_stances = 0;
+    leg_stances_[total_stances++] = &lf_stance_;
+    leg_stances_[total_stances++] = &rf_stance_;
+    leg_stances_[total_stances++] = &lh_stance_;
+    leg_stances_[total_stances++] = &rh_stance_;
 }
 
-void QuadrupedBalancer::balance(QuadrupedBase &base, float target_roll, float target_pitch, 
+void QuadrupedBalancer::balance(float target_roll, float target_pitch, 
+                        float target_yaw, float target_x, float target_y, float target_z)
+{
+    for(int i = 0; i < 4; i++)
+    {
+        legGroundIntersection(base->legs[i], i, target_roll, target_pitch, target_yaw, target_x, target_y, target_z);
+        ee_base_to_hip(base->legs[i], *leg_stances_[i]);
+    }
+}
+
+
+void QuadrupedBalancer::legGroundIntersection(QuadrupedLeg *leg, unsigned int leg_id, float target_roll, float target_pitch, 
                         float target_yaw, float target_x, float target_y, float target_z)
 {
     Transformation normal_vector;
-    Transformation p0;
-    Transformation p1;
-    Transformation p_line;
-
+    Transformation plane_p;
+    Transformation normal_vector_origin;
+    Transformation line_p1;
+    Point line_vector;
     float d;
     
-    p0.p = base.lf->nominal_stance();
-    p1.p = base.lf->nominal_stance();
-    p_line.p = base.lf->nominal_stance();
-    p_line.Translate(0, 0, 0.05);
-    p0.Translate(0, 0, -target_z);
-    p1.Translate(-0.1, -0.1, -target_z);
-    normal_vector.p = p1.p;
+    plane_p = leg->nominal_stance();
+    plane_p.Translate(0, 0, -target_z);
+
+    leg->nominal_stance() = leg->nominal_stance();
+    line_p1 = leg->nominal_stance();
+    line_p1.Translate(0, 0, 0.05);
+    
+    normal_vector_origin = leg->nominal_stance();
+    normal_vector_origin.Translate(-0.1, -0.1, -target_z);
+    normal_vector.p = normal_vector_origin.p;
     normal_vector.Translate(0, 0, 0.1);
 
-    p0.RotateX(target_roll);
-    p0.RotateY(target_pitch);
-    p0.RotateZ(target_yaw);
+    plane_p.RotateX(target_roll);
+    plane_p.RotateY(target_pitch);
+    plane_p.RotateZ(target_yaw);
 
-    p1.RotateX(target_roll);
-    p1.RotateY(target_pitch);
-    p1.RotateZ(target_yaw);
+    normal_vector_origin.RotateX(target_roll);
+    normal_vector_origin.RotateY(target_pitch);
+    normal_vector_origin.RotateZ(target_yaw);
 
     normal_vector.RotateX(target_roll);
     normal_vector.RotateY(target_pitch);
     normal_vector.RotateZ(target_yaw);
 
-    normal_vector.X() = normal_vector.X() - p1.X();
-    normal_vector.Y() = normal_vector.Y() - p1.Y();
-    normal_vector.Z() = normal_vector.Z() - p1.Z();
+    normal_vector.X() = normal_vector.X() - normal_vector_origin.X();
+    normal_vector.Y() = normal_vector.Y() - normal_vector_origin.Y();
+    normal_vector.Z() = normal_vector.Z() - normal_vector_origin.Z();
 
-    d = (p0.X() * normal_vector.p.X() + \
-        p0.Y() * normal_vector.p.Y() + \
-        p0.Z() * normal_vector.p.Z());
+    line_vector.X() = -(line_p1.X() - leg->nominal_stance().X());
+    line_vector.Y() = -(line_p1.Y() - leg->nominal_stance().Y());
+    line_vector.Z() = -(line_p1.Z() - leg->nominal_stance().Z());
 
-    // ee_base_to_hip(base.lf, normal_vector.p);
-    // lf_stance_.p = normal_vector.p;
+    d = (plane_p.X() * normal_vector.p.X() + plane_p.Y() * normal_vector.p.Y() +  plane_p.Z() * normal_vector.p.Z());
+
     BLA::Matrix<4,4> denominator = 
     {
-    normal_vector.X(), normal_vector.Y(),   normal_vector.Z(),                  0,
-                    1,                 0,                   0, -(p_line.X() - base.lf->nominal_stance().X()),
-                    0,                 1,                   0, -(p_line.Y() - base.lf->nominal_stance().Y()),
-                    0,                 0,                   1, -(p_line.Z() - base.lf->nominal_stance().Z())
+        normal_vector.X(), normal_vector.Y(),   normal_vector.Z(),               0,
+                        1,                 0,                   0, line_vector.X(),
+                        0,                 1,                   0, line_vector.Y(),
+                        0,                 0,                   1, line_vector.Z()
     };
 
     BLA::Matrix<4,4> x_numerator = 
     {
-         d, normal_vector.Y(),   normal_vector.Z(),                  0,
-    base.lf->nominal_stance().X(),                 0,                   0, -(p_line.X() - base.lf->nominal_stance().X()),
-    base.lf->nominal_stance().Y(),                 1,                   0, -(p_line.Y() - base.lf->nominal_stance().Y()),
-    base.lf->nominal_stance().Z(),                 0,                   1, -(p_line.Z() - base.lf->nominal_stance().Z())
+                d, normal_vector.Y(),   normal_vector.Z(),               0,
+        leg->nominal_stance().X(),                 0,                   0, line_vector.X(),
+        leg->nominal_stance().Y(),                 1,                   0, line_vector.Y(),
+        leg->nominal_stance().Z(),                 0,                   1, line_vector.Z()
     };
 
     BLA::Matrix<4,4> y_numerator = 
     {
-    normal_vector.X(),      d,   normal_vector.Z(),                  0,
-                    1, base.lf->nominal_stance().X(),                   0, -(p_line.X() - base.lf->nominal_stance().X()),
-                    0, base.lf->nominal_stance().Y(),                   0, -(p_line.Y() - base.lf->nominal_stance().Y()),
-                    0, base.lf->nominal_stance().Z(),                   1, -(p_line.Z() - base.lf->nominal_stance().Z())
+        normal_vector.X(),            d,  normal_vector.Z(),               0,
+                        1, leg->nominal_stance().X(),                   0, line_vector.X(),
+                        0, leg->nominal_stance().Y(),                   0, line_vector.Y(),
+                        0, leg->nominal_stance().Z(),                   1, line_vector.Z()
     };
 
     BLA::Matrix<4,4> z_numerator = 
     {
-    normal_vector.X(), normal_vector.Y(),      d,                  0,
-                    1,                 0, base.lf->nominal_stance().X(), -(p_line.X() - base.lf->nominal_stance().X()),
-                    0,                 1, base.lf->nominal_stance().Y(), -(p_line.Y() - base.lf->nominal_stance().Y()),
-                    0,                 0, base.lf->nominal_stance().Z(), -(p_line.Z() - base.lf->nominal_stance().Z())
+        normal_vector.X(), normal_vector.Y(),           d,               0,
+                        1,                 0, leg->nominal_stance().X(), line_vector.X(),
+                        0,                 1, leg->nominal_stance().Y(), line_vector.Y(),
+                        0,                 0, leg->nominal_stance().Z(), line_vector.Z()
     };
 
     BLA::Matrix<4,4> t_numerator = 
     {
-    normal_vector.X(), normal_vector.Y(),   normal_vector.Z(),      d,
-                    1,                 0,                   0, base.lf->nominal_stance().X(),
-                    0,                 1,                   0, base.lf->nominal_stance().Y(),
-                    0,                 0,                   1, base.lf->nominal_stance().Z()
+        normal_vector.X(), normal_vector.Y(),   normal_vector.Z(),           d,
+                        1,                 0,                   0, leg->nominal_stance().X(),
+                        0,                 1,                   0, leg->nominal_stance().Y(),
+                        0,                 0,                   1, leg->nominal_stance().Z()
     };
 
-//============================================
-
-
-    // BLA::Matrix<4,4> denominator = 
-    // {
-    //                 2,                 1,                  -4,                   0,
-    //                 1,                 0,                   0,                  -1,
-    //                 0,                 1,                   0,                  -3,
-    //                 0,                 0,                   1,                  -1
-    // };
-
-    // BLA::Matrix<4,4> x_numerator = 
-    // {
-    //                 4,                 1,                  -4,                   0,
-    //                 0,                 0,                   0,                  -1,
-    //                 2,                 1,                   0,                  -3,
-    //                 0,                 0,                   1,                  -1
-    // };
-
-    // BLA::Matrix<4,4> y_numerator = 
-    // {
-    //                 2,                 4,                  -4,                   0,
-    //                 1,                 0,                   0,                  -1,
-    //                 0,                 2,                   0,                  -3,
-    //                 0,                 0,                   1,                  -1
-    // };
-
-    // BLA::Matrix<4,4> z_numerator = 
-    // {
-    //                 2,                 1,                   4,                   0,
-    //                 1,                 0,                   0,                  -1,
-    //                 0,                 1,                   2,                  -3,
-    //                 0,                 0,                   0,                  -1
-    // };
-
-    // BLA::Matrix<4,4> t_numerator = 
-    // {
-    //                 2,                 1,                  -4,                   4,
-    //                 1,                 0,                   0,                   0,
-    //                 0,                 1,                   0,                   2,
-    //                 0,                 0,                   1,                   0
-    // };
-// x_numerator = ~x_numerator;
-// y_numerator = ~y_numerator;
-// z_numerator = ~z_numerator;
-// t_numerator = ~t_numerator;
-// denominator = ~denominator;
-// //===========================================
-    
-
-    // lf_stance_.p.X() = Determinant(x_numerator) / Determinant(denominator);
-    // lf_stance_.p.Y() = Determinant(y_numerator) / Determinant(denominator);
-    // lf_stance_.p.Z() = Determinant(z_numerator) / Determinant(denominator);
-    lf_stance_.p.X() = x_numerator.Det() / denominator.Det();
-    lf_stance_.p.Y() = y_numerator.Det() / denominator.Det();
-    lf_stance_.p.Z() = z_numerator.Det() / denominator.Det();
-    ee_base_to_hip(base.lf, lf_stance_);
-
-
-    // Point test = p0.p;
-    // ee_base_to_hip(base.lf, test);
-    // lf_stance_.p = test;
-
-// d,p0.X(), p0.Y(), p0.Z();
-
-    // Point test;
-    // Rotation r_test;
-    // test(0) = 0;
-    // test(1) = 0;
-    // test(2) = 1;
-    //     r_test.RotateY(1.5708);
-    // test = r_test * test;
-    // lf_stance_.Translate(0, 0, 1);
-
-    // lf_stance_.RotateX(-target_roll);
-    // lf_stance_.RotateY(1.5708);
-    // lf_stance_.RotateZ(-target_yaw);
-    // lf_stance_.Translate(-target_x, -target_y, - target_z);
-    // ee_base_to_hip(base.lf, lf_stance_.p);
-    // lf_stance_.p = test;
-
-    rf_stance_.p = base.rf->nominal_stance();
-    // rf_stance_.RotateX(-target_roll);
-    // rf_stance_.RotateY(-target_pitch);
-    // rf_stance_.RotateZ(-target_yaw);
-    // rf_stance_.Translate(-target_x, -target_y, - target_z);
-    ee_base_to_hip(base.rf, rf_stance_);
-
-    lh_stance_.p = base.lh->nominal_stance();
-    // lh_stance_.RotateX(-target_roll);
-    // lh_stance_.RotateY(-target_pitch);
-    // lh_stance_.RotateZ(-target_yaw);
-    // lh_stance_.Translate(-target_x, -target_y, - target_z);
-    ee_base_to_hip(base.lh, lh_stance_);
-
-    rh_stance_.p = base.rh->nominal_stance();
-    // rh_stance_.RotateX(-target_roll);
-    // rh_stance_.RotateY(-target_pitch);
-    // rh_stance_.RotateZ(-target_yaw);
-    // rh_stance_.Translate(-target_x, -target_y, - target_z);
-    ee_base_to_hip(base.rh, rh_stance_);
+    leg_stances_[leg_id]->p.X() = x_numerator.Det() / denominator.Det();
+    leg_stances_[leg_id]->p.Y() = y_numerator.Det() / denominator.Det();
+    leg_stances_[leg_id]->p.Z() = z_numerator.Det() / denominator.Det();
 }
 
 void QuadrupedBalancer::ee_base_to_hip(QuadrupedLeg *leg, Transformation &ee)
