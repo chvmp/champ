@@ -4,7 +4,8 @@
 QuadrupedBalancer::QuadrupedBalancer(QuadrupedBase &quadruped_base)
 {
     base = &quadruped_base;
-    int total_stances = 0;
+    unsigned int total_stances = 0;
+
     leg_stances_[total_stances++] = &lf_stance_;
     leg_stances_[total_stances++] = &rf_stance_;
     leg_stances_[total_stances++] = &lh_stance_;
@@ -75,7 +76,7 @@ void QuadrupedBalancer::legGroundIntersection(QuadrupedLeg *leg, Transformation 
 
     BLA::Matrix<4,4> x_numerator = 
     {
-                d, normal_vector.Y(),   normal_vector.Z(),               0,
+                                d, normal_vector.Y(),   normal_vector.Z(),               0,
         leg->nominal_stance().X(),                 0,                   0, line_vector.X(),
         leg->nominal_stance().Y(),                 1,                   0, line_vector.Y(),
         leg->nominal_stance().Z(),                 0,                   1, line_vector.Z()
@@ -83,7 +84,7 @@ void QuadrupedBalancer::legGroundIntersection(QuadrupedLeg *leg, Transformation 
 
     BLA::Matrix<4,4> y_numerator = 
     {
-        normal_vector.X(),            d,  normal_vector.Z(),               0,
+        normal_vector.X(),                         d,   normal_vector.Z(),               0,
                         1, leg->nominal_stance().X(),                   0, line_vector.X(),
                         0, leg->nominal_stance().Y(),                   0, line_vector.Y(),
                         0, leg->nominal_stance().Z(),                   1, line_vector.Z()
@@ -91,7 +92,7 @@ void QuadrupedBalancer::legGroundIntersection(QuadrupedLeg *leg, Transformation 
 
     BLA::Matrix<4,4> z_numerator = 
     {
-        normal_vector.X(), normal_vector.Y(),           d,               0,
+        normal_vector.X(), normal_vector.Y(),                         d,               0,
                         1,                 0, leg->nominal_stance().X(), line_vector.X(),
                         0,                 1, leg->nominal_stance().Y(), line_vector.Y(),
                         0,                 0, leg->nominal_stance().Z(), line_vector.Z()
@@ -99,7 +100,7 @@ void QuadrupedBalancer::legGroundIntersection(QuadrupedLeg *leg, Transformation 
 
     BLA::Matrix<4,4> t_numerator = 
     {
-        normal_vector.X(), normal_vector.Y(),   normal_vector.Z(),           d,
+        normal_vector.X(), normal_vector.Y(),   normal_vector.Z(),                         d,
                         1,                 0,                   0, leg->nominal_stance().X(),
                         0,                 1,                   0, leg->nominal_stance().Y(),
                         0,                 0,                   1, leg->nominal_stance().Z()
@@ -113,7 +114,7 @@ void QuadrupedBalancer::legGroundIntersection(QuadrupedLeg *leg, Transformation 
 void QuadrupedBalancer::ee_base_to_hip(QuadrupedLeg *leg, Transformation *ee)
 {
     Point temp_point;
-    temp_point.X() = -ee->Z();
+    temp_point.X() = - ee->Z();
     temp_point.Y() = leg->x() - ee->X();
     temp_point.Z() = ee->Y() - leg->y();
 

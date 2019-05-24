@@ -1,5 +1,5 @@
 #ifndef _QUADRUPPED_LEG_H_
-#define  _QUADRUPPED_LEG_H_
+#define _QUADRUPPED_LEG_H_
 
 #include <Geometry.h>
 #include <revolute_joint.h>

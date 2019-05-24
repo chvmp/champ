@@ -1,7 +1,7 @@
 #ifndef _QUADRUPPED_BASE_H_
-#define  _QUADRUPPED_BASE_H_
+#define _QUADRUPPED_BASE_H_
 
-#include <quadruped_leg.h>
+#include<quadruped_leg.h>
 
 class QuadrupedBase
 {   

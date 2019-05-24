@@ -18,7 +18,6 @@ void QuadrupedIK::solveLeg(QuadrupedLeg *leg, Point target, float *joints)
     // // reverse
     joints[2] = -acos((pow(target.X(),2) + pow(target.Y(),2) - pow(leg->upper_leg->r() ,2) - pow(leg->lower_leg->r() ,2)) / (2 * leg->upper_leg->r() * leg->lower_leg->r()));
     joints[1] = (atan(target.Y() / target.X()) - atan( (leg->lower_leg->r() * sin(joints[2])) / (leg->upper_leg->r() + (leg->lower_leg->r() * cos(joints[2])))));
-  
 }
 
 void QuadrupedIK::solveBody(QuadrupedBase &base, Point lf_target, Point rf_target, Point lh_target, Point rh_target, float *joints)

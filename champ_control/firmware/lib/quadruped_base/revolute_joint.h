@@ -1,5 +1,5 @@
 #ifndef _REVOLUTE_JOINT_H_
-#define  _REVOLUTE_JOINT_H_
+#define _REVOLUTE_JOINT_H_
 
 class RevoluteJoint
 {

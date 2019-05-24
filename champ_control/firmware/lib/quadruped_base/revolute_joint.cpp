@@ -6,7 +6,6 @@ RevoluteJoint::RevoluteJoint(float d, float theta, float r, float alpha):
     r_(r),
     alpha_(alpha)
 { 
-
 } 
 
 float &RevoluteJoint::theta()

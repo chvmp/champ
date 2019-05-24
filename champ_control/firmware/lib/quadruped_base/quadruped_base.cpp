@@ -1,4 +1,4 @@
-#include <quadruped_base.h>
+#include<quadruped_base.h>
 
 QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg):        
     total_legs_(0),
