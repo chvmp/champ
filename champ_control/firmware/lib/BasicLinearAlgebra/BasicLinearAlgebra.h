@@ -481,9 +481,7 @@ Matrix<rows,cols,retMemT> &ElementwiseDivide(const Matrix<rows,cols,MemT> &A, co
 template<int dim, class MemT>
 typename MemT::elem_t Determinant(const Matrix<dim,dim,MemT> &A)
 {
-    typename MemT::elem_t det;
-    //https://www.mathsisfun.com/algebra/matrix-determinant.html
-    // Add the determinants of all the minors
+    typename MemT::elem_t det = 0.0;
     for(int i = 0; i < dim; i++)
     {
         Minor<MemT> del(A.delegate, i, 0);
