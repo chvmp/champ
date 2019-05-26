@@ -18,7 +18,7 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
-QuadrupedIK ik;
+QuadrupedIK ik(base);
 
 void setup()
 {
@@ -43,9 +43,6 @@ void loop() {
 
     if ((millis() - prev_ik_time) >= (1000 / CONTROL_RATE))
     {
-        float target_joint_states[12];
-        float current_joint_states[12];
-
         // //update joint states of the robot
         // base.lf->joints(0, 0.89, -1.75);
         // base.rf->joints(0, 0.89, -1.75);
@@ -65,10 +62,10 @@ void loop() {
         // publishJointStates(target_joint_states);
         
         balancer.balance(0.3, 0.3, 0.0, 0.0, 0.0, -0.150 );
-        publishPoints(balancer.lf_stance().p, balancer.rf_stance().p, balancer.lh_stance().p, balancer.rh_stance().p);
+        publishPoints(balancer.lf_stance(), balancer.rf_stance(), balancer.lh_stance(), balancer.rh_stance());
 
-        ik.solveBody(base, balancer.lf_stance().p, balancer.rf_stance().p, balancer.lh_stance().p, balancer.rh_stance().p, target_joint_states);
-        publishJointStates(target_joint_states);
+        ik.solveBody(balancer.lf_stance(), balancer.rf_stance(), balancer.lh_stance(), balancer.rh_stance());
+        publishJointStates(ik.lf_joints(), ik.rf_joints(), ik.lh_joints(), ik.rh_joints());
 
         //publish all joint angles
         // base.joints(current_joint_states);
@@ -83,13 +80,30 @@ void loop() {
     nh.spinOnce();
 }
 
-void publishJointStates(float *joints)
+void publishJointStates(float lf_joints[3], float rf_joints[3], float lh_joints[3], float rh_joints[3])
 {
-    joints_msg.position = joints;
+    float target_joints[12];
+    target_joints[0] = lf_joints[0];
+    target_joints[1] = lf_joints[1];
+    target_joints[2] = lf_joints[2];
+
+    target_joints[3] = rf_joints[0];
+    target_joints[4] = rf_joints[1];
+    target_joints[5] = rf_joints[2];
+
+    target_joints[6] = lh_joints[0];
+    target_joints[7] = lh_joints[1];
+    target_joints[8] = lh_joints[2];
+
+    target_joints[9] = rh_joints[0];
+    target_joints[10] = rh_joints[1];
+    target_joints[11] = rh_joints[2];
+
+    joints_msg.position = target_joints;
     jointstates_pub.publish(&joints_msg);
 }
 
-void publishPoints(Point p_lf, Point p_rf, Point p_lh, Point p_rh)
+void publishPoints(Transformation p_lf, Transformation p_rf, Transformation p_lh, Transformation p_rh)
 {
     point_msg.lf.x = p_lf.X();
     point_msg.lf.y = p_lf.Y();

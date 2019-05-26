@@ -1,15 +1,15 @@
 #include<quadruped_ik.h>
 
-QuadrupedIK::QuadrupedIK()
+QuadrupedIK::QuadrupedIK(QuadrupedBase &quadruped_base)
 {
+    base = &quadruped_base;
 }
 
-void QuadrupedIK::solveLeg(QuadrupedLeg *leg, Point target, float *joints)
+void QuadrupedIK::solveLeg(QuadrupedLeg *leg, Transformation target, float *joints)
 {
     Rotation hip_theta;
     joints[0] = -(atan(target.Z() / target.X()) - ( 1.5708 - acos(leg->upper_leg->d() / sqrt(pow(target.Z(),2) + pow(target.X(), 2)))));
-    hip_theta.RotateY(joints[0]);
-    target = hip_theta * target;
+    target.RotateY(joints[0]);
     
     // // ik for knee forward
     // // joints[2] = acos( (pow(target.X(),2) + pow(target.Y(),2) - pow(leg->upper_leg->r() ,2) - pow(leg->lower_leg->r() ,2)) / (2 * leg->upper_leg->r() * leg->lower_leg->r()) );
@@ -20,22 +20,30 @@ void QuadrupedIK::solveLeg(QuadrupedLeg *leg, Point target, float *joints)
     joints[1] = (atan(target.Y() / target.X()) - atan( (leg->lower_leg->r() * sin(joints[2])) / (leg->upper_leg->r() + (leg->lower_leg->r() * cos(joints[2])))));
 }
 
-void QuadrupedIK::solveBody(QuadrupedBase &base, Point lf_target, Point rf_target, Point lh_target, Point rh_target, float *joints)
+void QuadrupedIK::solveBody(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target)
 {
-    unsigned int total_joints = 0;
-    Point *legs[4];
+    solveLeg(base->legs[0],lf_target, lf_joints_);
+    solveLeg(base->legs[1],rf_target, rf_joints_);
+    solveLeg(base->legs[2],lh_target, lh_joints_);
+    solveLeg(base->legs[3],rh_target, rh_joints_);
+}
 
-    legs[0] = &lf_target;
-    legs[1] = &rf_target;
-    legs[2] = &lh_target;
-    legs[3] = &rh_target;
+float *QuadrupedIK::lf_joints()
+{
+    return lf_joints_;
+}
 
-    for(unsigned int i = 0; i < 4; i++)
-    {
-        float temp_joints[3];
-        solveLeg(base.legs[i], *legs[i], temp_joints);
-        joints[total_joints++] = temp_joints[0];
-        joints[total_joints++] = temp_joints[1];
-        joints[total_joints++] = temp_joints[2];
-    }
+float *QuadrupedIK::rf_joints()
+{
+    return rf_joints_;
+}
+
+float *QuadrupedIK::lh_joints()
+{
+    return lh_joints_;
+}
+
+float *QuadrupedIK::rh_joints()
+{
+    return rh_joints_;
 }
