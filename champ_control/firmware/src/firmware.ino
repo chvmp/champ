@@ -61,7 +61,7 @@ void loop() {
         // ik.solveBody(base, target, target, target, target, target_joint_states);
         // publishJointStates(target_joint_states);
         
-        balancer.balance(0.3, 0.3, 0.0, 0.0, 0.0, -0.150 );
+        balancer.balance(0.0, 0.0, 0.0, 0.0, 0.0, -0.05 );
         publishPoints(balancer.lf_stance(), balancer.rf_stance(), balancer.lh_stance(), balancer.rh_stance());
 
         ik.solveBody(balancer.lf_stance(), balancer.rf_stance(), balancer.lh_stance(), balancer.rh_stance());
