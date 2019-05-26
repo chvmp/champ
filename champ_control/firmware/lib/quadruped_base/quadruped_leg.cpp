@@ -72,6 +72,17 @@ void QuadrupedLeg::joints(float *joints)
     }
 }
 
+float *QuadrupedLeg::joints()
+{
+    float joints[3];
+    for(unsigned int i = 0; i < 3; i++)
+    {
+        joints[i] = chain[i]->theta();
+    }
+    
+    return joints;
+}
+
 float QuadrupedLeg::x()
 {
     return x_;
