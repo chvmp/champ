@@ -8,6 +8,7 @@ from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Quaternion
 from tf.transformations import quaternion_from_euler
 from sensor_msgs.msg import JointState
+from std_msgs.msg import Float64MultiArray
 
 class Viz:
     def __init__(self):
@@ -22,6 +23,7 @@ class Viz:
 
         self.marker_array_pub = rospy.Publisher('/champ/ee', MarkerArray, queue_size = 10)
         self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 10)
+        self.joint_control_pub = rospy.Publisher('/champ/joint_group_position_controller/command', Float64MultiArray, queue_size = 10)
 
     def joint_states_callback(self, joints):
         joint_states = JointState()
@@ -34,7 +36,11 @@ class Viz:
         ]
 
         joint_states.position = joints.position
-        self.joint_states_pub.publish(joint_states)
+        # self.joint_states_pub.publish(joint_states)
+
+        position_command = Float64MultiArray()
+        position_command.data = joints.position
+        self.joint_control_pub.publish(position_command)
 
     def ee_callback(self, points):
         marker_array = MarkerArray()
