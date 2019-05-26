@@ -1,0 +1,35 @@
+/champ:
+  joint_states_controller:
+      type: joint_state_controller/JointStateController
+      publish_rate: 25
+
+  joint_group_position_controller:
+      type: position_controllers/JointGroupPositionController
+      joints:
+          - lf_hip_joint
+          - lf_upper_leg_joint
+          - lf_lower_leg_joint
+          - rf_hip_joint
+          - rf_upper_leg_joint
+          - rf_lower_leg_joint
+          - lh_hip_joint
+          - lh_upper_leg_joint
+          - lh_lower_leg_joint
+          - rh_hip_joint
+          - rh_upper_leg_joint
+          - rh_lower_leg_joint
+
+# /gazebo_ros_control:
+#   pid_gains:
+#     lf_hip_joint        : {p: 100.0, i: 0.01, d: 10.0}
+#     lf_upper_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
+#     lf_lower_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
+#     rf_hip_joint        : {p: 100.0, i: 0.01, d: 10.0}
+#     rf_upper_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
+#     rf_lower_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
+#     lh_hip_joint        : {p: 100.0, i: 0.01, d: 10.0}
+#     lh_upper_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
+#     lh_lower_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
+#     rh_hip_joint        : {p: 100.0, i: 0.01, d: 10.0}
+#     rh_upper_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
+#     rh_lower_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}

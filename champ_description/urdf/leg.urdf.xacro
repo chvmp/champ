@@ -23,6 +23,18 @@
         </xacro:if>
 
         <link name="${leg}_hip_link">
+            <inertial>
+                <mass value="${hip_mass}" />
+                <inertia ixx="${(1/12) * hip_mass * (hip_y_length * hip_y_length + hip_z_length * hip_z_length)}" ixy="0.0" ixz="0.0"
+                         iyy="${(1/12) * hip_mass * (hip_x_length * hip_x_length + hip_z_length * hip_z_length)}" iyz="0.0"
+                         izz="${(1/12) * hip_mass * (hip_x_length * hip_x_length + hip_y_length * hip_y_length)}" />
+            </inertial>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="${hip_mesh_path}" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
@@ -31,15 +43,20 @@
                 <material name="black" />
             </visual>
         </link>
-        <joint name="${leg}_hip_joint" type="revolute">
-            <axis xyz="0 1 0" />
-            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
-            <parent link="base_link" />
-            <child link="${leg}_hip_link" />
-            <origin xyz="${base_to_hip_xyz}" rpy="-${pi/2} ${pi/2} 0" />
-        </joint>
 
         <link name="${leg}_upper_leg_link">
+            <inertial>
+                <mass value="${upper_leg_mass}" />
+                <inertia ixx="${(1/12) * upper_leg_mass * (upper_leg_y_length * upper_leg_y_length + upper_leg_z_length * upper_leg_z_length)}" ixy="0.0" ixz="0.0"
+                         iyy="${(1/12) * upper_leg_mass * (upper_leg_x_length * upper_leg_x_length + upper_leg_z_length * upper_leg_z_length)}" iyz="0.0"
+                         izz="${(1/12) * upper_leg_mass * (upper_leg_x_length * upper_leg_x_length + upper_leg_y_length * upper_leg_y_length)}" />
+            </inertial>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="${upper_leg_mesh_path}" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
@@ -48,15 +65,20 @@
                 <material name="black" />
             </visual>
         </link>
-        <joint name="${leg}_upper_leg_joint" type="revolute">
-            <axis xyz="0 0 1" />
-            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
-            <parent link="${leg}_hip_link" />
-            <child link="${leg}_upper_leg_link" />
-            <origin xyz="0 0 ${hip_to_upper_leg}" rpy="0 0 0" />
-        </joint>
 
         <link name="${leg}_lower_leg_link">
+            <inertial>
+                <mass value="${lower_leg_mass}" />
+                <inertia ixx="${(1/12) * lower_leg_mass * (lower_leg_y_length * lower_leg_y_length + lower_leg_z_length * lower_leg_z_length)}" ixy="0.0" ixz="0.0"
+                         iyy="${(1/12) * lower_leg_mass * (lower_leg_x_length * lower_leg_x_length + lower_leg_z_length * lower_leg_z_length)}" iyz="0.0"
+                         izz="${(1/12) * lower_leg_mass * (lower_leg_x_length * lower_leg_x_length + lower_leg_y_length * lower_leg_y_length)}" />
+            </inertial>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="${lower_leg_mesh_path}" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
@@ -65,6 +87,25 @@
                 <material name="black" />
             </visual>
         </link>
+
+        <link name="${leg}_foot_link" />
+
+        <joint name="${leg}_hip_joint" type="revolute">
+            <axis xyz="0 1 0" />
+            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
+            <parent link="base_link" />
+            <child link="${leg}_hip_link" />
+            <origin xyz="${base_to_hip_xyz}" rpy="-${pi/2} ${pi/2} 0" />
+        </joint>
+
+        <joint name="${leg}_upper_leg_joint" type="revolute">
+            <axis xyz="0 0 1" />
+            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
+            <parent link="${leg}_hip_link" />
+            <child link="${leg}_upper_leg_link" />
+            <origin xyz="0 0 ${hip_to_upper_leg}" rpy="0 0 0" />
+        </joint>
+
         <joint name="${leg}_lower_leg_joint" type="revolute">
             <axis xyz="0 0 1" />
             <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="0.5" />
@@ -73,11 +114,49 @@
             <origin xyz="${upper_leg_to_lower_leg_distance} 0 0" rpy="0 0 0" />
         </joint>
 
-        <link name="${leg}_foot_link" />
         <joint name="${leg}_foot_joint" type="fixed">
             <parent link="${leg}_lower_leg_link" />
             <child link="${leg}_foot_link" />
             <origin xyz="${lower_leg_to_foot_distance} 0 0" rpy="0 0 0" />
         </joint>
+
+        <transmission name="${leg}_hip_joint_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${leg}_hip_joint">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
+            </joint>
+            <actuator name="${leg}_hip_joint_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <transmission name="${leg}_upper_leg_joint_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${leg}_upper_leg_joint">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
+            </joint>
+            <actuator name="${leg}_upper_leg_joint_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <transmission name="${leg}_lower_leg_joint_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${leg}_lower_leg_joint">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
+            </joint>
+            <actuator name="${leg}_lower_joint_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
     </xacro:macro>
 </robot>

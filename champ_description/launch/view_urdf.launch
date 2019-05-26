@@ -3,9 +3,13 @@
     <node name="champ_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
         <param name="publish_frequency" type="double" value="30.0" />
         <param name="ignore_timestamp" type="bool" value="true" />
-            <remap from="/joint_states" to="/champ/joint_states" />
     </node>
 
     <node type="rviz" name="rviz" pkg="rviz" args="-d $(find champ_description)/rviz/urdf_viewer.rviz" />
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="true"/>
+        <rosparam param="/source_list">[champ/joint_states]</rosparam>
+    </node>
 </launch>
 

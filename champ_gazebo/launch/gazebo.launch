@@ -1,0 +1,26 @@
+<launch>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="paused" default="false"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find champ_gazebo)/worlds/default.world"/>
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="headless" value="$(arg headless)"/>
+    </include>
+
+    <include file="$(find champ_description)/launch/description.launch"/>
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model champ -param robot_description -z 0.282" />
+    
+    <rosparam file="$(find champ_gazebo)/config/champ.yaml" command="load"/>
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
+        --namespace=champ
+        joint_states_controller
+        joint_group_position_controller
+        ">
+    </node>
+</launch>
+
