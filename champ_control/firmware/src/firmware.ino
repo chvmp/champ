@@ -62,10 +62,10 @@ void loop() {
         // publishJointStates(target_joint_states);
         
         balancer.balance(0.0, 0.0, 0.0, 0.0, 0.0, -0.05 );
-        publishPoints(balancer.lf_stance(), balancer.rf_stance(), balancer.lh_stance(), balancer.rh_stance());
+        publishPoints(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance());
 
-        ik.solveBody(balancer.lf_stance(), balancer.rf_stance(), balancer.lh_stance(), balancer.rh_stance());
-        publishJointStates(ik.lf_joints(), ik.rf_joints(), ik.lh_joints(), ik.rh_joints());
+        ik.solveBody(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance());
+        publishJointStates(ik.lf.joints(), ik.rf.joints(), ik.lh.joints(), ik.rh.joints());
 
         //publish all joint angles
         // base.joints(current_joint_states);

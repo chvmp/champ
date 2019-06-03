@@ -12,6 +12,11 @@ QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, Quadrup
     legs[total_legs++] = rf;
     legs[total_legs++] = lh;
     legs[total_legs++] = rh;
+
+    // addLeg(lf);
+    // addLeg(rf);
+    // addLeg(lh);
+    // addLeg(rh);
 }
 
 void QuadrupedBase::joints(float *joints)
