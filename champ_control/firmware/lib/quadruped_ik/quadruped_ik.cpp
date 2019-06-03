@@ -15,7 +15,7 @@ QuadrupedIK::QuadrupedIK(QuadrupedBase &quadruped_base):
     legs_[total_stances++] = &rh;
 }
 
-void QuadrupedIK::solveBody(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target)
+void QuadrupedIK::solve(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target)
 {
     legs_[0]->solve(lf_target);
     legs_[1]->solve(rf_target);

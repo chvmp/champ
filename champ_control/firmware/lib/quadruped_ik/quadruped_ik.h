@@ -17,9 +17,9 @@ class QuadrupedIK
         IKLegInstance rf;
         IKLegInstance lh;
         IKLegInstance rh;
-        
+
         QuadrupedIK(QuadrupedBase &quadruped_base);
-        void solveBody(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target);
+        void solve(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target);
 };
 
 #endif
