@@ -1,16 +1,17 @@
 #include<quadruped_base.h>
 
 QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg):        
-    total_legs_(0),
     lf(&lf_leg),
     rf(&rf_leg),
     lh(&lh_leg),
     rh(&rh_leg)
 {
-    addLeg(lf);
-    addLeg(rf);
-    addLeg(lh);
-    addLeg(rh);
+    unsigned int total_legs;
+
+    legs[total_legs++] = lf;
+    legs[total_legs++] = rf;
+    legs[total_legs++] = lh;
+    legs[total_legs++] = rh;
 }
 
 void QuadrupedBase::joints(float *joints)

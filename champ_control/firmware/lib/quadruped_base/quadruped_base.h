@@ -5,16 +5,10 @@
 
 class QuadrupedBase
 {   
-    unsigned int total_legs_;
     float roll_;
     float pitch_;
     float yaw_;
 
-    void addLeg(QuadrupedLeg *leg)
-    {
-        legs[total_legs_++] = leg;
-    }
-    
     public:
         QuadrupedLeg *legs[4];
 
