@@ -4,10 +4,12 @@
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Joints.h>
 #include <champ_description.h>
+#include <champ_config.h>
 #include <quadruped_ik.h>
 #include <quadruped_balancer.h>
+#include <quadruped_gait.h>
 
-#define CONTROL_RATE 100
+#define CONTROL_RATE FREQUENCY
 
 ros::NodeHandle nh;
 champ_msgs::PointArray point_msg;
@@ -19,6 +21,7 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
 QuadrupedIK ik(base);
+QuadrupedGait gait(FREQUENCY, MAX_VELOCITY, MAX_DISPLACEMENT);
 
 void setup()
 {
@@ -43,37 +46,18 @@ void loop() {
 
     if ((millis() - prev_ik_time) >= (1000 / CONTROL_RATE))
     {
-        // //update joint states of the robot
-        // base.lf->joints(0, 0.89, -1.75);
-        // base.rf->joints(0, 0.89, -1.75);
-        // base.lh->joints(0, 0.89, -1.75);
-        // base.rh->joints(0, 0.89, -1.75);
         base.lf->joints(0, 0, 0);
         base.rf->joints(0, 0, 0);
         base.lh->joints(0, 0, 0);
         base.rh->joints(0, 0, 0);
         base.attitude(0.0, 0.0, 0.0);
 
-        // Point target;
-        // target.X() = 0.187;
-        // target.Y() = -0.012;
-        // target.Z() = -0.138;
-        // ik.solveBody(base, target, target, target, target, target_joint_states);
-        // publishJointStates(target_joint_states);
-        
         balancer.balance(0.0, 0.0, 0.0, 0.0, 0.0, -0.05 );
-        publishPoints(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance());
+        gait.generate(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance(), 0.5);
+        ik.solve(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
 
-        ik.solveBody(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance());
+        publishPoints(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
         publishJointStates(ik.lf.joints(), ik.rf.joints(), ik.lh.joints(), ik.rh.joints());
-
-        //publish all joint angles
-        // base.joints(current_joint_states);
-        // publishJointStates(current_joint_states);
-
-        //publish ee points
-        // publishPoints(base.lf->ee().p, base.rf->ee().p, base.lh->ee().p, base.rh->ee().p);
-        // publishPoints(base.lf->ee_to_base().p, base.rf->ee_to_base().p, base.lh->ee_to_base().p, base.rh->ee_to_base().p);
 
         prev_ik_time = millis();
     }
