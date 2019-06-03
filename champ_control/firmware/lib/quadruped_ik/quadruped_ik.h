@@ -12,8 +12,8 @@ class QuadrupedIK
     float rf_joints_[3];
     float lh_joints_[3];
     float rh_joints_[3];
-    public:
 
+    public:
         QuadrupedIK(QuadrupedBase &quadruped_base);
       
         void solveLeg(QuadrupedLeg *leg, Transformation target, float *joints);
