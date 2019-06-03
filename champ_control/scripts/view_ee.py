@@ -21,9 +21,9 @@ class Viz:
         rospy.Subscriber("/champ/ee/raw", PointArray, self.ee_callback)
         rospy.Subscriber("/champ/joint_states/raw", Joints, self.joint_states_callback)
 
-        self.marker_array_pub = rospy.Publisher('/champ/ee', MarkerArray, queue_size = 10)
-        self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 10)
-        self.joint_control_pub = rospy.Publisher('/champ/joint_group_position_controller/command', Float64MultiArray, queue_size = 10)
+        self.marker_array_pub = rospy.Publisher('/champ/ee', MarkerArray, queue_size = 100)
+        self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 100)
+        self.joint_control_pub = rospy.Publisher('/champ/joint_group_position_controller/command', Float64MultiArray, queue_size = 100)
 
     def joint_states_callback(self, joints):
         joint_states = JointState()
@@ -31,7 +31,7 @@ class Viz:
         joint_states.name = [
             "lf_hip_joint", "lf_upper_leg_joint", "lf_lower_leg_joint", 
             "rf_hip_joint", "rf_upper_leg_joint", "rf_lower_leg_joint", 
-            "lh_hip_joint", "lh_upper_leg_joint","lh_lower_leg_joint", 
+            "lh_hip_joint", "lh_upper_leg_joint", "lh_lower_leg_joint", 
             "rh_hip_joint", "rh_upper_leg_joint", "rh_lower_leg_joint"
         ]
 
