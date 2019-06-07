@@ -7,6 +7,7 @@
     <link name="champ"/>
     <link name="base_link">
         <inertial>
+            <origin xyz="0.065 0 0" />
             <mass value="${base_mass}" />
             <inertia ixx="${(1/12) * base_mass * (base_y_length * base_y_length + base_z_length * base_z_length)}" ixy="0.0" ixz="0.0"
                      iyy="${(1/12) * base_mass * (base_x_length * base_x_length + base_z_length * base_z_length)}" iyz="0.0"
@@ -26,6 +27,10 @@
             <material name="black" />
         </visual>
     </link>
+    <gazebo reference="base_link">
+        <material>Gazebo/FlatBlack</material>
+    </gazebo>
+
     <joint name="base_to_champ" type="fixed">
         <parent link="champ" />
         <child link="base_link" />
@@ -41,6 +46,7 @@
     <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
             <robotNamespace>/champ</robotNamespace>
+            <legacyModeNS>true</legacyModeNS>
         </plugin>
     </gazebo>
     
