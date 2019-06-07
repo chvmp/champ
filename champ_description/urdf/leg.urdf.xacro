@@ -96,8 +96,13 @@
             </visual>
         </link>
         <gazebo reference="${leg}_lower_leg_link">
-            <mu1>10000.0</mu1>
-            <mu2>10000.0</mu2>
+            <kp>100000.0</kp>
+            <kd>100000.0</kd>
+            <mu1>1.5</mu1>
+            <mu2>1.5</mu2>
+            <fdir>1 0 0</fdir>
+            <maxVel>0.5</maxVel>
+            <minDepth>0.001</minDepth>
             <material>Gazebo/FlatBlack</material>
         </gazebo>
 
@@ -142,7 +147,7 @@
             <actuator name="${leg}_hip_joint_motor">
                 <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
                 <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
-                <mechanicalReduction>1</mechanicalReduction>
+                <!-- <mechanicalReduction>1</mechanicalReduction> -->
             </actuator>
         </transmission>
 
@@ -155,7 +160,7 @@
             <actuator name="${leg}_upper_leg_joint_motor">
                 <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
                 <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
-                <mechanicalReduction>1</mechanicalReduction>
+                <!-- <mechanicalReduction>1</mechanicalReduction> -->
             </actuator>
         </transmission>
 
@@ -168,7 +173,7 @@
             <actuator name="${leg}_lower_joint_motor">
                 <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
                 <!-- <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> -->
-                <mechanicalReduction>1</mechanicalReduction>
+                <!-- <mechanicalReduction>1</mechanicalReduction> -->
             </actuator>
         </transmission>
     </xacro:macro>
