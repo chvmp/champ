@@ -4,7 +4,7 @@
       publish_rate: 25
 
   joint_group_position_controller:
-      type: position_controllers/JointGroupPositionController
+      type: effort_controllers/JointTrajectoryController
       joints:
           - lf_hip_joint
           - lf_upper_leg_joint
@@ -19,17 +19,31 @@
           - rh_upper_leg_joint
           - rh_lower_leg_joint
 
+      gains:
+        lf_hip_joint        : {p: 180, d: 0.9, i: 20}
+        lf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+        lf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+        rf_hip_joint        : {p: 180, d: 0.9, i: 20}
+        rf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+        rf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+        lh_hip_joint        : {p: 180, d: 0.9, i: 20}
+        lh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+        lh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+        rh_hip_joint        : {p: 180, d: 0.9, i: 20}
+        rh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+        rh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+
 # /gazebo_ros_control:
 #   pid_gains:
-#     lf_hip_joint        : {p: 100.0, i: 0.01, d: 10.0}
-#     lf_upper_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
-#     lf_lower_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
-#     rf_hip_joint        : {p: 100.0, i: 0.01, d: 10.0}
-#     rf_upper_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
-#     rf_lower_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
-#     lh_hip_joint        : {p: 100.0, i: 0.01, d: 10.0}
-#     lh_upper_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
-#     lh_lower_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
-#     rh_hip_joint        : {p: 100.0, i: 0.01, d: 10.0}
-#     rh_upper_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
-#     rh_lower_leg_joint  : {p: 100.0, i: 0.01, d: 10.0}
+#     lf_hip_joint        : {p: 180, d: 0.9, i: 20}
+#     lf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+#     lf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+#     rf_hip_joint        : {p: 180, d: 0.9, i: 20}
+#     rf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+#     rf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+#     lh_hip_joint        : {p: 180, d: 0.9, i: 20}
+#     lh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+#     lh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+#     rh_hip_joint        : {p: 180, d: 0.9, i: 20}
+#     rh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+#     rh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
