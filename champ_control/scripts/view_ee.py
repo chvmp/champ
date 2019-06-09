@@ -9,6 +9,7 @@ from geometry_msgs.msg import Quaternion
 from tf.transformations import quaternion_from_euler
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 class Viz:
     def __init__(self):
@@ -23,24 +24,21 @@ class Viz:
 
         self.marker_array_pub = rospy.Publisher('/champ/ee', MarkerArray, queue_size = 100)
         self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 100)
-        self.joint_control_pub = rospy.Publisher('/champ/joint_group_position_controller/command', Float64MultiArray, queue_size = 100)
+        self.joint_control_pub = rospy.Publisher('/champ/joint_group_position_controller/command', JointTrajectory, queue_size = 100)
 
     def joint_states_callback(self, joints):
-        joint_states = JointState()
-        joint_states.header.stamp = rospy.Time.now()
-        joint_states.name = [
+        joint_control = JointTrajectory()
+        joint_control.joint_names = [
             "lf_hip_joint", "lf_upper_leg_joint", "lf_lower_leg_joint", 
             "rf_hip_joint", "rf_upper_leg_joint", "rf_lower_leg_joint", 
             "lh_hip_joint", "lh_upper_leg_joint", "lh_lower_leg_joint", 
             "rh_hip_joint", "rh_upper_leg_joint", "rh_lower_leg_joint"
         ]
-
-        joint_states.position = joints.position
-        # self.joint_states_pub.publish(joint_states)
-
-        position_command = Float64MultiArray()
-        position_command.data = joints.position
-        self.joint_control_pub.publish(position_command)
+        point = JointTrajectoryPoint()
+        point.time_from_start = rospy.Duration(1.0/60.0)
+        point.positions = joints.position    
+        joint_control.points.append(point)
+        self.joint_control_pub.publish(joint_control)
 
     def ee_callback(self, points):
         marker_array = MarkerArray()
