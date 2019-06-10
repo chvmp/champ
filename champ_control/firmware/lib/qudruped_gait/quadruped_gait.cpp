@@ -1,14 +1,15 @@
 #include<quadruped_gait.h>
 
-QuadrupedGait::QuadrupedGait(int frequency, float max_velocity, float max_displacement):
+QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, int frequency, float max_velocity, float max_displacement):
+    base_(&quadruped_base),
     lf_gait_pattern_{1,0,1,0},
     rf_gait_pattern_{0,1,0,1},
     lh_gait_pattern_{0,1,0,1},
     rh_gait_pattern_{1,0,1,0},
-    lf(frequency, max_velocity, max_displacement),
-    rf(frequency, max_velocity, max_displacement),
-    lh(frequency, max_velocity, max_displacement),
-    rh(frequency, max_velocity, max_displacement)
+    lf(base_->lf, frequency, max_velocity, max_displacement),
+    rf(base_->rf, frequency, max_velocity, max_displacement),
+    lh(base_->lh, frequency, max_velocity, max_displacement),
+    rh(base_->rh, frequency, max_velocity, max_displacement)
 {
     unsigned int total_stances = 0;
     
@@ -25,4 +26,9 @@ void QuadrupedGait::generate(Transformation lf_ref_stance,
     rf.generate(rf_ref_stance, target_velocity, rf_gait_pattern_);
     lh.generate(lh_ref_stance, target_velocity, lh_gait_pattern_);
     rh.generate(rh_ref_stance, target_velocity, rh_gait_pattern_);
+
+    base_->lf->foot_base_to_hip(lf.foot_);
+    base_->rf->foot_base_to_hip(rf.foot_);
+    base_->lh->foot_base_to_hip(lh.foot_);
+    base_->rh->foot_base_to_hip(rh.foot_);
 }

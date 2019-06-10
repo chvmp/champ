@@ -3,9 +3,11 @@
 
 #include<Arduino.h>
 #include<Geometry.h>
+#include<balancer_leg_instance.h>
 
 class GaitLegInstance
 {
+    QuadrupedLeg *leg_;
     int frequency_;
     float max_velocity_;
     float max_displacement_;
@@ -14,13 +16,15 @@ class GaitLegInstance
     unsigned long  last_cycle_time_;
     unsigned int gait_index_;
 
-    Transformation foot_;
 
     float getGaitCycleCount(float target_velocity);
-
+    
     public:
-        GaitLegInstance(int frequency, float max_velocity, float max_displacement);
+        Transformation foot_;
+
+        GaitLegInstance(QuadrupedLeg *leg, int frequency, float max_velocity, float max_displacement);
         void generate(Transformation ref, float target_velocity, bool * gait_pattern);
+
         Transformation stance();
 };
 

@@ -1,6 +1,7 @@
 #include<gait_leg_instance.h>
 
-GaitLegInstance::GaitLegInstance(int frequency, float max_velocity, float max_displacement):
+GaitLegInstance::GaitLegInstance(QuadrupedLeg *leg, int frequency, float max_velocity, float max_displacement):
+    leg_(leg),
     frequency_(frequency),
     max_velocity_(max_velocity),
     max_displacement_(max_displacement),
@@ -42,15 +43,15 @@ void GaitLegInstance::generate(Transformation ref, float target_velocity, bool *
     if(gait_pattern[gait_index_])
     {
         float theta = current_iteration * (PI * 2);
-        foot_.X() = ref.X() - (a * (1 - cos(theta)));
-        foot_.Y() = ref.Y() - (a * (theta - sin(theta)));
-        foot_.Z() = ref.Z();
+        foot_.Z() = ref.Z() + (a * (1 - cos(theta)));
+        foot_.X() = ref.X() + (a * (theta - sin(theta)));
+        foot_.Y() = ref.Y();
     }
     else if(!gait_pattern[gait_index_])
     {
-        foot_.X() = ref.X();
-        foot_.Y() = ref.Y() - ((1 - current_iteration) * target_displacement);
         foot_.Z() = ref.Z();
+        foot_.X() = ref.X() + ((1 - current_iteration) * target_displacement);
+        foot_.Y() = ref.Y();
     }
 
     if((millis() - last_cycle_time_) > (float)(1000 / cycle_count))
