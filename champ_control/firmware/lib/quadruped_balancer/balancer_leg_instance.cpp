@@ -62,7 +62,7 @@ void BalancerLegInstance::legGroundIntersection(float target_roll, float target_
 
     BLA::Matrix<4,4> x_numerator = 
     {
-                                 d, normal_vector.Y(),   normal_vector.Z(),               0,
+                  d, normal_vector.Y(),   normal_vector.Z(),               0,
         line_p0.X(),                 0,                   0, line_vector.X(),
         line_p0.Y(),                 1,                   0, line_vector.Y(),
         line_p0.Z(),                 0,                   1, line_vector.Z()
@@ -70,7 +70,7 @@ void BalancerLegInstance::legGroundIntersection(float target_roll, float target_
 
     BLA::Matrix<4,4> y_numerator = 
     {
-        normal_vector.X(),                          d,   normal_vector.Z(),               0,
+        normal_vector.X(),           d,   normal_vector.Z(),               0,
                         1, line_p0.X(),                   0, line_vector.X(),
                         0, line_p0.Y(),                   0, line_vector.Y(),
                         0, line_p0.Z(),                   1, line_vector.Z()
@@ -78,7 +78,7 @@ void BalancerLegInstance::legGroundIntersection(float target_roll, float target_
 
     BLA::Matrix<4,4> z_numerator = 
     {
-        normal_vector.X(), normal_vector.Y(),                         d,               0,
+        normal_vector.X(), normal_vector.Y(),           d,               0,
                         1,                 0, line_p0.X(), line_vector.X(),
                         0,                 1, line_p0.Y(), line_vector.Y(),
                         0,                 0, line_p0.Z(), line_vector.Z()
