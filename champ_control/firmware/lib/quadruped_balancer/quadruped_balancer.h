@@ -7,14 +7,9 @@
 
 class QuadrupedBalancer
 {
-    QuadrupedBase *base;
+    QuadrupedBase *base_;
 
     BalancerLegInstance *legs_[4];
-    
-    // Transformation lf_stance_;
-    // Transformation rf_stance_;
-    // Transformation lh_stance_;
-    // Transformation rh_stance_;
 
     public:
         BalancerLegInstance lf;
