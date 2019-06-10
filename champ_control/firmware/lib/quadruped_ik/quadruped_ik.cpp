@@ -17,8 +17,8 @@ QuadrupedIK::QuadrupedIK(QuadrupedBase &quadruped_base):
 
 void QuadrupedIK::solve(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target)
 {
-    legs_[0]->solve(lf_target);
-    legs_[1]->solve(rf_target);
-    legs_[2]->solve(lh_target);
-    legs_[3]->solve(rh_target);
+    lf.solve(lf_target);
+    rf.solve(rf_target);
+    lh.solve(lh_target);
+    rh.solve(rh_target);
 }
