@@ -265,7 +265,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /champ/ee
+      Marker Topic: /champ/foot
       Name: MarkerArray
       Namespaces:
         "": true

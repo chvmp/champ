@@ -6,8 +6,8 @@
 
 class QuadrupedLeg
 {
-    Transformation ee_from_hip_;
-    Transformation ee_from_base_;
+    Transformation foot_from_hip_;
+    Transformation foot_from_base_;
 
     unsigned int no_of_links_;
     unsigned int leg_id_;
@@ -37,8 +37,9 @@ class QuadrupedLeg
         
         Transformation forwardKinematics(Transformation &pose);
 
-        Transformation ee();
-        Transformation ee_to_base();
+        Transformation foot();
+        Transformation foot_to_base();
+        void foot_base_to_hip(Transformation &foot);
         
         void joints(float hip_joint, float upper_leg_joint, float lower_leg_joint);
         void joints(float *joints);

@@ -17,7 +17,7 @@ QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_lin
     addLink(hip);
     addLink(upper_leg);
     addLink(lower_leg);
-    nominal_stance_ = ee_to_base();
+    nominal_stance_ = foot_to_base();
 }
 
 void QuadrupedLeg::addLink(RevoluteJoint *l)
@@ -39,22 +39,32 @@ Transformation QuadrupedLeg::forwardKinematics(Transformation &pose)
     return pose;
 }
 
-Transformation QuadrupedLeg::ee()
+Transformation QuadrupedLeg::foot()
 {
-    ee_from_hip_ = Identity<4,4>();
+    foot_from_hip_ = Identity<4,4>();
 
-    return forwardKinematics(ee_from_hip_);
+    return forwardKinematics(foot_from_hip_);
 }
 
-Transformation QuadrupedLeg::ee_to_base()
+Transformation QuadrupedLeg::foot_to_base()
 {
-    ee_from_base_.p = ee().p;
-    ee_from_base_.RotateX(roll_);
-    ee_from_base_.RotateY(pitch_);
-    ee_from_base_.RotateZ(yaw_);
-    ee_from_base_.Translate(x_, y_, z_);
+    foot_from_base_.p = foot().p;
+    foot_from_base_.RotateX(roll_);
+    foot_from_base_.RotateY(pitch_);
+    foot_from_base_.RotateZ(yaw_);
+    foot_from_base_.Translate(x_, y_, z_);
 
-    return ee_from_base_;
+    return foot_from_base_;
+}
+
+void QuadrupedLeg::foot_base_to_hip(Transformation &foot)
+{
+    Point temp_point;
+    temp_point.X() = - foot.Z();
+    temp_point.Y() = x_ - foot.X();
+    temp_point.Z() = foot.Y() - y_;
+
+    foot.p = temp_point;
 }
 
 void QuadrupedLeg::joints(float hip_joint, float upper_leg_joint, float lower_leg_joint)

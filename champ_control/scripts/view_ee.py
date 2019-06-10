@@ -19,10 +19,10 @@ class Viz:
         self.ranges = []
         self.last_received = rospy.Time.now().to_sec()
 
-        rospy.Subscriber("/champ/ee/raw", PointArray, self.ee_callback)
+        rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
         rospy.Subscriber("/champ/joint_states/raw", Joints, self.joint_states_callback)
 
-        self.marker_array_pub = rospy.Publisher('/champ/ee', MarkerArray, queue_size = 100)
+        self.marker_array_pub = rospy.Publisher('/champ/foot', MarkerArray, queue_size = 100)
         self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 100)
         self.joint_control_pub = rospy.Publisher('/champ/joint_group_position_controller/command', JointTrajectory, queue_size = 100)
 
@@ -35,12 +35,24 @@ class Viz:
             "rh_hip_joint", "rh_upper_leg_joint", "rh_lower_leg_joint"
         ]
         point = JointTrajectoryPoint()
-        point.time_from_start = rospy.Duration(1.0/60.0)
+        point.time_from_start = rospy.Duration(1.0 / 60.0)
         point.positions = joints.position    
         joint_control.points.append(point)
         self.joint_control_pub.publish(joint_control)
 
-    def ee_callback(self, points):
+        # joint_states = JointState()
+        # joint_states.header.stamp = rospy.Time.now()
+        # joint_states.name = [
+        #     "lf_hip_joint", "lf_upper_leg_joint", "lf_lower_leg_joint", 
+        #     "rf_hip_joint", "rf_upper_leg_joint", "rf_lower_leg_joint", 
+        #     "lh_hip_joint", "lh_upper_leg_joint","lh_lower_leg_joint", 
+        #     "rh_hip_joint", "rh_upper_leg_joint", "rh_lower_leg_joint"
+        # ]
+
+        # joint_states.position = joints.position
+        # self.joint_states_pub.publish(joint_states)
+
+    def foot_callback(self, points):
         marker_array = MarkerArray()
         marker_array.markers.append(self.create_marker(points.lf.x, points.lf.y, points.lf.z, 0, "lf_hip_debug_link"))
         marker_array.markers.append(self.create_marker(points.rf.x, points.rf.y, points.rf.z, 1, "rf_hip_debug_link"))

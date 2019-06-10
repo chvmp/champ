@@ -13,7 +13,7 @@
 
 ros::NodeHandle nh;
 champ_msgs::PointArray point_msg;
-ros::Publisher point_pub("/champ/ee/raw", &point_msg);
+ros::Publisher point_pub("/champ/foot/raw", &point_msg);
 
 champ_msgs::Joints joints_msg;
 ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
@@ -21,7 +21,7 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
 QuadrupedIK ik(base);
-QuadrupedGait gait(FREQUENCY, MAX_VELOCITY, MAX_DISPLACEMENT);
+QuadrupedGait gait(base, FREQUENCY, MAX_VELOCITY, MAX_DISPLACEMENT);
 
 void setup()
 {
