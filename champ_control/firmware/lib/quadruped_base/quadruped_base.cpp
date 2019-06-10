@@ -6,17 +6,12 @@ QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, Quadrup
     lh(&lh_leg),
     rh(&rh_leg)
 {
-    unsigned int total_legs;
+    unsigned int total_legs = 0;
 
     legs[total_legs++] = lf;
     legs[total_legs++] = rf;
     legs[total_legs++] = lh;
     legs[total_legs++] = rh;
-
-    // addLeg(lf);
-    // addLeg(rf);
-    // addLeg(lh);
-    // addLeg(rh);
 }
 
 void QuadrupedBase::joints(float *joints)
