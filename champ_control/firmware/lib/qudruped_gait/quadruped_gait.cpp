@@ -27,8 +27,8 @@ void QuadrupedGait::generate(Transformation lf_ref_stance,
     lh.generate(lh_ref_stance, target_velocity, lh_gait_pattern_);
     rh.generate(rh_ref_stance, target_velocity, rh_gait_pattern_);
 
-    base_->lf->foot_base_to_hip(lf.foot_);
-    base_->rf->foot_base_to_hip(rf.foot_);
-    base_->lh->foot_base_to_hip(lh.foot_);
-    base_->rh->foot_base_to_hip(rh.foot_);
+    // base_->lf->foot_base_to_hip(lf.foot_);
+    // base_->rf->foot_base_to_hip(rf.foot_);
+    // base_->lh->foot_base_to_hip(lh.foot_);
+    // base_->rh->foot_base_to_hip(rh.foot_);
 }

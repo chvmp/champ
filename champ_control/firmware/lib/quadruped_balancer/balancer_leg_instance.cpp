@@ -87,7 +87,7 @@ void BalancerLegInstance::legGroundIntersection(float target_roll, float target_
     foot_.p.X() = x_numerator.Det() / denominator.Det();
     foot_.p.Y() = y_numerator.Det() / denominator.Det();
     foot_.p.Z() = z_numerator.Det() / denominator.Det();
-    // leg_->foot_base_to_hip(foot_);
+    leg_->foot_base_to_hip(foot_);
 }
 
 Transformation BalancerLegInstance::stance()
