@@ -28,29 +28,35 @@ float GaitLegInstance::getGaitCycleCount(float target_velocity)
 void GaitLegInstance::generate(Transformation ref, float target_velocity, bool *gait_pattern)
 {
     int cycle_count = getGaitCycleCount(target_velocity);
-    float target_displacement = target_velocity / cycle_count;
-    float swing_height = target_displacement / PI;
-    float a = swing_height / 2;
+    float ref_y = 0;
+    float swing_height = 0;
 
     if(!gait_started_)
     {
         last_cycle_time_ = millis();
         gait_started_ = true;
+        swing_height = (max_displacement_ / 2) / PI;
+        ref_y = ref.Y() + (max_displacement_ / 2);
+    }
+    {
+        swing_height = max_displacement_ / PI;
+        ref_y = ref.Y() + (max_displacement_ / 2);
     }
 
+    float a = swing_height / 2;
     float current_iteration = (millis() - last_cycle_time_) / (float)(1000 / cycle_count);
 
     if(gait_pattern[gait_index_])
     {
         float theta = current_iteration * (PI * 2);
-        foot_.X() = ref.X() + (a * (1 - cos(theta)));
-        foot_.Y() = ref.Y() + (a * (theta - sin(theta)));
+        foot_.X() = ref.X() - (a * (1 - cos(theta)));
+        foot_.Y() = ref_y - (a * (theta - sin(theta)));
         foot_.Z() = ref.Z();
     }
     else if(!gait_pattern[gait_index_])
     {
         foot_.X() = ref.X();
-        foot_.Y() = ref.Y() + ((1 - current_iteration) * target_displacement);
+        foot_.Y() = ref_y - ((1 - current_iteration) * max_displacement_);
         foot_.Z() = ref.Z();
     }
 
