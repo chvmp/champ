@@ -1,7 +1,12 @@
 <launch>
     <!-- Start ROS communication between the robot's computer and base -->
+    <arg name="sim" default="false" />
+
     <node pkg="rosserial_python" name="rosserial_lino" type="serial_node.py" output="screen">
-        <param name="port" value="/dev/ttyACM0" />
+        <param if="$(arg sim)" name="port" value="/tmp/simavr-uart0" />
+        <param unless="$(arg sim)" name="port" value="/dev/ttyACM0" />
+        <param if="$(arg sim)" name="fix_pyserial_for_test" value="true" />
+        <param unless="$(arg sim)" name="fix_pyserial_for_test" value="false" />
         <param name="baud" value="115200" />
     </node>
 </launch>
