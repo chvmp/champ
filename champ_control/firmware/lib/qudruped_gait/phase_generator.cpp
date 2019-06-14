@@ -28,10 +28,11 @@ void PhaseGenerator::stopPhaseGen()
 void PhaseGenerator::run(float target_velocity)
 {
     unsigned long now = millis();
-    float stance_phase_period =  (max_displacement_ / target_velocity);
+    float stance_phase_period =  (max_displacement_ / target_velocity) * 10000;
     float swing_phase_period = 2500;
     float stride_period = stance_phase_period + swing_phase_period;
     static float TD = swing_phase_period;
+    static unsigned long last_drop_time;
     // if(!ref_has_touchdown_ && !phase_gen_started_)
     // {
     //     TD = 2500;
@@ -50,17 +51,22 @@ void PhaseGenerator::run(float target_velocity)
     // if(stance_phase_signal[0] >= 0.8)
     //     last_touchdown_ = now;
 
-
-    if(now - last_touchdown_>= TD)
+    if(swing_phase_signal[0] > 0.99)
     {
-        if(!ref_has_touchdown_)
-        {
-            ref_has_touchdown_ = true;
-            TD = stride_period;
-        }
+        if((now - last_drop_time) < stance_phase_period)
+            last_touchdown_ = now;
+        last_drop_time = now;
+    }
+    // if(now - last_touchdown_>= TD)
+    // {
+    //     if(!ref_has_touchdown_)
+    //     {
+    //         ref_has_touchdown_ = true;
+    //         TD = stride_period;
+    //     }
 
-        last_touchdown_ = now;
-    }   
+    //     last_touchdown_ = now;
+    // }   
     // else 
     // {
     //     ref_has_touchdown_ = false;
@@ -94,17 +100,9 @@ void PhaseGenerator::run(float target_velocity)
         float temp_t = 0;
 
         if(leg_clocks_[i] > -swing_phase_period && leg_clocks_[i] < 0)
-            temp_t = swing_phase_period;
+            swing_phase_signal[i] = (leg_clocks_[i] + swing_phase_period) / swing_phase_period;
         else  if(leg_clocks_[i] > stance_phase_period && leg_clocks_[i] < stride_period)
-            temp_t = -stance_phase_period;
-
-        swing_phase_signal[i] = (leg_clocks_[i] + temp_t) / swing_phase_period;
+            swing_phase_signal[i] = (leg_clocks_[i] - stance_phase_period) / swing_phase_period;
     }
-
-
-    // swing_phase_signal[0]
-    // swing_phase_signal[1]
-    // swing_phase_signal[2]
-    // swing_phase_signal[3]
 }
 
