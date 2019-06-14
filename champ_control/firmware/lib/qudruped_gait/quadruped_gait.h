@@ -5,6 +5,7 @@
 #include<Geometry.h>
 #include<quadruped_base.h>
 #include<gait_leg_instance.h>
+#include<phase_generator.h>
 
 class QuadrupedGait
 {
@@ -17,6 +18,7 @@ class QuadrupedGait
         bool lh_gait_pattern_[4];
         bool rh_gait_pattern_[4];
 
+        PhaseGenerator phase_gen_;
     public:
         GaitLegInstance lf;
         GaitLegInstance rf;

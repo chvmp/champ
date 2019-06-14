@@ -25,51 +25,51 @@ float GaitLegInstance::getGaitCycleCount(float target_velocity)
     return ceil(temp_cycle_count) * 2;
 }
 
-void GaitLegInstance::generate(Transformation ref, float target_velocity, bool *gait_pattern)
+void GaitLegInstance::generate(Transformation ref, float target_velocity, bool *gait_pattern, float swing, float stance)
 {
-    int cycle_count = getGaitCycleCount(target_velocity);
-    float ref_y = 0;
-    float swing_height = 0;
+    // int cycle_count = getGaitCycleCount(target_velocity);
+    float ref_y = ref.Y() + (max_displacement_ / 2);
+    float swing_height = max_displacement_ / PI;
 
-    if(!gait_started_)
-    {
-        last_cycle_time_ = millis();
-        gait_started_ = true;
-        swing_height = (max_displacement_ / 2) / PI;
-        ref_y = ref.Y() + (max_displacement_ / 2);
-    }
-    {
-        swing_height = max_displacement_ / PI;
-        ref_y = ref.Y() + (max_displacement_ / 2);
-    }
+    // if(!gait_started_)
+    // {
+    //     last_cycle_time_ = millis();
+    //     gait_started_ = true;
+    //     swing_height = (max_displacement_ / 2) / PI;
+    //     ref_y = ref.Y() + (max_displacement_ / 2);
+    // }
+    // {
+    //     swing_height = max_displacement_ / PI;
+    //     ref_y = ref.Y() + (max_displacement_ / 2);
+    // }
 
     float a = swing_height / 2;
-    float current_iteration = (millis() - last_cycle_time_) / (float)(1000 / cycle_count);
+    // float current_iteration = (millis() - last_cycle_time_) / (float)(1000 / cycle_count);
 
-    if(gait_pattern[gait_index_])
+    if(swing > 0)
     {
-        float theta = current_iteration * (PI * 2);
+        float theta = swing * (PI * 2);
         foot_.X() = ref.X() - (a * (1 - cos(theta)));
         foot_.Y() = ref_y - (a * (theta - sin(theta)));
         foot_.Z() = ref.Z();
     }
-    else if(!gait_pattern[gait_index_])
+    else if(stance > 0)
     {
         foot_.X() = ref.X();
-        foot_.Y() = ref_y - ((1 - current_iteration) * max_displacement_);
+        foot_.Y() = ref_y - ((1 - stance) * max_displacement_);
         foot_.Z() = ref.Z();
     }
 
-    if((millis() - last_cycle_time_) > (float)(1000 / cycle_count))
-    {
-        last_cycle_time_ = millis();
-        gait_index_++;
-        if(gait_index_ > 3)
-        {
-            gait_index_ = 0;
-            gait_started_ = false;
-        }
-    }
+    // if((millis() - last_cycle_time_) > (float)(1000 / cycle_count))
+    // {
+    //     last_cycle_time_ = millis();
+    //     gait_index_++;
+    //     if(gait_index_ > 3)
+    //     {
+    //         gait_index_ = 0;
+    //         gait_started_ = false;
+    //     }
+    // }
 }
 
 Transformation GaitLegInstance::stance()

@@ -1,9 +1,9 @@
-#ifndef _GAIT_LEG_INSTANCEH_
-#define _GAIT_LEG_INSTANCEH_
+#ifndef _GAIT_LEG_INSTANCE_H_
+#define _GAIT_LEG_INSTANCE_H_
 
 #include<Arduino.h>
 #include<Geometry.h>
-#include<balancer_leg_instance.h>
+#include<quadruped_leg.h>
 
 class GaitLegInstance
 {
@@ -23,7 +23,7 @@ class GaitLegInstance
         Transformation foot_;
 
         GaitLegInstance(QuadrupedLeg *leg, int frequency, float max_velocity, float max_displacement);
-        void generate(Transformation ref, float target_velocity, bool * gait_pattern);
+        void generate(Transformation ref, float target_velocity, bool * gait_pattern, float swing, float stance);
 
         Transformation stance();
 };
