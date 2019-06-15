@@ -17,8 +17,6 @@ void PhaseGenerator::run(float target_velocity)
     float stance_phase_period =  (max_displacement_ / target_velocity) * 1000;
     float swing_phase_period = 250;
     float stride_period = stance_phase_period + swing_phase_period;
-    float temp_stance_phase_signal[4] = {0,0,0,0};
-    float temp_swing_phase_signal[4] = {0,0,0,0};
     float leg_clocks[4] = {0,0,0,0};
 
     if(!phase_gen_started_)
@@ -41,25 +39,14 @@ void PhaseGenerator::run(float target_velocity)
 
     for(int i = 0; i < 4; i++)
     {
-        temp_stance_phase_signal[i] = leg_clocks[i] / stance_phase_period;
-        temp_stance_phase_signal[i] = constrain(temp_stance_phase_signal[i], 0, stance_phase_period);
+        stance_phase_signal[i] = leg_clocks[i] / stance_phase_period;
+        stance_phase_signal[i] = constrain(stance_phase_signal[i], 0, stance_phase_period);
 
         if(leg_clocks[i] > -swing_phase_period && leg_clocks[i] < 0)
-            temp_swing_phase_signal[i] = (leg_clocks[i] + swing_phase_period) / swing_phase_period;
-
+            swing_phase_signal[i] = (leg_clocks[i] + swing_phase_period) / swing_phase_period;
         else  if(leg_clocks[i] > stance_phase_period && leg_clocks[i] < stride_period)
-            temp_swing_phase_signal[i] = (leg_clocks[i] - stance_phase_period) / swing_phase_period;
-
-        if(temp_stance_phase_signal[i] > 1)
-            temp_stance_phase_signal[i] = 0;
-
-        if(temp_swing_phase_signal[i] > 1)
-            temp_swing_phase_signal[i] = 0;
-    }
-    
-    for(int i = 0; i < 4; i++)
-    {
-        stance_phase_signal[i] = temp_stance_phase_signal[i];
-        swing_phase_signal[i] = temp_swing_phase_signal[i];
+            swing_phase_signal[i] = (leg_clocks[i] - stance_phase_period) / swing_phase_period;
+        else
+            swing_phase_signal[i] = 0;
     }
 }
