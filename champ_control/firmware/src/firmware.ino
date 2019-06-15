@@ -52,8 +52,8 @@ void loop() {
         base.rh->joints(0, 0, 0);
         base.attitude(0.0, 0.0, 0.0);
 
-        balancer.balance(0.0, 0.02, 0.0, 0.0, 0.0, -0.07 );
-        gait.generate(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance(), 0.21);
+        balancer.balance(0.0, 0.0, 0.0, 0.0, 0.0, -0.08);
+        gait.generate(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance(), 0.5);
         ik.solve(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
 
         publishPoints(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
