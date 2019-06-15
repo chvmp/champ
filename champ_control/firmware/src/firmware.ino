@@ -21,7 +21,7 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
 QuadrupedIK ik(base);
-QuadrupedGait gait(base, FREQUENCY, MAX_VELOCITY, MAX_DISPLACEMENT);
+QuadrupedGait gait(base, MAX_VELOCITY, MAX_DISPLACEMENT);
 
 void setup()
 {

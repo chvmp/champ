@@ -1,14 +1,13 @@
-#ifndef _GAIT_LEG_INSTANCE_H_
-#define _GAIT_LEG_INSTANCE_H_
+#ifndef _TRAJECTORY_PLANNER_H_
+#define _TRAJECTORY_PLANNER_H_
 
 #include<Arduino.h>
 #include<Geometry.h>
 #include<quadruped_leg.h>
 
-class GaitLegInstance
+class TrajectoryPlanner
 {
     QuadrupedLeg *leg_;
-    int frequency_;
     float max_velocity_;
     float max_displacement_;
 
@@ -20,12 +19,13 @@ class GaitLegInstance
     float getGaitCycleCount(float target_velocity);
     
     public:
-        Transformation foot_;
-
-        GaitLegInstance(QuadrupedLeg *leg, int frequency, float max_velocity, float max_displacement);
-        void generate(Transformation ref, float target_velocity, bool * gait_pattern, float swing, float stance);
+        TrajectoryPlanner(QuadrupedLeg *leg, float max_velocity, float max_displacement);
+    
+        void generate(Transformation ref, float target_velocity, float swing, float stance);
 
         Transformation stance();
+
+        Transformation foot_;
 };
 
 #endif

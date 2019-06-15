@@ -1,5 +1,5 @@
 #include<phase_generator.h>
-PhaseGenerator::PhaseGenerator(QuadrupedLeg *leg, int frequency, float max_velocity, float max_displacement):
+PhaseGenerator::PhaseGenerator(QuadrupedLeg *leg, float max_velocity, float max_displacement):
     leg_(leg),
     max_velocity_(max_velocity),
     max_displacement_(max_displacement),

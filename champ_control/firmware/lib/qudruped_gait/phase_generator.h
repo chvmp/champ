@@ -18,10 +18,11 @@ class PhaseGenerator
         float leg_clocks_[4];
 
     public:
+        PhaseGenerator(QuadrupedLeg *leg, float max_velocity, float max_displacement);
+
         float stance_phase_signal[4];
         float swing_phase_signal[4];
         
-        PhaseGenerator(QuadrupedLeg *leg, int frequency, float max_velocity, float max_displacement);
         void run(float target_velocity);
 };
 
