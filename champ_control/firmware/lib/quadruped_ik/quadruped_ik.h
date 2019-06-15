@@ -13,13 +13,14 @@ class QuadrupedIK
     IKLegInstance *legs_[4];
 
     public:
+        QuadrupedIK(QuadrupedBase &quadruped_base);
+        
+        void solve(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target);
+
         IKLegInstance lf;
         IKLegInstance rf;
         IKLegInstance lh;
         IKLegInstance rh;
-
-        QuadrupedIK(QuadrupedBase &quadruped_base);
-        void solve(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target);
 };
 
 #endif

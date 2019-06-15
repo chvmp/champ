@@ -12,15 +12,15 @@ class QuadrupedBalancer
     BalancerLegInstance *legs_[4];
 
     public:
-        BalancerLegInstance lf;
-        BalancerLegInstance rf;
-        BalancerLegInstance lh;
-        BalancerLegInstance rh;
-
         QuadrupedBalancer(QuadrupedBase &quadruped_base);
 
         void balance(float target_roll, float target_pitch, float target_yaw, 
                      float target_x, float target_y, float target_z);
+        
+        BalancerLegInstance lf;
+        BalancerLegInstance rf;
+        BalancerLegInstance lh;
+        BalancerLegInstance rh;
 };
 
 #endif

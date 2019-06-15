@@ -10,6 +10,7 @@ class RevoluteJoint
 
     public:
         RevoluteJoint(float d, float theta, float r, float alpha);
+        
         float &theta();
         void theta(float angle);
         float &d();

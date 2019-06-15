@@ -10,13 +10,6 @@ class QuadrupedBase
     float yaw_;
 
     public:
-        QuadrupedLeg *legs[4];
-
-        QuadrupedLeg *lf;
-        QuadrupedLeg *rf;
-        QuadrupedLeg *lh;
-        QuadrupedLeg *rh;
-
         QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg);
         void joints(float *joints);
 
@@ -30,6 +23,13 @@ class QuadrupedBase
         void yaw(float yaw);
 
         void attitude(float roll, float pitch, float yaw);
+
+        QuadrupedLeg *legs[4];
+
+        QuadrupedLeg *lf;
+        QuadrupedLeg *rf;
+        QuadrupedLeg *lh;
+        QuadrupedLeg *rh;
 };
 
 #endif
