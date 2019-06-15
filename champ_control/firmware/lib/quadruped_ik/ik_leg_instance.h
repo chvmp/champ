@@ -12,6 +12,7 @@ class IKLegInstance
 
     public:
         IKLegInstance(QuadrupedLeg *leg);
+        
         void solve(Transformation target);
         float *joints();
 };
