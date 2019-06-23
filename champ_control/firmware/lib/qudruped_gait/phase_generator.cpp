@@ -14,6 +14,7 @@ PhaseGenerator::PhaseGenerator(QuadrupedLeg *leg, float max_velocity, float max_
 void PhaseGenerator::run(float target_velocity)
 {
     unsigned long now = millis();
+    unsigned long elapsed_time_ref = 0;
     float stance_phase_period =  (max_displacement_ / target_velocity) * 1000;
     float swing_phase_period = 250;
     float stride_period = stance_phase_period + swing_phase_period;
@@ -28,9 +29,10 @@ void PhaseGenerator::run(float target_velocity)
     if((now - last_touchdown_) > stride_period)
         last_touchdown_ = now;
   
-    unsigned long int elapsed_time_ref = now - last_touchdown_;
     if(elapsed_time_ref > stride_period)
         elapsed_time_ref = stride_period;
+    else
+        elapsed_time_ref = now - last_touchdown_;
 
     leg_clocks[0] = elapsed_time_ref - (0.0 * stride_period);
     leg_clocks[1] = elapsed_time_ref - (0.5 * stride_period);
@@ -40,7 +42,10 @@ void PhaseGenerator::run(float target_velocity)
     for(int i = 0; i < 4; i++)
     {
         stance_phase_signal[i] = leg_clocks[i] / stance_phase_period;
-        stance_phase_signal[i] = constrain(stance_phase_signal[i], 0, stance_phase_period);
+        if(leg_clocks[i] > 0 and leg_clocks[i] < stance_phase_period)
+            stance_phase_signal[i] = leg_clocks[i] / stance_phase_period;
+        else
+            stance_phase_signal[i] = 0;
 
         if(leg_clocks[i] > -swing_phase_period && leg_clocks[i] < 0)
             swing_phase_signal[i] = (leg_clocks[i] + swing_phase_period) / swing_phase_period;
