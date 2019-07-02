@@ -96,6 +96,11 @@
             </visual>
         </link>
         <gazebo reference="${leg}_lower_leg_link">
+            <kp>1000000.0</kp>
+            <kd>1.0</kd>
+            <mu1>0.8</mu1>
+            <mu2>0.8</mu2>
+            <maxVel>0.0</maxVel>
             <minDepth>0.001</minDepth>
             <material>Gazebo/FlatBlack</material>
         </gazebo>
@@ -104,7 +109,7 @@
 
         <joint name="${leg}_hip_joint" type="revolute">
             <axis xyz="0 1 0" />
-            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="3.5" />
+            <limit effort="20.0" lower="-${pi}" upper="${pi}" velocity="1" />
             <parent link="base_link" />
             <child link="${leg}_hip_link" />
             <origin xyz="${base_to_hip_xyz}" rpy="-${pi/2} ${pi/2} 0" />
@@ -112,7 +117,7 @@
 
         <joint name="${leg}_upper_leg_joint" type="revolute">
             <axis xyz="0 0 1" />
-            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="3.5" />
+            <limit effort="20.0" lower="-${pi}" upper="${pi}" velocity="3.5" />
             <parent link="${leg}_hip_link" />
             <child link="${leg}_upper_leg_link" />
             <origin xyz="0 0 ${hip_to_upper_leg}" rpy="0 0 0" />
@@ -120,7 +125,7 @@
 
         <joint name="${leg}_lower_leg_joint" type="revolute">
             <axis xyz="0 0 1" />
-            <limit effort="1000.0" lower="-${pi}" upper="${pi}" velocity="3.5" />
+            <limit effort="20.0" lower="-${pi}" upper="${pi}" velocity="3.5" />
             <parent link="${leg}_upper_leg_link" />
             <child link="${leg}_lower_leg_link" />
             <origin xyz="${upper_leg_to_lower_leg_distance} 0 0" rpy="0 0 0" />
