@@ -4,7 +4,7 @@ TrajectoryPlanner::TrajectoryPlanner(QuadrupedLeg *leg, float max_velocity, floa
     leg_(leg),
     max_velocity_(max_velocity),
     max_foot_displacement_(max_foot_displacement),
-    stance_depth_(0),
+    stance_depth_(0.02),
     total_control_points_(12),
     gait_started_(false),
     last_cycle_time_(0),
@@ -34,13 +34,17 @@ float TrajectoryPlanner::getGaitCycleCount(float target_velocity)
 void TrajectoryPlanner::generate(Transformation ref, float target_velocity, float swing_phase_signal, float stance_phase_signal)
 {
     int n = total_control_points_ - 1;
-    float x = 0;
-    float y = 0;
+  
+    float rotation = -1.5708;
 
     if(swing_phase_signal > 0)
     {
+        float x = 0;
+        float y = 0;
+
         for(unsigned int i = 0; i < total_control_points_ ; i++)
         {
+        
             float coeff = factorial_[n] / (factorial_[i] * factorial_[n - i]);
 
             x += coeff * pow(swing_phase_signal, i) * pow((1 - swing_phase_signal), (n - i)) * control_points_x_[i];
@@ -48,17 +52,21 @@ void TrajectoryPlanner::generate(Transformation ref, float target_velocity, floa
         }
 
         foot_.X() = ref.X() + y;
-        foot_.Y() = ref.Y() - x;
-        foot_.Z() = ref.Z();
+        foot_.Y() = ref.Y() - (x * cos(rotation));
+        foot_.Z() = ref.Z() + (x * sin(rotation));
     }
+    
     else if(stance_phase_signal > 0)
     {
-        foot_.X() = ref.X() + stance_depth_ * cos((3.1416 * x) / max_foot_displacement_);
-        foot_.Y() = ref.Y() - (max_foot_displacement_ / 2) * (1 - (2 * stance_phase_signal));
-        foot_.Z() = ref.Z();
+ 
+        float x = (max_foot_displacement_ / 2) * (1 - (2 * stance_phase_signal));
+        float y = stance_depth_ * cos((3.1416 * x) / max_foot_displacement_);
+
+        foot_.X() = ref.X() + y;
+        foot_.Y() = ref.Y() - (x * cos(rotation));
+        foot_.Z() = ref.Z() + (x * sin(rotation));
     }
 }
-
 Transformation TrajectoryPlanner::stance()
 {
     return foot_;
