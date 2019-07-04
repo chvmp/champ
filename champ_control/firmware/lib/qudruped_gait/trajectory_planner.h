@@ -26,9 +26,9 @@ class TrajectoryPlanner
     float getGaitCycleCount(float target_velocity);
 
     public:
-        TrajectoryPlanner(QuadrupedLeg *leg, float max_velocity, float max_foot_displacement);
+        TrajectoryPlanner(QuadrupedLeg *leg, float max_velocity, float swing_height, float max_foot_displacement);
     
-        void generate(Transformation ref, float target_velocity, float swing_phase_signal, float stance_phase_signal);
+        void generate(Transformation ref, float target_velocity, float rotation, float swing_phase_signal, float stance_phase_signal);
 
         Transformation stance();
 };
