@@ -11,9 +11,6 @@ class TrajectoryPlanner
     float stance_depth_;
     unsigned int total_control_points_;
 
-    unsigned long  last_cycle_time_;
-    unsigned int gait_index_;
-
     Transformation foot_;
 
     float factorial_[13];
