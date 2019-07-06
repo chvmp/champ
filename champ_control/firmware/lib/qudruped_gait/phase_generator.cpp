@@ -1,8 +1,5 @@
 #include<phase_generator.h>
-PhaseGenerator::PhaseGenerator(QuadrupedLeg *leg, float max_velocity, float max_displacement):
-    leg_(leg),
-    max_velocity_(max_velocity),
-    max_displacement_(max_displacement),
+PhaseGenerator::PhaseGenerator():
     last_touchdown_(0),
     phase_gen_started_(false),
     leg_clocks_{0,0,0,0},
@@ -11,11 +8,11 @@ PhaseGenerator::PhaseGenerator(QuadrupedLeg *leg, float max_velocity, float max_
 {
 }
 
-void PhaseGenerator::run(float target_velocity)
+void PhaseGenerator::run(float target_velocity, float step_length)
 {
     unsigned long now = millis();
     unsigned long elapsed_time_ref = 0;
-    float stance_phase_period =  (max_displacement_ / target_velocity) * 1000;
+    float stance_phase_period =  (step_length / target_velocity) * 1000;
     float swing_phase_period = 250;
     float stride_period = stance_phase_period + swing_phase_period;
     float leg_clocks[4] = {0,0,0,0};

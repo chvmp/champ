@@ -16,15 +16,15 @@ class QuadrupedGait
         PhaseGenerator phase_gen_;
 
     public:
-        QuadrupedGait(QuadrupedBase &quadruped_base, float max_velocity, float swing_height, float max_displacement);
+        QuadrupedGait(QuadrupedBase &quadruped_base, float max_velocity, float swing_height, float stance_depth, float step_length);
         
         TrajectoryPlanner lf;
         TrajectoryPlanner rf;
         TrajectoryPlanner lh;
         TrajectoryPlanner rh;
 
-        void generate(Transformation lf_ref_stance, 
-        Transformation rf_ref_stance, Transformation lh_ref_stance, Transformation rh_ref_stance, float target_velocity);
+        void generate(Transformation lf_ref_stance, Transformation rf_ref_stance, Transformation lh_ref_stance, Transformation rh_ref_stance, 
+                              float linear_velocity_x, float linear_velocity_y, float angular_velocity_z);
 };
 
 #endif
