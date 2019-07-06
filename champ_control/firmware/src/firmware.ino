@@ -21,7 +21,7 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
 QuadrupedIK ik(base);
-QuadrupedGait gait(base, MAX_VELOCITY, SWING_HEIGHT, MAX_DISPLACEMENT);
+QuadrupedGait gait(base, MAX_VELOCITY, SWING_HEIGHT, STANCE_DEPTH, STEP_LENGTH);
 
 void setup()
 {
@@ -53,7 +53,7 @@ void loop() {
         base.attitude(0.0, 0.0, 0.0);
 
         balancer.balance(0.0, 0.0, 0.0, 0.0, 0.0, -0.07);
-        gait.generate(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance(), 0.5);
+        gait.generate(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance(), 0.2, 0.0, 0.0);
         ik.solve(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
 
         publishPoints(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
