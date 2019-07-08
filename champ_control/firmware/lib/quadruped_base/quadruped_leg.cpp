@@ -3,7 +3,7 @@
 QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_link, RevoluteJoint &lower_leg_link, 
     float pos_x, float pos_y, float pos_z, float or_r, float or_p, float or_y):
     no_of_links_(0),
-    leg_id_(0),
+    leg_id(0),
     x_(pos_x), 
     y_(pos_y),
     z_(pos_z),

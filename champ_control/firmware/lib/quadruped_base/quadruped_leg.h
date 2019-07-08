@@ -10,7 +10,6 @@ class QuadrupedLeg
     Transformation foot_from_base_;
 
     unsigned int no_of_links_;
-    unsigned int leg_id_;
 
     float x_; 
     float y_; 
@@ -29,6 +28,8 @@ class QuadrupedLeg
                     float pos_x, float pos_y, float pos_z, 
                     float or_r, float or_p, float or_y);
         
+        unsigned int leg_id;
+
         Transformation forwardKinematics(Transformation &pose);
 
         Transformation foot();
