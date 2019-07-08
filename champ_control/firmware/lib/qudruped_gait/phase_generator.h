@@ -8,20 +8,19 @@
 
 class PhaseGenerator
 {
-        QuadrupedLeg *leg_;
-
+        float step_length_;
         unsigned long int last_touchdown_;
         bool phase_gen_started_;
 
         float leg_clocks_[4];
 
     public:
-        PhaseGenerator();
+        PhaseGenerator(float step_length);
 
         float stance_phase_signal[4];
         float swing_phase_signal[4];
         
-        void run(float step_distance, float target_velocity);
+        void run(float target_velocity);
 };
 
 #endif

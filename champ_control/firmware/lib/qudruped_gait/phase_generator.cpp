@@ -1,5 +1,6 @@
 #include<phase_generator.h>
-PhaseGenerator::PhaseGenerator():
+PhaseGenerator::PhaseGenerator(float step_length):
+    step_length_(step_length),
     last_touchdown_(0),
     phase_gen_started_(false),
     leg_clocks_{0,0,0,0},
@@ -8,11 +9,11 @@ PhaseGenerator::PhaseGenerator():
 {
 }
 
-void PhaseGenerator::run(float target_velocity, float step_length)
+void PhaseGenerator::run(float target_velocity)
 {
     unsigned long now = millis();
     unsigned long elapsed_time_ref = 0;
-    float stance_phase_period =  (step_length / target_velocity) * 1000;
+    float stance_phase_period =  (step_length_ / target_velocity) * 1000;
     float swing_phase_period = 250;
     float stride_period = stance_phase_period + swing_phase_period;
     float leg_clocks[4] = {0,0,0,0};
