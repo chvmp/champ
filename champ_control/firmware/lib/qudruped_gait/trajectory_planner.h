@@ -7,7 +7,10 @@
 
 class TrajectoryPlanner
 {
+    QuadrupedLeg *leg_;
+
     float swing_height_;
+    float step_length_;
     float stance_depth_;
     unsigned int total_control_points_;
 
@@ -27,10 +30,9 @@ class TrajectoryPlanner
     void updateControlPointsLength(float step_length);
 
     public:
-        TrajectoryPlanner(float swing_height, float stance_depth);
-    
-        void generate(Transformation ref, float rotation, float step_distance, float swing_phase_signal, float stance_phase_signal);
-
+        TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float step_length, float stance_depth);
+        void generate(Transformation ref, float linear_vel_x, float linear_vel_y, float angular_vel_z, float swing_phase_signal, float stance_phase_signal);
+        
         Transformation stance();
 };
 

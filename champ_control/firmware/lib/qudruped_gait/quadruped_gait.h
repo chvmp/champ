@@ -16,7 +16,7 @@ class QuadrupedGait
         PhaseGenerator phase_gen_;
 
     public:
-        QuadrupedGait(QuadrupedBase &quadruped_base, float max_velocity, float swing_height, float stance_depth, float step_length);
+        QuadrupedGait(QuadrupedBase &quadruped_base, float max_velocity, float swing_height, float step_length, float stance_depth);
         
         TrajectoryPlanner lf;
         TrajectoryPlanner rf;
