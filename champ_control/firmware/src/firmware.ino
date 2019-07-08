@@ -1,5 +1,6 @@
 #include <ros.h>
 #include <ros/time.h>
+#include <geometry_msgs/Twist.h>
 #include <champ_msgs/Point.h>
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Joints.h>
@@ -11,6 +12,14 @@
 
 #define CONTROL_RATE FREQUENCY
 
+float g_req_linear_vel_x = 0;
+float g_req_linear_vel_y = 0;
+float g_req_angular_vel_z = 0;
+
+unsigned long g_prev_command_time = 0;
+
+void commandCallback(const geometry_msgs::Twist& cmd_msg);
+
 ros::NodeHandle nh;
 champ_msgs::PointArray point_msg;
 ros::Publisher point_pub("/champ/foot/raw", &point_msg);
@@ -18,10 +27,12 @@ ros::Publisher point_pub("/champ/foot/raw", &point_msg);
 champ_msgs::Joints joints_msg;
 ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 
+ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
+
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
 QuadrupedIK ik(base);
-QuadrupedGait gait(base, MAX_VELOCITY, SWING_HEIGHT, STANCE_DEPTH, STEP_LENGTH);
+QuadrupedGait gait(base, MAX_VELOCITY, SWING_HEIGHT, STEP_LENGTH, STANCE_DEPTH);
 
 void setup()
 {
@@ -31,6 +42,7 @@ void setup()
     nh.getHardware()->setBaud(115200);
     nh.advertise(point_pub);
     nh.advertise(jointstates_pub);
+    nh.subscribe(cmd_sub);
 
     while (!nh.connected())
     {
@@ -53,7 +65,7 @@ void loop() {
         base.attitude(0.0, 0.0, 0.0);
 
         balancer.balance(0.0, 0.0, 0.0, 0.0, 0.0, -0.07);
-        gait.generate(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance(), 0.2, 0.0, 0.0);
+        gait.generate(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance(), g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
 
         publishPoints(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
@@ -61,6 +73,12 @@ void loop() {
 
         prev_ik_time = millis();
     }
+
+    if ((millis() - g_prev_command_time) >= 400)
+    {
+        stopBase();
+    }
+
     nh.spinOnce();
 }
 
@@ -106,4 +124,22 @@ void publishPoints(Transformation p_lf, Transformation p_rf, Transformation p_lh
     point_msg.rh.z = p_rh.Z();
 
     point_pub.publish(&point_msg);
+}
+
+void stopBase()
+{
+    g_req_linear_vel_x = 0;
+    g_req_linear_vel_y = 0;
+    g_req_angular_vel_z = 0;
+}
+
+void commandCallback(const geometry_msgs::Twist& cmd_msg)
+{
+    //callback function every time linear and angular speed is received from 'cmd_vel' topic
+    //this callback function receives cmd_msg object where linear and angular speed are stored
+    g_req_linear_vel_x = cmd_msg.linear.x;
+    g_req_linear_vel_y = cmd_msg.linear.y;
+    g_req_angular_vel_z = cmd_msg.angular.z;
+
+    g_prev_command_time = millis();
 }
