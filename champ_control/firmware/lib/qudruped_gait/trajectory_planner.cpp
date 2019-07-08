@@ -6,7 +6,7 @@ TrajectoryPlanner::TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, floa
     step_length_(step_length),
     stance_depth_(stance_depth),
     total_control_points_(12),
-    foot_(leg_->nominal_stance()),
+    // foot_(leg_->nominal_stance()),
     factorial_{1.0,1.0,2.0,6.0,24.0,120.0,720.0,5040.0,40320.0,362880.0,3628800.0,39916800.0,479001600.0},
     ref_control_points_x_{-0.15, -0.2805,-0.3,-0.3,-0.3,   0.0, 0.0 ,   0.0, 0.3032, 0.3032, 0.2826, 0.15},
     ref_control_points_y_{0.5,  0.5, 0.3611, 0.3611, 0.3611, 0.3611, 0.3611, 0.3214, 0.3214, 0.3214, 0.5, 0.5},
@@ -54,9 +54,6 @@ void TrajectoryPlanner::updateControlPointsLength(float step_length)
 
 void TrajectoryPlanner::generate(Transformation ref, float linear_vel_x, float linear_vel_y, float angular_vel_z, float swing_phase_signal, float stance_phase_signal)
 {
-
-    float rotation = 0;
-
     Transformation transformed_stance = leg_->nominal_stance();
     transformed_stance.Translate(linear_vel_x, linear_vel_y, 0);
     transformed_stance.RotateZ(angular_vel_z);
@@ -64,7 +61,7 @@ void TrajectoryPlanner::generate(Transformation ref, float linear_vel_x, float l
     float delta_x = transformed_stance.X() - leg_->nominal_stance().X();
     float delta_y = transformed_stance.Y() - leg_->nominal_stance().Y();
     
-    rotation = atan2(delta_y, delta_x);
+    float rotation = atan2(delta_y, delta_x);
    
     int n = total_control_points_ - 1;
   
@@ -85,7 +82,6 @@ void TrajectoryPlanner::generate(Transformation ref, float linear_vel_x, float l
         foot_.Y() = ref.Y() - (x * cos(rotation));
         foot_.Z() = ref.Z() + (x * sin(rotation));
     }
-
     else if(stance_phase_signal > 0)
     {
         float x = (step_length_ / 2) * (1 - (2 * stance_phase_signal));
@@ -94,6 +90,10 @@ void TrajectoryPlanner::generate(Transformation ref, float linear_vel_x, float l
         foot_.X() = ref.X() + y;
         foot_.Y() = ref.Y() - (x * cos(rotation));
         foot_.Z() = ref.Z() + (x * sin(rotation));
+    }
+    else
+    {
+        foot_ = ref;
     }
 }
 

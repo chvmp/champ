@@ -20,8 +20,8 @@ QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, float max_velocity, 
 void QuadrupedGait::generate(Transformation lf_ref_stance, Transformation rf_ref_stance, Transformation lh_ref_stance, Transformation rh_ref_stance, 
 float linear_velocity_x, float linear_velocity_y, float angular_velocity_z)
 {
-    float tangential_velocity = angular_velocity_z * (base_->lf->nominal_stance().Y() +  base_->lf->nominal_stance().X());
-    float velocity =  sqrt(pow(linear_velocity_x + tangential_velocity, 2) + pow(linear_velocity_y + tangential_velocity, 2));
+    float tangential_velocity = abs(angular_velocity_z * (base_->lf->nominal_stance().Y() +  base_->lf->nominal_stance().X()));
+    float velocity =  sqrt(pow(abs(linear_velocity_x) - tangential_velocity, 2) + pow(abs(linear_velocity_y) - tangential_velocity , 2)) ;
 
     phase_gen_.run(velocity);
 
