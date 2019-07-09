@@ -5,7 +5,7 @@
     <arg name="paused" default="false"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find champ_gazebo)/worlds/default.world"/>
+        <arg name="world_name" value="$(find champ_gazebo)/worlds/outdoor.world"/>
         <arg name="gui" value="$(arg gui)" />
         <arg name="paused" value="$(arg paused)"/>
         <arg name="use_sim_time" value="true"/>
@@ -21,6 +21,15 @@
         joint_states_controller
         joint_group_position_controller
         ">
+    </node>
+
+    <node name="odometry_ground_truth_tf" pkg="champ_gazebo" type="odometry_tf.py" output="screen" />
+
+    <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" output="screen">
+        <remap from="image" to="/camera1/depth/image_raw"/>
+        <remap from="camera_info" to="/camera1/depth/camera_info"/>
+        <param name="output_frame_id" value="camera_link" />
+        <param name="scan_height" value="100" />
     </node>
 </launch>
 
