@@ -23,10 +23,10 @@ class Odom:
         )
 
         self.odom_broadcaster.sendTransform(
-            (data.pose.pose.position.x, data.pose.pose.position.y, 0.21),
+            (data.pose.pose.position.x, data.pose.pose.position.y, 0),
             odom_quat,
             current_time,
-            "base_link",
+            "champ_footprint",
             "odom"
         )
 
