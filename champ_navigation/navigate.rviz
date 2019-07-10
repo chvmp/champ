@@ -9,9 +9,12 @@ Panels:
         - /TF1/Frames1
         - /TF1/Tree1
         - /Global Map1/Costmap1
+        - /Global Map1/Planner1
         - /Local Map1/Costmap1
+        - /Local Map1/Planner1
+        - /Amcl Particle Swarm1
       Splitter Ratio: 0.5
-    Tree Height: 760
+    Tree Height: 922
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -39,7 +42,7 @@ Visualization Manager:
     - Alpha: 0.5
       Cell Size: 1
       Class: rviz/Grid
-      Color: 160; 160; 164
+      Color: 255; 219; 174
       Enabled: true
       Line Style:
         Line Width: 0.0299999993
@@ -190,53 +193,53 @@ Visualization Manager:
         champ_footprint:
           Value: true
         hokuyo_frame:
-          Value: true
+          Value: false
         hokuyo_scan_link:
-          Value: true
+          Value: false
         lf_foot_link:
-          Value: true
+          Value: false
         lf_hip_debug_link:
-          Value: true
+          Value: false
         lf_hip_link:
-          Value: true
+          Value: false
         lf_lower_leg_link:
-          Value: true
+          Value: false
         lf_upper_leg_link:
-          Value: true
+          Value: false
         lh_foot_link:
-          Value: true
+          Value: false
         lh_hip_debug_link:
-          Value: true
+          Value: false
         lh_hip_link:
-          Value: true
+          Value: false
         lh_lower_leg_link:
-          Value: true
+          Value: false
         lh_upper_leg_link:
-          Value: true
+          Value: false
         map:
           Value: true
         odom:
           Value: true
         rf_foot_link:
-          Value: true
+          Value: false
         rf_hip_debug_link:
-          Value: true
+          Value: false
         rf_hip_link:
-          Value: true
+          Value: false
         rf_lower_leg_link:
-          Value: true
+          Value: false
         rf_upper_leg_link:
-          Value: true
+          Value: false
         rh_foot_link:
-          Value: true
+          Value: false
         rh_hip_debug_link:
-          Value: true
+          Value: false
         rh_hip_link:
-          Value: true
+          Value: false
         rh_lower_leg_link:
-          Value: true
+          Value: false
         rh_upper_leg_link:
-          Value: true
+          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -283,14 +286,14 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
+        Max Value: 0.486186236
+        Min Value: 0.189622849
         Value: true
       Axis: Z
       Channel Name: intensities
       Class: rviz/LaserScan
       Color: 255; 255; 255
-      Color Transformer: Intensity
+      Color Transformer: AxisColor
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -304,7 +307,7 @@ Visualization Manager:
       Selectable: true
       Size (Pixels): 3
       Size (m): 0.200000003
-      Style: Squares
+      Style: Boxes
       Topic: /scan
       Unreliable: false
       Use Fixed Frame: true
@@ -313,7 +316,7 @@ Visualization Manager:
     - Alpha: 0.699999988
       Class: rviz/Map
       Color Scheme: map
-      Draw Behind: false
+      Draw Behind: true
       Enabled: true
       Name: Map
       Topic: /map
@@ -324,8 +327,8 @@ Visualization Manager:
       Displays:
         - Alpha: 0.699999988
           Class: rviz/Map
-          Color Scheme: map
-          Draw Behind: true
+          Color Scheme: raw
+          Draw Behind: false
           Enabled: true
           Name: Costmap
           Topic: /move_base/global_costmap/costmap
@@ -335,10 +338,10 @@ Visualization Manager:
         - Alpha: 1
           Buffer Length: 1
           Class: rviz/Path
-          Color: 255; 0; 0
+          Color: 255; 255; 0
           Enabled: true
-          Head Diameter: 0.300000012
-          Head Length: 0.200000003
+          Head Diameter: 0.0299999993
+          Head Length: 0.0199999996
           Length: 0.300000012
           Line Style: Lines
           Line Width: 0.0299999993
@@ -351,7 +354,7 @@ Visualization Manager:
           Pose Style: None
           Radius: 0.0299999993
           Shaft Diameter: 0.100000001
-          Shaft Length: 0.100000001
+          Shaft Length: 0.00999999978
           Topic: /move_base/DWAPlannerROS/global_plan
           Unreliable: false
           Value: true
@@ -454,12 +457,12 @@ Visualization Manager:
           Value: true
       Enabled: true
       Name: Local Map
-    - Alpha: 1
-      Arrow Length: 0.200000003
+    - Alpha: 0.200000003
+      Arrow Length: 0.0199999996
       Axes Length: 0.300000012
       Axes Radius: 0.00999999978
       Class: rviz/PoseArray
-      Color: 0; 192; 0
+      Color: 85; 255; 127
       Enabled: true
       Head Length: 0.0700000003
       Head Radius: 0.0299999993
@@ -470,32 +473,9 @@ Visualization Manager:
       Topic: /particlecloud
       Unreliable: false
       Value: true
-    - Alpha: 1
-      Buffer Length: 1
-      Class: rviz/Path
-      Color: 25; 255; 0
-      Enabled: true
-      Head Diameter: 0.300000012
-      Head Length: 0.200000003
-      Length: 0.300000012
-      Line Style: Lines
-      Line Width: 0.0299999993
-      Name: Full Plan
-      Offset:
-        X: 0
-        Y: 0
-        Z: 0
-      Pose Color: 255; 85; 255
-      Pose Style: None
-      Radius: 0.0299999993
-      Shaft Diameter: 0.100000001
-      Shaft Length: 0.100000001
-      Topic: /move_base/NavfnROS/plan
-      Unreliable: false
-      Value: true
   Enabled: true
   Global Options:
-    Background Color: 48; 48; 48
+    Background Color: 255; 255; 255
     Default Light: true
     Fixed Frame: map
     Frame Rate: 30
@@ -517,33 +497,33 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 27.0016155
+      Distance: 30.8337631
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 1.81903648
-        Y: 6.97275543
-        Z: 8.81118922e-06
+        X: 1.32497501
+        Y: 2.58477545
+        Z: 6.06937465e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.13039649
+      Pitch: 1.56979632
       Target Frame: <Fixed Frame>
       Value: ThirdPersonFollower (rviz)
-      Yaw: 3.0103972
+      Yaw: 0.138568699
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: false
-  Height: 985
-  Hide Left Dock: false
-  Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000016b00000391fc0200000005fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006300fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000002800000391000000db00ffffff000000010000010f00000391fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000002800000391000000b300fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a00000031700fffffffb0000000800540069006d00650100000000000004500000000000000000000004cd0000039100000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+    collapsed: true
+  Height: 1147
+  Hide Left Dock: true
+  Hide Right Dock: true
+  QMainWindow State: 000000ff00000000fd00000004000000000000016b00000433fc0200000005fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006300fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000002800000433000000db00ffffff000000010000010f00000433fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002800000433000000b300fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a00000031700fffffffb0000000800540069006d00650100000000000004500000000000000000000003a90000043300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -551,7 +531,7 @@ Window Geometry:
   Tool Properties:
     collapsed: false
   Views:
-    collapsed: false
-  Width: 1875
-  X: 114
-  Y: 30
+    collapsed: true
+  Width: 937
+  X: 981
+  Y: 24
