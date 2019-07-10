@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import rospy
 from champ_msgs.msg import Point
 from champ_msgs.msg import PointArray
@@ -10,6 +9,7 @@ from tf.transformations import quaternion_from_euler
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+import tf
 
 class Viz:
     def __init__(self):
@@ -25,6 +25,9 @@ class Viz:
         self.marker_array_pub = rospy.Publisher('/champ/foot', MarkerArray, queue_size = 100)
         self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 100)
         self.joint_control_pub = rospy.Publisher('/champ/joint_group_position_controller/command', JointTrajectory, queue_size = 100)
+
+        self.base_broadcaster = tf.TransformBroadcaster()
+
 
     def joint_states_callback(self, joints):
         joint_control = JointTrajectory()
@@ -63,6 +66,18 @@ class Viz:
         # marker_array.markers.append(self.create_marker(points.lh.x, points.lh.y, points.lh.z, 2, "base_link"))
         # marker_array.markers.append(self.create_marker(points.rh.x, points.rh.y, points.rh.z, 3, "base_link"))
         self.marker_array_pub.publish(marker_array)
+
+        current_time = rospy.Time.now()
+
+        base_orientation = tf.transformations.quaternion_from_euler(0, 0, 0)
+
+        self.base_broadcaster.sendTransform(
+            (0, 0, points.lf.x),
+            base_orientation,
+            current_time,
+            "base_link",
+            "champ_footprint"
+        )
 
     def create_marker(self, x, y, z, id, frame_id):
         point_marker = Marker()
