@@ -11,7 +11,7 @@ from std_msgs.msg import Float64MultiArray
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import tf
 
-class Viz:
+class ChampRelay:
     def __init__(self):
         self.angle_min = 0.0
         self.angle_max = 0.0
@@ -105,7 +105,7 @@ class Viz:
 
 if __name__ == "__main__":
     rospy.init_node('clustering', anonymous=True)
-    v = Viz()
+    v = ChampRelay()
     rospy.spin()
 
 
