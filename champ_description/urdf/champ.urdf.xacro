@@ -4,7 +4,7 @@
 
     <material name="black"><color rgba="0.15 0.15 0.15 1.0" /></material>
 
-    <link name="champ"/>
+    <link name="champ_footprint"/>
     <link name="base_link">
         <inertial>
             <origin xyz="0.04 0 0" />
@@ -32,7 +32,7 @@
     </gazebo>
 
     <joint name="base_to_champ" type="fixed">
-        <parent link="champ" />
+        <parent link="champ_footprint" />
         <child link="base_link" />
         <origin xyz="0 0 0" rpy="0 0 0" />
     </joint>
@@ -89,7 +89,7 @@
             <rpyOffsets>0 0 0</rpyOffsets>
         </plugin>
     </gazebo>
-    <xacro:include filename="$(find common_sensors)/urdf/sensors/kinect.urdf.xacro" />
+    <!-- <xacro:include filename="$(find common_sensors)/urdf/sensors/kinect.urdf.xacro" />
     <xacro:sensor_kinect parent="base_link">
         <property name="cam_px" value="0.23" />
         <property name="cam_py" value="0.0" />
@@ -97,6 +97,16 @@
         <property name="cam_or" value="0.0" />
         <property name="cam_op" value="0.0" />
         <property name="cam_oy" value="0.0"/>
-    </xacro:sensor_kinect>
-
+    </xacro:sensor_kinect> -->
+    <xacro:include filename="$(find common_sensors)/urdf/sensors/hokuyo_utm30lx.urdf.xacro" />
+    <xacro:hokuyo_utm30lx 
+        name="hokuyo" 
+        parent="base_link" 
+        ros_topic="scan" 
+        update_rate="30" 
+        ray_count="1040" 
+        min_angle="130" 
+        max_angle="-130" >
+        <origin xyz="0.0 0.0 0.12" rpy="0 0 0"/>
+    </xacro:hokuyo_utm30lx>
 </robot>
