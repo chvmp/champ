@@ -75,7 +75,7 @@
 
         <link name="${leg}_lower_leg_link">
             <inertial>
-                <origin xyz="0.065 0 0" />
+                <origin xyz="0.065 0.005 0" />
                 <mass value="${lower_leg_mass}" />
                 <inertia ixx="${(1/12) * lower_leg_mass * (lower_leg_y_length * lower_leg_y_length + lower_leg_z_length * lower_leg_z_length)}" ixy="0.0" ixz="0.0"
                          iyy="${(1/12) * lower_leg_mass * (lower_leg_x_length * lower_leg_x_length + lower_leg_z_length * lower_leg_z_length)}" iyz="0.0"
@@ -109,7 +109,7 @@
 
         <joint name="${leg}_hip_joint" type="revolute">
             <axis xyz="0 1 0" />
-            <limit effort="20" lower="-${pi}" upper="${pi}" velocity="2.0" />
+            <limit effort="25" lower="-${pi}" upper="${pi}" velocity="1.5" />
             <parent link="base_link" />
             <child link="${leg}_hip_link" />
             <origin xyz="${base_to_hip_xyz}" rpy="-${pi/2} ${pi/2} 0" />
@@ -117,7 +117,7 @@
 
         <joint name="${leg}_upper_leg_joint" type="revolute">
             <axis xyz="0 0 1" />
-            <limit effort="20" lower="-${pi}" upper="${pi}" velocity="2.0" />
+            <limit effort="25" lower="-${pi}" upper="${pi}" velocity="1.5" />
             <parent link="${leg}_hip_link" />
             <child link="${leg}_upper_leg_link" />
             <origin xyz="0 0 ${hip_to_upper_leg}" rpy="0 0 0" />
@@ -125,7 +125,7 @@
 
         <joint name="${leg}_lower_leg_joint" type="revolute">
             <axis xyz="0 0 1" />
-            <limit effort="20" lower="-${pi}" upper="${pi}" velocity="2.0" />
+            <limit effort="25" lower="-${pi}" upper="${pi}" velocity="1.5" />
             <parent link="${leg}_upper_leg_link" />
             <child link="${leg}_lower_leg_link" />
             <origin xyz="${upper_leg_to_lower_leg_distance} 0 0" rpy="0 0 0" />
