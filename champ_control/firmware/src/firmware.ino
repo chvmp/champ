@@ -54,9 +54,9 @@ void setup()
 }
 
 void loop() { 
-    static unsigned long prev_ik_time = 0;
+    static unsigned long prev_control_time = 0;
 
-    if ((millis() - prev_ik_time) >= (1000 / CONTROL_RATE))
+    if ((millis() - prev_control_time) >= (1000 / CONTROL_RATE))
     {
         base.lf->joints(0, 0, 0);
         base.rf->joints(0, 0, 0);
@@ -64,14 +64,14 @@ void loop() {
         base.rh->joints(0, 0, 0);
         base.attitude(0.0, 0.0, 0.0);
 
-        balancer.balance(0.0, 0.0, 0.0, 0.0, 0.0, -0.07);
+        balancer.balance(0.0, 0.0, 0.0, 0.0, 0.0, -0.08);
         gait.generate(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance(), g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
 
         publishPoints(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
         publishJointStates(ik.lf.joints(), ik.rf.joints(), ik.lh.joints(), ik.rh.joints());
 
-        prev_ik_time = millis();
+        prev_control_time = millis();
     }
 
     if ((millis() - g_prev_command_time) >= 400)
