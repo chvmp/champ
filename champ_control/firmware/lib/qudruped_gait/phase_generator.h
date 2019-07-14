@@ -8,11 +8,13 @@
 
 class PhaseGenerator
 {
+        bool phase_gen_started_;
         float step_length_;
         unsigned long int last_touchdown_;
-        bool phase_gen_started_;
 
         float leg_clocks_[4];
+
+        bool has_swung_;
 
     public:
         PhaseGenerator(float step_length);

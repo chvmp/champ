@@ -65,7 +65,16 @@ void TrajectoryPlanner::generate(Transformation ref, float linear_vel_x, float l
    
     int n = total_control_points_ - 1;
   
-    if(swing_phase_signal > 0)
+    if(stance_phase_signal > swing_phase_signal)
+    {
+        float x = (step_length_ / 2) * (1 - (2 * stance_phase_signal));
+        float y = stance_depth_ * cos((3.1416 * x) / step_length_);
+
+        foot_.X() = ref.X() + y;
+        foot_.Y() = -x * cos(rotation);
+        foot_.Z() = ref.Z() + (x * sin(rotation));
+    }
+    else if(swing_phase_signal > stance_phase_signal)
     {
         float x = 0;
         float y = 0;
@@ -79,16 +88,7 @@ void TrajectoryPlanner::generate(Transformation ref, float linear_vel_x, float l
         }
 
         foot_.X() = ref.X() + y;
-        foot_.Y() = ref.Y() - (x * cos(rotation));
-        foot_.Z() = ref.Z() + (x * sin(rotation));
-    }
-    else if(stance_phase_signal > 0)
-    {
-        float x = (step_length_ / 2) * (1 - (2 * stance_phase_signal));
-        float y = stance_depth_ * cos((3.1416 * x) / step_length_);
-
-        foot_.X() = ref.X() + y;
-        foot_.Y() = ref.Y() - (x * cos(rotation));
+        foot_.Y() = -x * cos(rotation);
         foot_.Z() = ref.Z() + (x * sin(rotation));
     }
     else
