@@ -74,7 +74,7 @@ void TrajectoryPlanner::generate(Transformation ref, float linear_vel_x, float l
         foot_.Y() = -x * cos(rotation);
         foot_.Z() = ref.Z() + (x * sin(rotation));
     }
-    else if(swing_phase_signal > stance_phase_signal)
+    else if(stance_phase_signal < swing_phase_signal)
     {
         float x = 0;
         float y = 0;
@@ -91,7 +91,8 @@ void TrajectoryPlanner::generate(Transformation ref, float linear_vel_x, float l
         foot_.Y() = -x * cos(rotation);
         foot_.Z() = ref.Z() + (x * sin(rotation));
     }
-    else
+    
+    if(linear_vel_x == 0 && linear_vel_y == 0 && angular_vel_z == 0)
     {
         foot_ = ref;
     }
