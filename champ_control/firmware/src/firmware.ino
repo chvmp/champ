@@ -74,7 +74,7 @@ void loop() {
         prev_control_time = millis();
     }
 
-    if ((millis() - g_prev_command_time) >= 400)
+    if ((millis() - g_prev_command_time) >= 500)
     {
         stopBase();
     }
