@@ -1,10 +1,10 @@
 #include<phase_generator.h>
 PhaseGenerator::PhaseGenerator(float step_length):
-    phase_gen_started_(false),
     step_length_(step_length),
     last_touchdown_(millis()),
     leg_clocks_{0,0,0,0},
     has_swung_(false),
+    has_started(false),
     stance_phase_signal{0,0,0,0},
     swing_phase_signal{0,0,0,0}
 {
@@ -30,9 +30,9 @@ void PhaseGenerator::run(float target_velocity)
         return;
     }
 
-    if(!phase_gen_started_)
+    if(!has_started)
     {
-        phase_gen_started_ = true;
+        has_started = true;
         last_touchdown_ = millis();
     }
 
