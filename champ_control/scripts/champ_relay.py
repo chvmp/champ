@@ -82,24 +82,25 @@ class ChampRelay:
     def create_marker(self, x, y, z, id, frame_id):
         point_marker = Marker()
         point_marker.header.frame_id = frame_id
+        point_marker.header.stamp = rospy.Time.now()
+        point_marker.lifetime = rospy.Duration.from_sec(10)
 
-        point_marker.type = Marker.CUBE
-        point_marker.action = Marker.ADD
+        point_marker.type = Marker.SPHERE
+        point_marker.action = Marker.MODIFY
         point_marker.id = id
-
         point_marker.pose.position.x = x
         point_marker.pose.position.y = y
         point_marker.pose.position.z = z
         point_marker.pose.orientation = Quaternion(*quaternion_from_euler(0.0, 0.0, 0.0))
         
-        point_marker.scale.x = (0.025); 
-        point_marker.scale.y = (0.025); 
-        point_marker.scale.z = (0.025); 
+        point_marker.scale.x = 0.018
+        point_marker.scale.y = 0.018
+        point_marker.scale.z = 0.018
 
-        point_marker.color.r = 0.780; 
-        point_marker.color.g = 0.082; 
-        point_marker.color.b = 0.521; 
-        point_marker.color.a = 0.5; 
+        point_marker.color.r = 0.780
+        point_marker.color.g = 0.082
+        point_marker.color.b = 0.521
+        point_marker.color.a = 0.5
 
         return point_marker
 
