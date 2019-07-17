@@ -11,7 +11,7 @@ class QuadrupedGait
 {
         QuadrupedBase *base_;
 
-        TrajectoryPlanner *foot_stances_[4];
+        TrajectoryPlanner *trajectory_planners_[4];
 
         PhaseGenerator phase_gen_;
 
@@ -23,8 +23,7 @@ class QuadrupedGait
         TrajectoryPlanner lh;
         TrajectoryPlanner rh;
 
-        void generate(Transformation lf_ref_stance, Transformation rf_ref_stance, Transformation lh_ref_stance, Transformation rh_ref_stance, 
-                              float linear_velocity_x, float linear_velocity_y, float angular_velocity_z);
+        void generate(Transformation (&foot_positions)[4], float linear_velocity_x, float linear_velocity_y, float angular_velocity_z);
 };
 
 #endif

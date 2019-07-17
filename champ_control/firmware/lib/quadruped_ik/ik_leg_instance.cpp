@@ -5,29 +5,29 @@ IKLegInstance::IKLegInstance(QuadrupedLeg *leg):
 {
 }
 
-void IKLegInstance::solve(Transformation target)
+void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float &upper_leg_joint, float &lower_leg_joint)
 {
     Rotation hip_theta;
-    joints_[0] = -(atan(target.Z() / target.X()) - (1.5708 - acos(leg_->upper_leg->d() / sqrt(pow(target.Z(), 2) + pow(target.X(), 2)))));
-    // target.RotateY(joints_[0]);
-    hip_theta.RotateY(joints_[0]);
-    target.p = hip_theta * target.p;
+    hip_joint = -(atan(foot_position.Z() / foot_position.X()) - (1.5708 - acos(leg_->upper_leg->d() / sqrt(pow(foot_position.Z(), 2) + pow(foot_position.X(), 2)))));
+    // foot_position.RotateY(joints_[0]);
+    hip_theta.RotateY(hip_joint);
+    foot_position.p = hip_theta * foot_position.p;
      // // reverse
-    joints_[2] = -acos((pow(target.X(), 2) + pow(target.Y(), 2) - pow(leg_->upper_leg->r() ,2) - pow(leg_->lower_leg->r() ,2)) / (2 * leg_->upper_leg->r() * leg_->lower_leg->r()));
-    joints_[1] = (atan(target.Y() / target.X()) - atan( (leg_->lower_leg->r() * sin(joints_[2])) / (leg_->upper_leg->r() + (leg_->lower_leg->r() * cos(joints_[2])))));
+    lower_leg_joint = -acos((pow(foot_position.X(), 2) + pow(foot_position.Y(), 2) - pow(leg_->upper_leg->r() ,2) - pow(leg_->lower_leg->r() ,2)) / (2 * leg_->upper_leg->r() * leg_->lower_leg->r()));
+    upper_leg_joint = (atan(foot_position.Y() / foot_position.X()) - atan( (leg_->lower_leg->r() * sin(lower_leg_joint)) / (leg_->upper_leg->r() + (leg_->lower_leg->r() * cos(lower_leg_joint)))));
 
-    // if(leg_->leg_id < 2)
+    // if(leg_->leg_id()< 2)
     // {
     //     // // reverse
-    //     joints_[2] = -acos((pow(target.X(), 2) + pow(target.Y(), 2) - pow(leg_->upper_leg->r() ,2) - pow(leg_->lower_leg->r() ,2)) / (2 * leg_->upper_leg->r() * leg_->lower_leg->r()));
-    //     joints_[1] = (atan(target.Y() / target.X()) - atan( (leg_->lower_leg->r() * sin(joints_[2])) / (leg_->upper_leg->r() + (leg_->lower_leg->r() * cos(joints_[2])))));
+    //     lower_leg_joint = -acos((pow(foot_position.X(), 2) + pow(foot_position.Y(), 2) - pow(leg_->upper_leg->r() ,2) - pow(leg_->lower_leg->r() ,2)) / (2 * leg_->upper_leg->r() * leg_->lower_leg->r()));
+    //     upper_leg_joint = (atan(foot_position.Y() / foot_position.X()) - atan( (leg_->lower_leg->r() * sin(lower_leg_joint)) / (leg_->upper_leg->r() + (leg_->lower_leg->r() * cos(lower_leg_joint)))));
         
     // }
     // else
     // {
     //     // ik for knee forward
-    //     joints_[2] = acos((pow(target.X() , 2) + pow(target.Y() , 2) - pow(leg_->upper_leg->r() , 2) - pow(leg_->lower_leg->r(), 2)) / (2 * leg_->upper_leg->r() * leg_->lower_leg->r()));
-    //     joints_[1] = atan(target.Y() / target.X()) - atan( (leg_->lower_leg->r() * sin(joints_[2])) / (leg_->upper_leg->r() + (leg_->lower_leg->r() * cos(joints_[2]))));
+    //     lower_leg_joint = acos((pow(foot_position.X() , 2) + pow(foot_position.Y() , 2) - pow(leg_->upper_leg->r() , 2) - pow(leg_->lower_leg->r(), 2)) / (2 * leg_->upper_leg->r() * leg_->lower_leg->r()));
+    //     upper_leg_joint = atan(foot_position.Y() / foot_position.X()) - atan( (leg_->lower_leg->r() * sin(lower_leg_joint)) / (leg_->upper_leg->r() + (leg_->lower_leg->r() * cos(lower_leg_joint))));
     // }
 }
 

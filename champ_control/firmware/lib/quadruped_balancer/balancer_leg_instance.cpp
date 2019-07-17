@@ -6,7 +6,7 @@ BalancerLegInstance::BalancerLegInstance(QuadrupedLeg *leg):
 {
 }
 
-void BalancerLegInstance::legGroundIntersection(float target_roll, float target_pitch, 
+void BalancerLegInstance::legGroundIntersection(Transformation &foot_position, float target_roll, float target_pitch, 
                         float target_yaw, float target_x, float target_y, float target_z)
 {
     Transformation normal_vector;
@@ -84,13 +84,9 @@ void BalancerLegInstance::legGroundIntersection(float target_roll, float target_
                         0,                 0, line_p0.Z(), line_vector.Z()
     };
 
-    foot_.p.X() = x_numerator.Det() / denominator.Det();
-    foot_.p.Y() = y_numerator.Det() / denominator.Det();
-    foot_.p.Z() = z_numerator.Det() / denominator.Det();
-    leg_->foot_base_to_hip(foot_);
-}
-
-Transformation BalancerLegInstance::stance()
-{   
-    return foot_;
+    foot_position.p.X() = x_numerator.Det() / denominator.Det();
+    foot_position.p.Y() = y_numerator.Det() / denominator.Det();
+    foot_position.p.Z() = z_numerator.Det() / denominator.Det();
+    
+    leg_->transformToHip(foot_position);
 }

@@ -6,7 +6,6 @@
 
 class BalancerLegInstance
 {
-    Transformation foot_;
     QuadrupedLeg *leg_;
     
     public:
@@ -15,10 +14,8 @@ class BalancerLegInstance
         void balance(float target_roll, float target_pitch, float target_yaw, 
                      float target_x, float target_y, float target_z);
 
-        void legGroundIntersection(float target_roll, float target_pitch, 
+        void legGroundIntersection(Transformation &new_foot_position, float target_roll, float target_pitch, 
                                    float target_yaw, float target_x, float target_y, float target_z);
-
-        Transformation stance();
 };
 
 #endif

@@ -58,18 +58,21 @@ void loop() {
 
     if ((millis() - prev_control_time) >= (1000 / CONTROL_RATE))
     {
+        Transformation foot_positions[4];
+        float joint_positions[12]; 
+
         base.lf->joints(0, 0, 0);
         base.rf->joints(0, 0, 0);
         base.lh->joints(0, 0, 0);
         base.rh->joints(0, 0, 0);
         base.attitude(0.0, 0.0, 0.0);
 
-        balancer.balance(0.0, 0.0, 0.0, 0.0, 0.0, -0.08);
-        gait.generate(balancer.lf.stance(), balancer.rf.stance(), balancer.lh.stance(), balancer.rh.stance(), g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
-        ik.solve(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
+        balancer.balance(foot_positions, 0.0, 0.0, 0.0, 0.0, 0.0, -0.08);
+        gait.generate(foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
+        ik.solve(foot_positions, joint_positions);
 
-        publishPoints(gait.lf.stance(), gait.rf.stance(), gait.lh.stance(), gait.rh.stance());
-        publishJointStates(ik.lf.joints(), ik.rf.joints(), ik.lh.joints(), ik.rh.joints());
+        publishPoints(foot_positions);
+        publishJointStates(joint_positions);
 
         prev_control_time = millis();
     }
@@ -80,50 +83,6 @@ void loop() {
     }
 
     nh.spinOnce();
-}
-
-void publishJointStates(float lf_joints[3], float rf_joints[3], float lh_joints[3], float rh_joints[3])
-{
-    float target_joints[12];
-    target_joints[0] = lf_joints[0];
-    target_joints[1] = lf_joints[1];
-    target_joints[2] = lf_joints[2];
-
-    target_joints[3] = rf_joints[0];
-    target_joints[4] = rf_joints[1];
-    target_joints[5] = rf_joints[2];
-
-    target_joints[6] = lh_joints[0];
-    target_joints[7] = lh_joints[1];
-    target_joints[8] = lh_joints[2];
-
-    target_joints[9] = rh_joints[0];
-    target_joints[10] = rh_joints[1];
-    target_joints[11] = rh_joints[2];
-
-    joints_msg.position = target_joints;
-    jointstates_pub.publish(&joints_msg);
-}
-
-void publishPoints(Transformation p_lf, Transformation p_rf, Transformation p_lh, Transformation p_rh)
-{
-    point_msg.lf.x = p_lf.X();
-    point_msg.lf.y = p_lf.Y();
-    point_msg.lf.z = p_lf.Z();
-
-    point_msg.rf.x = p_rf.X();
-    point_msg.rf.y = p_rf.Y();
-    point_msg.rf.z = p_rf.Z();
-
-    point_msg.lh.x = p_lh.X();
-    point_msg.lh.y = p_lh.Y();
-    point_msg.lh.z = p_lh.Z();
-
-    point_msg.rh.x = p_rh.X();
-    point_msg.rh.y = p_rh.Y();
-    point_msg.rh.z = p_rh.Z();
-
-    point_pub.publish(&point_msg);
 }
 
 void stopBase()
@@ -143,3 +102,31 @@ void commandCallback(const geometry_msgs::Twist& cmd_msg)
 
     g_prev_command_time = millis();
 }
+
+void publishJointStates(float joint_positions[12])
+{
+    joints_msg.position = joint_positions;
+    jointstates_pub.publish(&joints_msg);  
+}
+
+void publishPoints(Transformation foot_positions[4])
+{
+    point_msg.lf.x = foot_positions[0].X();
+    point_msg.lf.y = foot_positions[0].Y();
+    point_msg.lf.z = foot_positions[0].Z();
+
+    point_msg.rf.x = foot_positions[1].X();
+    point_msg.rf.y = foot_positions[1].Y();
+    point_msg.rf.z = foot_positions[1].Z();
+
+    point_msg.lh.x = foot_positions[2].X();
+    point_msg.lh.y = foot_positions[2].Y();
+    point_msg.lh.z = foot_positions[2].Z();
+
+    point_msg.rh.x = foot_positions[3].X();
+    point_msg.rh.y = foot_positions[3].Y();
+    point_msg.rh.z = foot_positions[3].Z();
+
+    point_pub.publish(&point_msg);
+}
+

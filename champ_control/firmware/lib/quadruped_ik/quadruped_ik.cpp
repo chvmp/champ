@@ -7,18 +7,18 @@ QuadrupedIK::QuadrupedIK(QuadrupedBase &quadruped_base):
     lh(base->lh),
     rh(base->rh)
 {
-    unsigned int total_stances = 0;
+    unsigned int total_legs = 0;
 
-    legs_[total_stances++] = &lf;
-    legs_[total_stances++] = &rf;
-    legs_[total_stances++] = &lh;
-    legs_[total_stances++] = &rh;
+    ik_solvers_[total_legs++] = &lf;
+    ik_solvers_[total_legs++] = &rf;
+    ik_solvers_[total_legs++] = &lh;
+    ik_solvers_[total_legs++] = &rh;
 }
 
-void QuadrupedIK::solve(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target)
+void QuadrupedIK::solve(Transformation (&foot_positions)[4], float (&joint_positions)[12])
 {
-    lf.solve(lf_target);
-    rf.solve(rf_target);
-    lh.solve(lh_target);
-    rh.solve(rh_target);
+    for(unsigned int i = 0; i < 4; i++)
+    {
+        ik_solvers_[i]->solve(foot_positions[i], joint_positions[(i*3)], joint_positions[(i*3) + 1], joint_positions[(i*3) + 2]);
+    }
 }

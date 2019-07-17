@@ -23,18 +23,18 @@ class QuadrupedLeg
 
     Transformation nominal_stance_;
 
+    unsigned int leg_id_;
+
     public:
         QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_link, RevoluteJoint &lower_leg_link, 
                     float pos_x, float pos_y, float pos_z, 
                     float or_r, float or_p, float or_y);
         
-        unsigned int leg_id;
 
         Transformation forwardKinematics(Transformation &pose);
 
         Transformation foot();
-        Transformation foot_to_base();
-        void foot_base_to_hip(Transformation &foot);
+        Transformation foot_from_base();
         
         void joints(float hip_joint, float upper_leg_joint, float lower_leg_joint);
         void joints(float *joints);
@@ -48,6 +48,11 @@ class QuadrupedLeg
         float yaw();
 
         Transformation nominal_stance();
+        unsigned int leg_id();
+
+        void transformToHip(Transformation &foot);
+
+        void setLegID(unsigned int id);
 
         RevoluteJoint *hip;
         RevoluteJoint *upper_leg;
@@ -57,3 +62,4 @@ class QuadrupedLeg
 };
 
 #endif
+

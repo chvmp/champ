@@ -14,7 +14,7 @@ class TrajectoryPlanner
     float stance_depth_;
     unsigned int total_control_points_;
 
-    Transformation foot_;
+    // Transformation foot_;
 
     float factorial_[13];
     float ref_control_points_x_[12];
@@ -31,9 +31,7 @@ class TrajectoryPlanner
 
     public:
         TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float step_length, float stance_depth);
-        void generate(Transformation ref, float linear_vel_x, float linear_vel_y, float angular_vel_z, float swing_phase_signal, float stance_phase_signal);
-        
-        Transformation stance();
+        void generate(Transformation &foot_position, float linear_vel_x, float linear_vel_y, float angular_vel_z, float swing_phase_signal, float stance_phase_signal);
 };
 
 #endif

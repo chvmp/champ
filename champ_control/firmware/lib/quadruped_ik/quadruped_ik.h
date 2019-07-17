@@ -1,3 +1,4 @@
+
 #ifndef _QUADRUPED_IK_H_
 #define _QUADRUPED_IK_H_
 
@@ -10,12 +11,12 @@ class QuadrupedIK
 {
     QuadrupedBase *base;
 
-    IKLegInstance *legs_[4];
+    IKLegInstance *ik_solvers_[4];
 
     public:
         QuadrupedIK(QuadrupedBase &quadruped_base);
         
-        void solve(Transformation lf_target, Transformation rf_target, Transformation lh_target, Transformation rh_target);
+        void solve(Transformation (&foot_positions)[4], float (&joint_positions)[12]);
 
         IKLegInstance lf;
         IKLegInstance rf;

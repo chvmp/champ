@@ -13,7 +13,7 @@ class IKLegInstance
     public:
         IKLegInstance(QuadrupedLeg *leg);
         
-        void solve(Transformation target);
+        void solve(Transformation &foot_position, float &hip_joint, float &upper_leg_joint, float &lower_leg_joint);
         float *joints();
 };
 

@@ -5,10 +5,10 @@
 
 class QuadrupedBase
 {   
-    float roll_;
-    float pitch_;
-    float yaw_;
-
+    float current_roll_;
+    float current_pitch_;
+    float current_yaw_;
+    
     public:
         QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg);
         void joints(float *joints);
@@ -18,7 +18,7 @@ class QuadrupedBase
 
         float pitch();
         void pitch(float pitch);
-        
+
         float yaw();
         void yaw(float yaw);
 
