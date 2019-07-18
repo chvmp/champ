@@ -91,9 +91,10 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float linear_vel
         foot_position.Y() = -x * cos(rotation);
         foot_position.Z() = foot_position.Z() + (x * sin(rotation));
     }
-    
-    if(linear_vel_x == 0 && linear_vel_y == 0 && angular_vel_z == 0)
+    else if((!swing_phase_signal && !stance_phase_signal) && (linear_vel_x || linear_vel_y || angular_vel_z ))
     {
-        foot_position = foot_position;
+        foot_position = prev_foot_position_;
     }
+    
+    prev_foot_position_ = foot_position;
 }

@@ -14,7 +14,7 @@ class TrajectoryPlanner
     float stance_depth_;
     unsigned int total_control_points_;
 
-    // Transformation foot_;
+    Transformation prev_foot_position_;
 
     float factorial_[13];
     float ref_control_points_x_[12];
