@@ -25,6 +25,8 @@ class QuadrupedLeg
 
     unsigned int leg_id_;
 
+    unsigned long int last_touchdown_;
+
     public:
         QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_link, RevoluteJoint &lower_leg_link, 
                     float pos_x, float pos_y, float pos_z, 
@@ -49,6 +51,9 @@ class QuadrupedLeg
 
         Transformation nominal_stance();
         unsigned int leg_id();
+
+        unsigned long int last_touchdown();
+        void last_touchdown(unsigned long int current_time);
 
         void transformToHip(Transformation &foot);
 

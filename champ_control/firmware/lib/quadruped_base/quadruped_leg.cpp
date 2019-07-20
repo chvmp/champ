@@ -112,6 +112,16 @@ unsigned int  QuadrupedLeg::leg_id()
     return leg_id_;
 }
 
+unsigned long int  QuadrupedLeg::last_touchdown()
+{
+    return last_touchdown_;
+}
+
+void  QuadrupedLeg::last_touchdown(unsigned long int current_time)
+{
+    last_touchdown_ = current_time;
+}
+
 void QuadrupedLeg::transformToHip(Transformation &foot)
 {
     Point temp_point;
