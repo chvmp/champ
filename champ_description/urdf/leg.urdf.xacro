@@ -49,7 +49,7 @@
 
         <link name="${leg}_upper_leg_link">
             <inertial>
-                <origin xyz="0.065 0 0" />
+                <origin xyz="${(upper_leg_x_length / 2) - ((upper_leg_x_length - upper_leg_to_lower_leg_distance) / 2)} 0 0" />
                 <mass value="${upper_leg_mass}" />
                 <inertia ixx="${(1/12) * upper_leg_mass * (upper_leg_y_length * upper_leg_y_length + upper_leg_z_length * upper_leg_z_length)}" ixy="0.0" ixz="0.0"
                          iyy="${(1/12) * upper_leg_mass * (upper_leg_x_length * upper_leg_x_length + upper_leg_z_length * upper_leg_z_length)}" iyz="0.0"
@@ -75,7 +75,7 @@
 
         <link name="${leg}_lower_leg_link">
             <inertial>
-                <origin xyz="0.065 0.005 0" />
+                <origin xyz="${(lower_leg_to_foot_distance - (lower_leg_x_length - lower_leg_to_foot_distance)) / 2} 0 0" />
                 <mass value="${lower_leg_mass}" />
                 <inertia ixx="${(1/12) * lower_leg_mass * (lower_leg_y_length * lower_leg_y_length + lower_leg_z_length * lower_leg_z_length)}" ixy="0.0" ixz="0.0"
                          iyy="${(1/12) * lower_leg_mass * (lower_leg_x_length * lower_leg_x_length + lower_leg_z_length * lower_leg_z_length)}" iyz="0.0"

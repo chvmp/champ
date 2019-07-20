@@ -32,7 +32,7 @@
     </gazebo>
 
     <joint name="base_to_champ" type="fixed">
-        <parent link="champ_footprint" />
+        <parent link="base_footprint" />
         <child link="base_link" />
         <origin xyz="0 0 0" rpy="0 0 0" />
     </joint>
@@ -107,6 +107,6 @@
         ray_count="1040" 
         min_angle="130" 
         max_angle="-130" >
-        <origin xyz="0.0 0.0 0.12" rpy="0 0 0"/>
+        <origin xyz="0.0 0.0 ${base_z_length / 2 + 0.04}" rpy="0 0 0"/>
     </xacro:hokuyo_utm30lx>
 </robot>
