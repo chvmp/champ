@@ -14,7 +14,7 @@ Panels:
         - /Local Map1/Planner1
         - /Amcl Particle Swarm1
       Splitter Ratio: 0.5
-    Tree Height: 922
+    Tree Height: 351
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -67,15 +67,15 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        champ_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         hokuyo_frame:
           Alpha: 1
           Show Axes: false
@@ -188,9 +188,9 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        base_link:
+        base_footprint:
           Value: true
-        champ_footprint:
+        base_link:
           Value: true
         hokuyo_frame:
           Value: false
@@ -248,7 +248,7 @@ Visualization Manager:
       Tree:
         map:
           odom:
-            champ_footprint:
+            base_footprint:
               base_link:
                 hokuyo_frame:
                   hokuyo_scan_link:
@@ -286,8 +286,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 0.486186236
-        Min Value: 0.189622849
+        Max Value: 0.318508118
+        Min Value: 0.318492442
         Value: true
       Axis: Z
       Channel Name: intensities
@@ -497,15 +497,15 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 30.8337631
+      Distance: 39.1368141
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 1.32497501
-        Y: 2.58477545
+        X: 7.14405346
+        Y: -2.48954868
         Z: 6.06937465e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
@@ -533,5 +533,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 937
-  X: 981
+  X: 43
   Y: 24

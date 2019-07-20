@@ -26,7 +26,7 @@ class Odom:
             (data.pose.pose.position.x, data.pose.pose.position.y, 0),
             odom_quat,
             current_time,
-            "champ_footprint",
+            "base_footprint",
             "odom"
         )
 

@@ -1,6 +1,6 @@
 <launch>
     <node pkg="amcl" type="amcl" name="amcl" output="screen">
-        <param name="base_frame_id" value="champ_footprint"/> <!-- Change this if you want to change your base frame id. -->
+        <param name="base_frame_id" value="base_footprint"/> <!-- Change this if you want to change your base frame id. -->
         <param name="gui_publish_rate" value="10.0"/> <!-- Maximum rate (Hz) at which scans and paths are published for visualization, -1.0 to disable. -->
         <param name="kld_err" value="0.05"/>
         <param name="kld_z" value="0.99"/>

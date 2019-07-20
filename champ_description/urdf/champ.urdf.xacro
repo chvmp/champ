@@ -4,7 +4,7 @@
 
     <material name="black"><color rgba="0.15 0.15 0.15 1.0" /></material>
 
-    <link name="champ_footprint"/>
+    <link name="base_footprint"/>
     <link name="base_link">
         <inertial>
             <origin xyz="0 0 0" />

@@ -76,7 +76,7 @@ class ChampRelay:
             base_orientation,
             current_time,
             "base_link",
-            "champ_footprint"
+            "base_footprint"
         )
 
     def create_marker(self, x, y, z, id, frame_id):
