@@ -32,72 +32,32 @@ float QuadrupedGait::getRotation(QuadrupedLeg *leg, float linear_velocity_x, flo
 
 void QuadrupedGait::generate(Transformation (&foot_positions)[4], float linear_velocity_x, float linear_velocity_y, float angular_velocity_z)
 {
-    float l_step_length = 0;
-    float r_step_length = 0;
     float tangential_velocity = angular_velocity_z * (base_->lf->nominal_stance().Y() +  base_->lf->nominal_stance().X());
-    float velocity =  sqrt(pow(linear_velocity_x - abs(tangential_velocity), 2) + pow(linear_velocity_y , 2)) ;
-    
-    float l_vel = linear_velocity_x - tangential_velocity;
-    float r_vel = linear_velocity_x + tangential_velocity;
-    float speed_ratio = 0;
-    float rotation =0;
-    if(linear_velocity_x && angular_velocity_z > 0)
-    {
-        speed_ratio = abs(l_vel / r_vel);
-        l_step_length = speed_ratio * step_length_;
-        r_step_length = step_length_;
-    }
-    
-    else if(linear_velocity_x && angular_velocity_z < 0)
-    {
-        speed_ratio = abs(r_vel / l_vel);
-        l_step_length = step_length_;
-        r_step_length = speed_ratio * step_length_;
-    }
+    float velocity =  sqrt(pow(linear_velocity_x, 2) + pow(linear_velocity_y + abs(tangential_velocity), 2)) ;
 
     phase_gen_.run(abs(velocity));
 
     for(unsigned int i = 0; i < 4; i++)
     {
         float step_length = 0;
+        float rotation = getRotation(base_->legs[i], linear_velocity_x, linear_velocity_y, angular_velocity_z);
 
         if(!linear_velocity_x && !linear_velocity_y && !angular_velocity_z )  
         {
             step_length = 0;
         }
-        else if(linear_velocity_x && linear_velocity_y)
-        {
-            rotation = getRotation(base_->legs[i], linear_velocity_x, linear_velocity_y, angular_velocity_z);
-            step_length = step_length_;
-        }
-        else if(linear_velocity_x && angular_velocity_z)
-        {
-
-            if(i == 0 || i == 2)
-            {
-                step_length = l_step_length;
-            }
-            else   
-            {
-                step_length = r_step_length;
-            }
-        }
         else if(linear_velocity_x)
         {
-            rotation = getRotation(base_->legs[i], linear_velocity_x, linear_velocity_y, angular_velocity_z);
             step_length = step_length_;
         }
         else if(linear_velocity_y)
         {
-            rotation = getRotation(base_->legs[i], linear_velocity_x, linear_velocity_y, angular_velocity_z);
             step_length = step_length_ * 0.5;
         }
-        else if(angular_velocity_z)
+        else if(linear_velocity_x || angular_velocity_z)
         {
-            rotation = getRotation(base_->legs[i], linear_velocity_x, linear_velocity_y, angular_velocity_z);
             step_length = step_length_ * 0.6;
         }
-
 
         trajectory_planners_[i]->generate(foot_positions[i], step_length, rotation, phase_gen_.swing_phase_signal[i], phase_gen_.stance_phase_signal[i]);
     }
