@@ -62,6 +62,3 @@ void QuadrupedGait::generate(Transformation (&foot_positions)[4], float linear_v
         trajectory_planners_[i]->generate(foot_positions[i], step_length, rotation, phase_gen_.swing_phase_signal[i], phase_gen_.stance_phase_signal[i]);
     }
 }
-
-
-
