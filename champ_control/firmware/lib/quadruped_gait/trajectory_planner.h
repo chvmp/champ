@@ -31,7 +31,7 @@ class TrajectoryPlanner
 
     public:
         TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float step_length, float stance_depth);
-        void generate(Transformation &foot_position, float linear_vel_x, float linear_vel_y, float angular_vel_z, float swing_phase_signal, float stance_phase_signal);
+        void generate(Transformation &foot_position, float step_length, float rotation, float swing_phase_signal, float stance_phase_signal);
 };
 
 #endif

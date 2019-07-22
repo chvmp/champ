@@ -15,6 +15,10 @@ class QuadrupedGait
 
         PhaseGenerator phase_gen_;
 
+        float step_length_;
+
+        float getRotation(QuadrupedLeg *leg, float linear_velocity_x, float linear_velocity_y, float angular_velocity_z);
+        
     public:
         QuadrupedGait(QuadrupedBase &quadruped_base, float max_velocity, float swing_height, float step_length, float stance_depth);
 

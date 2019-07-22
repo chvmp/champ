@@ -3,7 +3,6 @@
 TrajectoryPlanner::TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float step_length, float stance_depth):
     leg_(leg),
     swing_height_(swing_height),
-    step_length_(step_length),
     stance_depth_(stance_depth),
     total_control_points_(12),
     // foot_(leg_->nominal_stance()),
@@ -52,31 +51,9 @@ void TrajectoryPlanner::updateControlPointsLength(float step_length)
     }
 }
 
-void TrajectoryPlanner::generate(Transformation &foot_position, float linear_vel_x, float linear_vel_y, float angular_vel_z, float swing_phase_signal, float stance_phase_signal)
+void TrajectoryPlanner::generate(Transformation &foot_position, float step_length, float rotation, float swing_phase_signal, float stance_phase_signal)
 {    
-    Transformation transformed_stance = leg_->nominal_stance();
-    transformed_stance.Translate(linear_vel_x, linear_vel_y, 0);
-    transformed_stance.RotateZ(angular_vel_z);
-
-    float step_length = 0;
-    float delta_x = transformed_stance.X() - leg_->nominal_stance().X();
-    float delta_y = transformed_stance.Y() - leg_->nominal_stance().Y();
-
-    float rotation = atan2(delta_y, delta_x);
-
-    if(rotation == 0 || abs(rotation) == PI)
-    {
-        step_length = step_length_;
-    }
-    else if(abs(rotation) == PI/2)
-    {
-        step_length = step_length_ * 0.5;
-    }
-    else
-    {
-        step_length = step_length_ * 0.6;
-    }
-    
+    Transformation new_foot_position = foot_position;
     updateControlPointsLength(step_length);
 
     int n = total_control_points_ - 1;
@@ -86,9 +63,9 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float linear_vel
         float x = (step_length / 2) * (1 - (2 * stance_phase_signal));
         float y = stance_depth_ * cos((3.1416 * x) / step_length);
 
-        foot_position.X() = foot_position.X() + y;
-        foot_position.Y() = -x * cos(rotation);
-        foot_position.Z() = foot_position.Z() + (x * sin(rotation));
+        new_foot_position.X() = foot_position.X() + y;
+        new_foot_position.Y() = -x * cos(rotation);
+        new_foot_position.Z() = foot_position.Z() + (x * sin(rotation));
     }
     else if(stance_phase_signal < swing_phase_signal)
     {
@@ -103,14 +80,19 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float linear_vel
             y += coeff * pow(swing_phase_signal, i) * pow((1 - swing_phase_signal), (n - i)) * control_points_y_[i];
         }
 
-        foot_position.X() = foot_position.X() + y;
-        foot_position.Y() = -x * cos(rotation);
-        foot_position.Z() = foot_position.Z() + (x * sin(rotation));
+        new_foot_position.X() = foot_position.X() + y;
+        new_foot_position.Y() = -x * cos(rotation);
+        new_foot_position.Z() = foot_position.Z() + (x * sin(rotation));
     }
-    else if((!swing_phase_signal && !stance_phase_signal) && (linear_vel_x || linear_vel_y || angular_vel_z ))
+    else if((!swing_phase_signal && !stance_phase_signal) && step_length > 0)
     {
         foot_position = prev_foot_position_;
     }
+    else
+    {
+        new_foot_position = foot_position;
+    }
+    foot_position = new_foot_position;
     
     prev_foot_position_ = foot_position;
 }
