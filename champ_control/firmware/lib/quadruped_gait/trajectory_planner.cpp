@@ -86,13 +86,13 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float step_lengt
     }
     else if((!swing_phase_signal && !stance_phase_signal) && step_length > 0)
     {
-        foot_position = prev_foot_position_;
+        new_foot_position = prev_foot_position_;
     }
-    else
+    else if(step_length == 0)
     {
         new_foot_position = foot_position;
     }
+
     foot_position = new_foot_position;
-    
     prev_foot_position_ = foot_position;
 }
