@@ -1,7 +1,7 @@
 #include<phase_generator.h>
 PhaseGenerator::PhaseGenerator(float step_length):
     step_length_(step_length),
-    last_touchdown_(millis()),
+    last_touchdown_(micros()),
     leg_clocks_{0,0,0,0},
     has_swung_(false),
     has_started(false),
@@ -13,7 +13,7 @@ PhaseGenerator::PhaseGenerator(float step_length):
 void PhaseGenerator::run(float target_velocity)
 {
     unsigned long elapsed_time_ref = 0;
-    float swing_phase_period = 250;
+    float swing_phase_period = 250000;
     float leg_clocks[4] = {0,0,0,0};
 
     if(target_velocity == 0)
@@ -33,21 +33,21 @@ void PhaseGenerator::run(float target_velocity)
     if(!has_started)
     {
         has_started = true;
-        last_touchdown_ = millis();
+        last_touchdown_ = micros();
     }
 
-    float stance_phase_period =  (step_length_ / target_velocity) * 1000;
+    float stance_phase_period =  (step_length_ / target_velocity) * 1000000;
     float stride_period = stance_phase_period + swing_phase_period;
 
-    if((millis() - last_touchdown_) >= stride_period)
+    if((micros() - last_touchdown_) >= stride_period)
     {
-        last_touchdown_ = millis();
+        last_touchdown_ = micros();
     }
 
     if(elapsed_time_ref >= stride_period)
         elapsed_time_ref = stride_period;
     else
-        elapsed_time_ref = millis() - last_touchdown_;
+        elapsed_time_ref = micros() - last_touchdown_;
 
     leg_clocks[0] = elapsed_time_ref - (0 * stride_period);
     leg_clocks[1] = elapsed_time_ref - (0.5 * stride_period);

@@ -56,7 +56,7 @@ void setup()
 void loop() { 
     static unsigned long prev_control_time = 0;
 
-    if ((millis() - prev_control_time) >= (1000 / CONTROL_RATE))
+    if ((micros() - prev_control_time) >= (1000000 / CONTROL_RATE))
     {
         Transformation foot_positions[4];
         float joint_positions[12]; 
@@ -74,10 +74,10 @@ void loop() {
         publishPoints(foot_positions);
         publishJointStates(joint_positions);
 
-        prev_control_time = millis();
+        prev_control_time = micros();
     }
 
-    if ((millis() - g_prev_command_time) >= 500)
+    if ((micros() - g_prev_command_time) >= 500000)
     {
         stopBase();
     }
@@ -100,7 +100,7 @@ void commandCallback(const geometry_msgs::Twist& cmd_msg)
     g_req_linear_vel_y = cmd_msg.linear.y;
     g_req_angular_vel_z = cmd_msg.angular.z;
 
-    g_prev_command_time = millis();
+    g_prev_command_time = micros();
 }
 
 void publishJointStates(float joint_positions[12])
