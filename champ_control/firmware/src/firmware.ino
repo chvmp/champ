@@ -10,8 +10,6 @@
 #include <quadruped_balancer.h>
 #include <quadruped_gait.h>
 
-#define CONTROL_RATE FREQUENCY
-
 float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
 float g_req_angular_vel_z = 0;
@@ -56,7 +54,7 @@ void setup()
 void loop() { 
     static unsigned long prev_control_time = 0;
 
-    if ((micros() - prev_control_time) >= (1000000 / CONTROL_RATE))
+    if ((micros() - prev_control_time) >= (SECONDS_TO_MICROS / FREQUENCY))
     {
         Transformation foot_positions[4];
         float joint_positions[12]; 
@@ -77,7 +75,7 @@ void loop() {
         prev_control_time = micros();
     }
 
-    if ((micros() - g_prev_command_time) >= 500000)
+    if ((micros() - g_prev_command_time) >= (0.5 * SECONDS_TO_MICROS))
     {
         stopBase();
     }

@@ -4,7 +4,7 @@
 #include<Arduino.h>
 #include<Geometry.h>
 #include<quadruped_leg.h>
-#include <string.h>
+#include<champ_config.h>
 
 class PhaseGenerator
 {
