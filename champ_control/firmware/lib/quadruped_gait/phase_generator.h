@@ -8,7 +8,7 @@
 
 class PhaseGenerator
 {
-        float step_length_;
+        // float step_length_;
         unsigned long int last_touchdown_;
 
         float leg_clocks_[4];
@@ -16,14 +16,14 @@ class PhaseGenerator
         bool has_swung_;
 
     public:
-        PhaseGenerator(float step_length);
+        PhaseGenerator();
         
         bool has_started;
 
         float stance_phase_signal[4];
         float swing_phase_signal[4];
         
-        void run(float target_velocity);
+        void run(float target_velocity, float step_length);
 };
 
 #endif
