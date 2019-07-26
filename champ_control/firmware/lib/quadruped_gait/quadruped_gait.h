@@ -16,9 +16,16 @@ class QuadrupedGait
         PhaseGenerator phase_gen_;
 
         float step_length_;
+        float transversal_step_length_;
+        float lateral_step_length_;
+        float rotational_step_length_;
+        float optimal_rotational_angle_;
 
-        float getRotation(QuadrupedLeg *leg, float linear_velocity_x, float linear_velocity_y, float angular_velocity_z);
-        
+        void transformTrajectory(QuadrupedLeg *leg, float linear_velocity_x, float linear_velocity_y, float angular_velocity_z, float &step_length, float &rotation);
+        float getOptimalRotationalAngle(QuadrupedLeg *leg, float step_length);
+        float getOptimalTurningAngle(QuadrupedLeg *leg, float step_length);
+        float getStepLength(float linear_velocity_x, float linear_velocity_y, float angular_velocity_z);
+
     public:
         QuadrupedGait(QuadrupedBase &quadruped_base, float max_velocity, float swing_height, float step_length, float stance_depth);
 
