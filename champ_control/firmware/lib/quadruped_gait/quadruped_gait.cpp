@@ -23,7 +23,7 @@ QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, float max_velocity, 
 
     transversal_step_length_ = step_length_;
     lateral_step_length_ = step_length_ * 0.5;
-    rotational_step_length_ = step_length_ * 0.6;
+    rotational_step_length_ = step_length_ * 0.4;
 
     optimal_rotational_angle_ = getOptimalRotationalAngle(base_->lf, rotational_step_length_);
 }
@@ -42,7 +42,7 @@ void QuadrupedGait::transformTrajectory(QuadrupedLeg *leg, float linear_velocity
     }
     else if(angular_velocity_z)
     {
-        theta = optimal_rotational_angle_;
+        theta = (angular_velocity_z * optimal_rotational_angle_) / abs(angular_velocity_z);
     }
 
     Transformation transformed_stance = leg->nominal_stance();
