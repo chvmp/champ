@@ -23,7 +23,7 @@ QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, float max_velocity, 
 
     transversal_step_length_ = step_length_;
     lateral_step_length_ = step_length_ * 0.5;
-    rotational_step_length_ = step_length_ * 0.4;
+    rotational_step_length_ = step_length_ * 0.5;
 
     optimal_rotational_angle_ = getOptimalRotationalAngle(base_->lf, rotational_step_length_);
 }
