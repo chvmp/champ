@@ -1,4 +1,4 @@
-#/usr/bin/env python
+#!/usr/bin/env python
 import rospy
 from champ_msgs.msg import Contacts
 import pygazebo
