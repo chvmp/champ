@@ -18,7 +18,6 @@ float g_req_angular_vel_z = 0;
 unsigned long g_prev_command_time = 0;
 
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
-void contactsCallback(const champ_msgs::Contacts& contacts_msg);
 
 ros::NodeHandle nh;
 champ_msgs::PointArray point_msg;
@@ -28,7 +27,6 @@ champ_msgs::Joints joints_msg;
 ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
-ros::Subscriber<champ_msgs::Contacts> contacts_sub("champ/gazebo/contacts", contactsCallback);
 
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
@@ -41,10 +39,9 @@ void setup()
 
     nh.initNode();
     nh.getHardware()->setBaud(115200);
-    nh.advertise(point_pub);
+    // nh.advertise(point_pub);
     nh.advertise(jointstates_pub);
     nh.subscribe(cmd_sub);
-    nh.subscribe(contacts_sub);
 
     while (!nh.connected())
     {
@@ -58,7 +55,7 @@ void setup()
 void loop() { 
     static unsigned long prev_control_time = 0;
 
-    if ((micros() - prev_control_time) >= (SECONDS_TO_MICROS / FREQUENCY))
+    if ((micros() - prev_control_time) >= 10000)
     {
         Transformation foot_positions[4];
         float joint_positions[12]; 
@@ -73,7 +70,7 @@ void loop() {
         gait.generate(foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(foot_positions, joint_positions);
 
-        publishPoints(foot_positions);
+        // publishPoints(foot_positions);
         publishJointStates(joint_positions);
 
         prev_control_time = micros();
@@ -96,18 +93,11 @@ void stopBase()
 
 void commandCallback(const geometry_msgs::Twist& cmd_msg)
 {
-    //callback function every time linear and angular speed is received from 'cmd_vel' topic
-    //this callback function receives cmd_msg object where linear and angular speed are stored
     g_req_linear_vel_x = cmd_msg.linear.x;
     g_req_linear_vel_y = cmd_msg.linear.y;
     g_req_angular_vel_z = cmd_msg.angular.z;
 
     g_prev_command_time = micros();
-}
-
-void contactsCallback(const champ_msgs::Contacts& contacts_msg)
-{
-    base.lf->in_contact(contacts_msg.contacts[0]);
 }
 
 void publishJointStates(float joint_positions[12])
