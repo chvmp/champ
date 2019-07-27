@@ -136,3 +136,11 @@ void QuadrupedLeg::setLegID(unsigned int id)
 {
     leg_id_ = id;
 }
+
+void QuadrupedLeg::updateGroundContact(bool in_contact)
+{
+    in_contact_ = in_contact;
+    if(!in_contact_ && in_contact){
+        last_touchdown_ = micros();
+    }
+}

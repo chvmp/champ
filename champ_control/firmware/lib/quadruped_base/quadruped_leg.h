@@ -3,6 +3,7 @@
 
 #include <Geometry.h>
 #include <revolute_joint.h>
+#include <Arduino.h>
 
 class QuadrupedLeg
 {
@@ -26,6 +27,8 @@ class QuadrupedLeg
     unsigned int leg_id_;
 
     unsigned long int last_touchdown_;
+
+    bool in_contact_;
 
     public:
         QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_link, RevoluteJoint &lower_leg_link, 
@@ -58,6 +61,7 @@ class QuadrupedLeg
         void transformToHip(Transformation &foot);
 
         void setLegID(unsigned int id);
+        void updateGroundContact(bool in_contact);
 
         RevoluteJoint *hip;
         RevoluteJoint *upper_leg;
