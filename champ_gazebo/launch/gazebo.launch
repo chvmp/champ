@@ -23,6 +23,8 @@
         ">
     </node>
 
+    <node name="contact_sensor" pkg="champ_gazebo" type="contact_sensor.py" output="screen" />
+
     <node name="odometry_ground_truth_tf" pkg="champ_gazebo" type="odometry_tf.py" output="screen" />
 
     <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" output="screen">
