@@ -34,7 +34,7 @@ def main():
     contacts_subscriber = manager.subscribe('/gazebo/default/physics/contacts','gazebo.msgs.Contacts', contactsCallback)
 
     while not rospy.is_shutdown():
-        yield From(trollius.sleep(0.1))
+        yield From(trollius.sleep(0.01))
 
 if __name__ == "__main__":
     rospy.init_node("contact_sensor", anonymous = True)
