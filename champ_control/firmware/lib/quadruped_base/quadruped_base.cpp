@@ -15,7 +15,7 @@ QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, Quadrup
 
     for(unsigned int i=0; i < 4; i++)
     {
-        legs[i]->setLegID(i);
+        legs[i]->leg_id(i);
     }
 }
 
