@@ -8,7 +8,7 @@ from trollius import From
 import time
 from pygazebo.msg import contacts_pb2 #forked version of pygazebo https://github.com/Rimabo/pygazebo
 
-contacts_publisher = rospy.Publisher('/champ/gazebo/contacts', Contacts, queue_size = 100)
+contacts_publisher = rospy.Publisher('/champ/gazebo/contacts', Contacts, queue_size = 1)
 
 def contactsCallback(data):
     message = contacts_pb2.Contacts.FromString(data)
@@ -34,7 +34,7 @@ def main():
     contacts_subscriber = manager.subscribe('/gazebo/default/physics/contacts','gazebo.msgs.Contacts', contactsCallback)
 
     while not rospy.is_shutdown():
-        yield From(trollius.sleep(0.01))
+        yield From(trollius.sleep(0.1))
 
 if __name__ == "__main__":
     rospy.init_node("contact_sensor", anonymous = True)
