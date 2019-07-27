@@ -76,9 +76,6 @@ void loop() {
         publishPoints(foot_positions);
         publishJointStates(joint_positions);
 
-        char buffer[50];
-        sprintf (buffer, "LF CONTACT: %ld", base.lf->last_touchdown());
-        nh.loginfo(buffer);
         prev_control_time = micros();
     }
 
