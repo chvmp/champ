@@ -10,6 +10,8 @@ QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_lin
     pitch_(or_p),
     yaw_(or_y),
     leg_id_(0),
+    last_touchdown_(0),
+    in_contact_(0),
     hip(&hip_link),
     upper_leg(&upper_leg_link),
     lower_leg(&lower_leg_link)
@@ -132,15 +134,20 @@ void QuadrupedLeg::transformToHip(Transformation &foot)
     foot.p = temp_point;
 }
 
-void QuadrupedLeg::setLegID(unsigned int id)
+void QuadrupedLeg::leg_id(unsigned int id)
 {
     leg_id_ = id;
 }
 
-void QuadrupedLeg::updateGroundContact(bool in_contact)
+void QuadrupedLeg::in_contact(bool in_contact)
 {
-    in_contact_ = in_contact;
     if(!in_contact_ && in_contact){
         last_touchdown_ = micros();
     }
+    in_contact_ = in_contact;
+}
+
+bool QuadrupedLeg::in_contact()
+{
+    return in_contact_;
 }

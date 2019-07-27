@@ -26,7 +26,7 @@ class QuadrupedLeg
 
     unsigned int leg_id_;
 
-    unsigned long int last_touchdown_;
+    unsigned long last_touchdown_;
 
     bool in_contact_;
 
@@ -60,8 +60,9 @@ class QuadrupedLeg
 
         void transformToHip(Transformation &foot);
 
-        void setLegID(unsigned int id);
-        void updateGroundContact(bool in_contact);
+        void leg_id(unsigned int id);
+        void in_contact(bool in_contact);
+        bool in_contact();
 
         RevoluteJoint *hip;
         RevoluteJoint *upper_leg;
