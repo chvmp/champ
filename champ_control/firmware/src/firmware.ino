@@ -4,6 +4,7 @@
 #include <champ_msgs/Point.h>
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Joints.h>
+#include <champ_msgs/Contacts.h>
 #include <champ_description.h>
 #include <champ_config.h>
 #include <quadruped_ik.h>

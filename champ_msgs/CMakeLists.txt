@@ -12,6 +12,7 @@ add_message_files(
   Point.msg
   PointArray.msg
   Joints.msg
+  Contacts.msg
 )
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)
