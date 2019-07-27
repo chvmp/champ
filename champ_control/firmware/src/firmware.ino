@@ -18,6 +18,7 @@ float g_req_angular_vel_z = 0;
 unsigned long g_prev_command_time = 0;
 
 void commandCallback(const geometry_msgs::Twist& cmd_msg);
+void contactsCallback(const champ_msgs::Contacts& contacts_msg);
 
 ros::NodeHandle nh;
 champ_msgs::PointArray point_msg;
@@ -27,6 +28,7 @@ champ_msgs::Joints joints_msg;
 ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
+ros::Subscriber<champ_msgs::Contacts> contacts_sub("champ/gazebo/contacts", contactsCallback);
 
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
@@ -42,6 +44,7 @@ void setup()
     nh.advertise(point_pub);
     nh.advertise(jointstates_pub);
     nh.subscribe(cmd_sub);
+    nh.subscribe(contacts_sub);
 
     while (!nh.connected())
     {
@@ -73,6 +76,9 @@ void loop() {
         publishPoints(foot_positions);
         publishJointStates(joint_positions);
 
+        char buffer[50];
+        sprintf (buffer, "LF CONTACT: %ld", base.lf->last_touchdown());
+        nh.loginfo(buffer);
         prev_control_time = micros();
     }
 
@@ -100,6 +106,11 @@ void commandCallback(const geometry_msgs::Twist& cmd_msg)
     g_req_angular_vel_z = cmd_msg.angular.z;
 
     g_prev_command_time = micros();
+}
+
+void contactsCallback(const champ_msgs::Contacts& contacts_msg)
+{
+    base.lf->in_contact(contacts_msg.contacts[0]);
 }
 
 void publishJointStates(float joint_positions[12])
