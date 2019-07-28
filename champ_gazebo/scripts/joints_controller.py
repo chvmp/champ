@@ -24,7 +24,7 @@ class JointsController:
         self.joint_control_pub.publish(joint_control)
 
 if __name__ == "__main__":
-    rospy.init_node('champ_joints_controller', anonymous=True)
+    rospy.init_node('champ_gazebo_joints_controller', anonymous=True)
     v = JointsController()
     rospy.spin()
 

@@ -63,6 +63,6 @@ class FootRelay:
         return point_marker
 
 if __name__ == "__main__":
-    rospy.init_node('clustering', anonymous=True)
-    v = FootRelay()
+    rospy.init_node('champ_foot_relay', anonymous=True)
+    f = FootRelay()
     rospy.spin()

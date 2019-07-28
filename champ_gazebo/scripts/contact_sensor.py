@@ -38,7 +38,7 @@ class ContactSensor:
             yield From(trollius.sleep(0.1))
 
 if __name__ == "__main__":
-    rospy.init_node("contact_sensor", anonymous = True)
+    rospy.init_node("champ_gazebo_contact_sensor", anonymous = True)
     contact_sensor = ContactSensor()
 
     loop = trollius.get_event_loop()

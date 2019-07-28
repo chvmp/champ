@@ -31,6 +31,6 @@ class Odom:
         )
 
 if __name__ == "__main__":
-    rospy.init_node("odometry_transform", anonymous = True)
+    rospy.init_node("champ_gazebo_odometry_transform", anonymous = True)
     odom = Odom()
     rospy.spin()
