@@ -4,7 +4,7 @@
 #include <champ_msgs/Point.h>
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Joints.h>
-#include <champ_msgs/Contacts.h>
+#include <champ_msgs/Pose.h>
 #include <champ_description.h>
 #include <champ_config.h>
 #include <quadruped_ik.h>
@@ -26,6 +26,9 @@ ros::Publisher point_pub("/champ/foot/raw", &point_msg);
 champ_msgs::Joints joints_msg;
 ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 
+champ_msgs::Pose pose_msg;
+ros::Publisher pose_pub("/champ/pose/raw", &pose_msg);
+
 ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
 
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
@@ -41,6 +44,7 @@ void setup()
     nh.getHardware()->setBaud(115200);
     // nh.advertise(point_pub);
     nh.advertise(jointstates_pub);
+    nh.advertise(pose_pub);
     nh.subscribe(cmd_sub);
 
     while (!nh.connected())
@@ -71,6 +75,7 @@ void loop() {
         ik.solve(foot_positions, joint_positions);
 
         // publishPoints(foot_positions);
+        publishPose(0, 0, base.lf->nominal_stance().X() - 0.08, 0, 0, 0);
         publishJointStates(joint_positions);
 
         prev_control_time = micros();
@@ -127,3 +132,14 @@ void publishPoints(Transformation foot_positions[4])
     point_pub.publish(&point_msg);
 }
 
+void publishPose(float x, float y, float z, float roll, float pitch, float yaw)
+{
+    pose_msg.x = x;
+    pose_msg.y = y;
+    pose_msg.z = z;
+    pose_msg.roll = roll;
+    pose_msg.pitch = pitch;
+    pose_msg.yaw = yaw;
+
+    pose_pub.publish(&pose_msg);
+}
