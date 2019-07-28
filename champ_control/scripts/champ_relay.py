@@ -2,58 +2,16 @@
 import rospy
 from champ_msgs.msg import Point
 from champ_msgs.msg import PointArray
-from champ_msgs.msg import Joints
 from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Quaternion
 from tf.transformations import quaternion_from_euler
-from sensor_msgs.msg import JointState
-from std_msgs.msg import Float64MultiArray
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import tf
 
-class ChampRelay:
+class FootRelay:
     def __init__(self):
-        self.angle_min = 0.0
-        self.angle_max = 0.0
-        self.angle_increment = 0.0
-        self.ranges = []
-        self.last_received = rospy.Time.now().to_sec()
-
         rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
-        rospy.Subscriber("/champ/joint_states/raw", Joints, self.joint_states_callback)
-
         self.marker_array_pub = rospy.Publisher('/champ/foot', MarkerArray, queue_size = 100)
-        self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 100)
-        self.joint_control_pub = rospy.Publisher('/champ/joint_group_position_controller/command', JointTrajectory, queue_size = 100)
-
         self.base_broadcaster = tf.TransformBroadcaster()
-
-
-    def joint_states_callback(self, joints):
-        joint_control = JointTrajectory()
-        joint_control.joint_names = [
-            "lf_hip_joint", "lf_upper_leg_joint", "lf_lower_leg_joint", 
-            "rf_hip_joint", "rf_upper_leg_joint", "rf_lower_leg_joint", 
-            "lh_hip_joint", "lh_upper_leg_joint", "lh_lower_leg_joint", 
-            "rh_hip_joint", "rh_upper_leg_joint", "rh_lower_leg_joint"
-        ]
-        point = JointTrajectoryPoint()
-        point.time_from_start = rospy.Duration(1.0 / 60.0)
-        point.positions = joints.position    
-        joint_control.points.append(point)
-        self.joint_control_pub.publish(joint_control)
-
-        # joint_states = JointState()
-        # joint_states.header.stamp = rospy.Time.now()
-        # joint_states.name = [
-        #     "lf_hip_joint", "lf_upper_leg_joint", "lf_lower_leg_joint", 
-        #     "rf_hip_joint", "rf_upper_leg_joint", "rf_lower_leg_joint", 
-        #     "lh_hip_joint", "lh_upper_leg_joint","lh_lower_leg_joint", 
-        #     "rh_hip_joint", "rh_upper_leg_joint", "rh_lower_leg_joint"
-        # ]
-
-        # joint_states.position = joints.position
-        # self.joint_states_pub.publish(joint_states)
 
     def foot_callback(self, points):
         marker_array = MarkerArray()
@@ -106,7 +64,7 @@ class ChampRelay:
 
 if __name__ == "__main__":
     rospy.init_node('clustering', anonymous=True)
-    v = ChampRelay()
+    v = FootRelay()
     rospy.spin()
 
 
