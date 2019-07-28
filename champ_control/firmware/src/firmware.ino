@@ -70,12 +70,14 @@ void loop() {
         base.rh->joints(0, 0, 0);
         base.attitude(0.0, 0.0, 0.0);
 
-        balancer.balance(foot_positions, 0.0, 0.0, 0.0, 0.0, 0.0, -0.08);
+        float target_base_height = base.lf->nominal_stance().Z() + NOMINAL_HEIGHT;
+
+        balancer.balance(foot_positions, 0.0, 0.0, 0.0, 0.0, 0.0, target_base_height);
         gait.generate(foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(foot_positions, joint_positions);
 
         // publishPoints(foot_positions);
-        publishPose(0, 0, base.lf->nominal_stance().X() - 0.08, 0, 0, 0);
+        publishPose(0, 0, NOMINAL_HEIGHT, 0, 0, 0);
         publishJointStates(joint_positions);
 
         prev_control_time = micros();
