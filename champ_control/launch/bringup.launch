@@ -10,7 +10,7 @@
         <param name="baud" value="115200" />
     </node>
 
-    <node pkg="champ_control" name="champ_relay" type="champ_relay.py" output="screen"/>
+    <node pkg="champ_control" name="foot_relay" type="foot_relay.py" output="screen"/>
     <node pkg="champ_control" name="joints_relay" type="joints_relay.py" output="screen"/>
 
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find champ_description)/urdf/champ.urdf.xacro' " />
