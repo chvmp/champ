@@ -12,6 +12,7 @@
 
     <node pkg="champ_control" name="foot_relay" type="foot_relay.py" output="screen"/>
     <node pkg="champ_control" name="joints_relay" type="joints_relay.py" output="screen"/>
+    <node pkg="champ_control" name="pose_relay" type="pose_relay.py" output="screen"/>
 
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find champ_description)/urdf/champ.urdf.xacro' " />
     <node name="champ_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
