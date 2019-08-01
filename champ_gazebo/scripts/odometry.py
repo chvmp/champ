@@ -39,6 +39,8 @@ class Odometry:
             t = self.tf.getLatestCommonTime("base_footprint", self.foot_links[leg_id])
             position, quaternion = self.tf.lookupTransform("base_footprint", self.foot_links[leg_id], t)
             return position
+        else:
+            return 0,0,0
 
     def contacts_callback(self, data):
         self.leg_contact_states = data.contacts
@@ -56,10 +58,13 @@ class Odometry:
 
             for i in range(4):
                 current_foot_position[i] = self.get_foot_position(i)
-
+                # print current_foot_position[i]
+                if current_foot_position[i] == None:
+                    # print "hello"
+                    break
             for i in range(4):
-                if current_foot_position != None:
-                    if self.prev_leg_contact_states[i] and leg_contact_states[i]:
+                if current_foot_position[i] != None:
+                    if self.prev_leg_contact_states and leg_contact_states[i]:
 
                         delta_x = self.foot_positions[i][0] - current_foot_position[i][0]
                         delta_y = self.foot_positions[i][1] - current_foot_position[i][1]
@@ -74,17 +79,20 @@ class Odometry:
 
                         vx_x_sum = vx_x_sum + vx
                         vx_y_sum = vx_y_sum + vy
-
-                        if delta_y != 0:
-                            print "x : ", vx_x_sum
-                            print "y:  ", vx_y_sum
+                        total_contact = total_contact + 1
+                        # if delta_y != 0:
+                        #     print "x : ", vx_x_sum
+                        #     print "y:  ", vx_y_sum
 
                         self.last_touchdowns[i] = rospy.Time.now().to_sec()
-
             self.foot_positions= current_foot_position
             self.prev_leg_contact_states = leg_contact_states
-            mean_vel_x = delta_x_sum 
-            mean_vel_y = delta_y_sum
+            
+            mean_vel_x = 0
+            mean_vel_y = 0
+            if(total_contact > 0):
+                mean_vel_x = delta_x_sum 
+                mean_vel_y = delta_y_sum
 
             self.pos_x = self.pos_x + mean_vel_x
             self.pos_y = self.pos_y + mean_vel_y
@@ -102,7 +110,7 @@ class Odometry:
             )
 
             self.last_contacts_callback_time = rospy.Time.now().to_sec()
-            rospy.sleep(0.01)
+            rospy.sleep(0.05)
 
 if __name__ == "__main__":
     rospy.init_node("champ_gazebo_odometry", anonymous = True)
