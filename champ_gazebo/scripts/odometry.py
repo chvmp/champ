@@ -22,7 +22,8 @@ class Odometry:
             "rh_foot_link"
         ]
 
-        self.foot_positions = [[0,0],[0,0],[0,0],[0,0]]
+        self.prev_foot_positions = [[0,0],[0,0],[0,0],[0,0]]
+        self.prev_theta = [0,0,0,0]
         self.foot_dt = [0,0,0,0]
         self.odom_broadcaster = tf.TransformBroadcaster()
         
@@ -32,6 +33,26 @@ class Odometry:
         self.pos_x = 0
         self.pos_y = 0
         self.theta = 0
+
+        self.publish_odom_tf(0,0,0,0)
+        rospy.sleep(1)
+
+        for i in range(4):
+            self.prev_foot_positions[i] = self.get_foot_position(i)
+            self.prev_theta[i] = math.atan2(self.prev_foot_positions[i][1], self.prev_foot_positions[i][0])
+            
+    def publish_odom_tf(self, x, y, z, theta):
+        current_time = rospy.Time.now()
+
+        odom_quat = quaternion_from_euler (0, 0, theta)
+
+        self.odom_broadcaster.sendTransform(
+            (x, y, z),
+            odom_quat,
+            current_time,
+            "base_footprint",
+            "odom"
+        )
 
     def get_foot_position(self, leg_id):
         if self.tf.frameExists("base_footprint" and self.foot_links[leg_id]) :
@@ -46,50 +67,43 @@ class Odometry:
 
     def run(self):
         while not rospy.is_shutdown():
-            delta_x_sum = 0
-            delta_y_sum = 0
-
+            dt_sum = 0
             leg_contact_states = self.leg_contact_states     
             current_foot_position = [[0,0],[0,0],[0,0],[0,0]]
+            current_theta = [0, 0, 0, 0]
 
             for i in range(4):
                 current_foot_position[i] = self.get_foot_position(i)
-                if current_foot_position[i] == None:
-                    break
+                current_theta[i] = math.atan2(current_foot_position[i][1], current_foot_position[i][0])
 
             for i in range(4):
-                if current_foot_position[i] != None:
-                    if self.prev_leg_contact_states and leg_contact_states[i]:
-                        delta_x = self.foot_positions[i][0] - current_foot_position[i][0]
-                        delta_y = self.foot_positions[i][1] - current_foot_position[i][1]
+                if current_foot_position[i] != None and leg_contact_states[i]:
+                    delta_x = (self.prev_foot_positions[i][0] - current_foot_position[i][0]) / 2
+                    delta_y = (self.prev_foot_positions[i][1] - current_foot_position[i][1]) / 2
+                    #TODO this value is still wrong
+                    delta_theta = (self.prev_theta[i] - current_theta[i])
 
-                        dt = rospy.Time.now().to_sec() - self.last_touchdowns[i]
-                        
-                        delta_x_sum = delta_x_sum + delta_x
-                        delta_y_sum = delta_y_sum + delta_y
+                    x = delta_x * math.cos(self.theta) - delta_y * math.sin(self.theta)
+                    y = delta_x * math.sin(self.theta) + delta_y * math.cos(self.theta)
 
-                        self.last_touchdowns[i] = rospy.Time.now().to_sec()
+                    self.pos_x += x
+                    self.pos_y += y
+                    self.theta += delta_theta
+                    
+                    # print i, " ", delta_theta
 
-            self.foot_positions= current_foot_position
+                    # dt = rospy.Time.now().to_sec() - self.last_touchdowns[i]
+                    # dt_sum = dt_sum + dt
+
+                    # self.last_touchdowns[i] = rospy.Time.now().to_sec()
+
+            self.publish_odom_tf(self.pos_x, self.pos_y, 0, self.theta)
+
+            self.prev_foot_positions = current_foot_position
+            self.prev_theta = current_theta
             self.prev_leg_contact_states = leg_contact_states
-            
-            self.pos_x = self.pos_x + (delta_x_sum / 2)
-            self.pos_y = self.pos_y + (delta_y_sum / 2)
-
-            current_time = rospy.Time.now()
-
-            odom_quat = quaternion_from_euler (0, 0, 0)
-
-            self.odom_broadcaster.sendTransform(
-                (self.pos_x, self.pos_y, 0),
-                odom_quat,
-                current_time,
-                "base_footprint",
-                "odom"
-            )
-
             self.last_contacts_callback_time = rospy.Time.now().to_sec()
-            rospy.sleep(0.02)
+            rospy.sleep(0.05)
 
 if __name__ == "__main__":
     rospy.init_node("champ_gazebo_odometry", anonymous = True)
