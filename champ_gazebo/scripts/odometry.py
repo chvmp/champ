@@ -139,6 +139,7 @@ class ChampOdometry:
                     if not in_xy:
                         delta_theta = self.prev_theta[i] - current_theta[i]
                         theta_sum += delta_theta
+                        self.theta += delta_theta / 2
 
             now = rospy.Time.now().to_sec() 
             dt = now - self.prev_time
