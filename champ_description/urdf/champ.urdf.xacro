@@ -31,10 +31,22 @@
         <material>Gazebo/FlatBlack</material>
     </gazebo>
 
-    <joint name="base_to_champ" type="fixed">
+    <joint name="base_to_footprint" type="fixed">
         <parent link="base_footprint" />
         <child link="base_link" />
         <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name="imu_link">
+        <inertial>
+            <mass value="0.001"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="1e-09" ixy="0.0" ixz="0.0" iyy="1e-09" iyz="0.0" izz="1e-09"/>
+        </inertial>
+    </link>
+        <joint name="imu_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="imu_link" />
     </joint>
 
     <xacro:include filename="$(find champ_description)/urdf/leg.urdf.xacro" />
@@ -81,6 +93,7 @@
         <property name="cam_op" value="0.0" />
         <property name="cam_oy" value="0.0"/>
     </xacro:sensor_kinect> -->
+    
     <xacro:include filename="$(find common_sensors)/urdf/sensors/hokuyo_utm30lx.urdf.xacro" />
     <xacro:hokuyo_utm30lx 
         name="hokuyo" 
@@ -98,18 +111,20 @@
             <robotNamespace>/champ</robotNamespace>
             <legacyModeNS>true</legacyModeNS>
         </plugin>
-
-        <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
-            <alwaysOn>true</alwaysOn>
-            <updateRate>10.0</updateRate>
-            <bodyName>base_link</bodyName>
-            <topicName>odom/ground_truth</topicName>
-            <gaussianNoise>0.01</gaussianNoise>
-            <frameName>world</frameName>
-            <xyzOffsets>0 0 0</xyzOffsets>
-            <rpyOffsets>0 0 0</rpyOffsets>
-        </plugin>
-        <plugin name="contact_plugin" filename="libcontact.so"/>
     </gazebo>
 
+    <gazebo>
+        <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
+            <robotNamespace>/</robotNamespace>
+            <updateRate>50.0</updateRate>
+            <bodyName>imu_link</bodyName>
+            <topicName>imu/data</topicName>
+            <accelDrift>0.005 0.005 0.005</accelDrift>
+            <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
+            <rateDrift>0.005 0.005 0.005 </rateDrift>
+            <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise>
+            <headingDrift>0.005</headingDrift>
+            <headingGaussianNoise>0.005</headingGaussianNoise>
+        </plugin>
+    </gazebo>
 </robot>
