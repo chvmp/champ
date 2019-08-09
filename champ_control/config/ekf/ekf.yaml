@@ -1,0 +1,38 @@
+frequency: 50
+
+two_d_mode: true
+diagnostics_agg: true
+
+#x     , y     , z,
+#roll  , pitch , yaw,
+#vx    , vy    , vz,
+#vroll , vpitch, vyaw,
+#ax    , ay    , az
+
+odom0: odom/raw
+odom0_config: [false, false, false,
+               false, false, false,
+               true, true, false,
+               false, false, true,
+               false, false, false]
+
+odom0_differential: true
+odom0_relative: false
+
+imu0: /imu/data
+
+# NOTE: If you find that your robot has x drift,
+# the most likely candidate is the x'' (acceleration) fr$
+# Just set it to false! (It's the first entry on the las$
+imu0_config: [false, false, false,
+              false, false, true,
+              false, false, false,
+              false, false, true,
+              false, false, false]
+
+imu0_differential: true
+imu0_relative: true
+
+odom_frame: odom
+base_link_frame: base_footprint
+world_frame: odom

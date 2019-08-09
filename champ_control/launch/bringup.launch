@@ -20,4 +20,9 @@
         <param name="ignore_timestamp" type="bool" value="false" />
         <remap from="/joint_states" to="/champ/joint_states/relay" />
     </node>
+
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
+        <remap from="odometry/filtered" to="odom" />
+        <rosparam command="load" file="$(find champ_control)/config/ekf/ekf.yaml" />
+    </node>
 </launch>
