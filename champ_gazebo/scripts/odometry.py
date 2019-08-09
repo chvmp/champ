@@ -150,7 +150,7 @@ class ChampOdometry:
 
             self.publish_odom(self.pos_x, self.pos_y, 0, self.theta, vx, vy, vth)
 
-            self.publish_odom_tf(self.pos_x, self.pos_y, 0, self.theta)
+            # self.publish_odom_tf(self.pos_x, self.pos_y, 0, self.theta)
 
             self.prev_foot_positions = current_foot_position
             self.prev_theta = current_theta
