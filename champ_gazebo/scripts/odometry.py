@@ -2,18 +2,21 @@
 import rospy
 from champ_msgs.msg import Contacts
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Point, Quaternion
+from geometry_msgs.msg import Point, Quaternion, Pose, Twist, Vector3
 import tf
 from tf import TransformListener
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
+from nav_msgs.msg import Odometry
+
 import math
 
-class Odometry:
+class ChampOdometry:
     def __init__(self):
         rospy.Subscriber("/champ/gazebo/contacts", Contacts, self.contacts_callback)
+        self.odom_publisher = rospy.Publisher("odom/raw", Odometry, queue_size=50)
+
+        self.odom_broadcaster = tf.TransformBroadcaster()
         self.tf = TransformListener()
-        self.leg_contact_states = [False, False, False, False]
-        self.prev_leg_contact_states = [False, False, False, False]
 
         self.foot_links = [
             "lf_foot_link",
@@ -22,13 +25,11 @@ class Odometry:
             "rh_foot_link"
         ]
 
+        self.nominal_foot_positions = [[0,0],[0,0],[0,0],[0,0]]
         self.prev_foot_positions = [[0,0],[0,0],[0,0],[0,0]]
         self.prev_theta = [0,0,0,0]
-        self.foot_dt = [0,0,0,0]
-        self.odom_broadcaster = tf.TransformBroadcaster()
-        
-        now = rospy.Time.now().to_sec()
-        self.last_touchdowns = [now,now,now,now]
+        self.prev_stance_angles = [0,0,0,0]
+        self.prev_time = 0
 
         self.pos_x = 0
         self.pos_y = 0
@@ -38,9 +39,25 @@ class Odometry:
         rospy.sleep(1)
 
         for i in range(4):
-            self.prev_foot_positions[i] = self.get_foot_position(i)
+            self.nominal_foot_positions[i] = self.get_foot_position(i)
+            self.prev_foot_positions[i] = self.nominal_foot_positions[i]
             self.prev_theta[i] = math.atan2(self.prev_foot_positions[i][1], self.prev_foot_positions[i][0])
-            
+
+    def publish_odom(self, x, y, z, theta, vx, vy, vth):
+        current_time = rospy.Time.now()
+        odom = Odometry()
+        odom.header.stamp = current_time
+        odom.header.frame_id = "odom"
+
+        odom_quat = tf.transformations.quaternion_from_euler(0, 0, theta)
+        odom.pose.pose = Pose(Point(x, y, z), Quaternion(*odom_quat))
+
+        odom.child_frame_id = "base_footprint"
+        odom.twist.twist = Twist(Vector3(vx, vy, 0), Vector3(0, 0, vth))
+
+        # publish the message
+        self.odom_publisher.publish(odom)
+
     def publish_odom_tf(self, x, y, z, theta):
         current_time = rospy.Time.now()
 
@@ -65,47 +82,83 @@ class Odometry:
     def contacts_callback(self, data):
         self.leg_contact_states = data.contacts
 
+    def is_almost_equal(self, a, b, max_rel_diff):
+        diff = abs(a - b)
+        a = abs(a)
+        b = abs(b)
+        largest = 0
+        if b > a:
+            largest = b
+        else:
+            larget = a
+
+        if diff <= (largest * max_rel_diff):
+            return True
+
+        return False
+
     def run(self):
         while not rospy.is_shutdown():
-            dt_sum = 0
             leg_contact_states = self.leg_contact_states     
             current_foot_position = [[0,0],[0,0],[0,0],[0,0]]
+            stance_angles = [0, 0, 0, 0]
             current_theta = [0, 0, 0, 0]
-
+            delta_theta = 0
+            in_xy = False
+            total_contact = sum(leg_contact_states)
+            x_sum = 0
+            y_sum = 0
+            theta_sum = 0
+   
             for i in range(4):
                 current_foot_position[i] = self.get_foot_position(i)
-                current_theta[i] = math.atan2(current_foot_position[i][1], current_foot_position[i][0])
 
             for i in range(4):
-                if current_foot_position[i] != None and leg_contact_states[i]:
+                current_theta[i] = math.atan2(current_foot_position[i][1], current_foot_position[i][0])
+                from_nominal_x = self.nominal_foot_positions[i][0] - current_foot_position[i][0]
+                from_nominal_y = self.nominal_foot_positions[i][1] - current_foot_position[i][1]
+                stance_angles[i] = math.atan2(from_nominal_y, from_nominal_x)
+                # print stance_angles
+                #check if it's moving in the x or y axis
+                if self.is_almost_equal(stance_angles[i], abs(1.5708), 0.001) or self.is_almost_equal(stance_angles[i], abs(3.1416), 0.001):
+                    in_xy = True
+                
+                if current_foot_position[i] != None and leg_contact_states[i] == True and total_contact == 2:
                     delta_x = (self.prev_foot_positions[i][0] - current_foot_position[i][0]) / 2
                     delta_y = (self.prev_foot_positions[i][1] - current_foot_position[i][1]) / 2
-                    #TODO this value is still wrong
-                    delta_theta = (self.prev_theta[i] - current_theta[i])
-
+    
                     x = delta_x * math.cos(self.theta) - delta_y * math.sin(self.theta)
                     y = delta_x * math.sin(self.theta) + delta_y * math.cos(self.theta)
 
+                    x_sum += delta_x
+                    y_sum += delta_y
+
                     self.pos_x += x
                     self.pos_y += y
-                    self.theta += delta_theta
-                    
-                    # print i, " ", delta_theta
 
-                    # dt = rospy.Time.now().to_sec() - self.last_touchdowns[i]
-                    # dt_sum = dt_sum + dt
+                    if not in_xy:
+                        delta_theta = self.prev_theta[i] - current_theta[i]
+                        theta_sum += delta_theta
 
-                    # self.last_touchdowns[i] = rospy.Time.now().to_sec()
+            now = rospy.Time.now().to_sec() 
+            dt = now - self.prev_time
+
+            vx = x_sum / dt
+            vy = y_sum / dt
+            vth = theta_sum / dt
+
+            self.publish_odom(self.pos_x, self.pos_y, 0, self.theta, vx, vy, vth)
 
             self.publish_odom_tf(self.pos_x, self.pos_y, 0, self.theta)
 
             self.prev_foot_positions = current_foot_position
             self.prev_theta = current_theta
-            self.prev_leg_contact_states = leg_contact_states
-            self.last_contacts_callback_time = rospy.Time.now().to_sec()
-            rospy.sleep(0.05)
+            self.prev_stance_angles = stance_angles
+
+            self.prev_time = now
+            rospy.sleep(0.01)
 
 if __name__ == "__main__":
     rospy.init_node("champ_gazebo_odometry", anonymous = True)
-    odom = Odometry()
+    odom = ChampOdometry()
     odom.run()
