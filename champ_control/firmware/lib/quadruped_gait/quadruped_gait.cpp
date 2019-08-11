@@ -8,10 +8,6 @@ QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, float max_xy_velocit
     max_step_length_(max_step_length),
     max_angular_velocity_(max_angular_velocity),
     max_theta_(max_theta),
-    transversal_step_length_(0),
-    lateral_step_length_(0),
-    rotational_step_length_(0),
-    optimal_rotational_angle_(0),
     lf(base_->lf, swing_height, max_step_length_, stance_depth),
     rf(base_->rf, swing_height, max_step_length_, stance_depth),
     lh(base_->lh, swing_height, max_step_length_, stance_depth),
@@ -23,10 +19,6 @@ QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, float max_xy_velocit
     trajectory_planners_[total_legs++] = &rf;
     trajectory_planners_[total_legs++] = &lh;
     trajectory_planners_[total_legs++] = &rh;
-
-    transversal_step_length_ = max_step_length_;
-    lateral_step_length_ = max_step_length_ * 0.5;
-    rotational_step_length_ = max_step_length_ * 0.2;
 }
 
 void QuadrupedGait::transformTrajectory(QuadrupedLeg *leg, float linear_velocity_x, float linear_velocity_y, float angular_velocity_z, float &step_length, float &rotation)
