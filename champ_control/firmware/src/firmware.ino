@@ -29,12 +29,12 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 champ_msgs::Pose pose_msg;
 ros::Publisher pose_pub("/champ/pose/raw", &pose_msg);
 
-ros::Subscriber<geometry_msgs::Twist> cmd_sub("cmd_vel", commandCallback);
+ros::Subscriber<geometry_msgs::Twist> cmd_sub("champ/cmd_vel", commandCallback);
 
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
 QuadrupedIK ik(base);
-QuadrupedGait gait(base, MAX_VELOCITY, SWING_HEIGHT, STEP_LENGTH, STANCE_DEPTH);
+QuadrupedGait gait(base, MAX_XY_VELOCITY, MAX_STEP_LENGTH, MAX_ANGULAR_VELOCITY, MAX_THETA, SWING_HEIGHT, STANCE_DEPTH);
 
 void setup()
 {

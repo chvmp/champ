@@ -25,4 +25,6 @@
         <remap from="odometry/filtered" to="odom" />
         <rosparam command="load" file="$(find champ_control)/config/ekf/ekf.yaml" />
     </node>
+
+    <include file="$(find champ_control)/launch/include/velocity_smoother.launch" />
 </launch>
