@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find champ_navigation)/launch/slam/octomap.launch" />
+
+    <include file="$(find champ_navigation)/launch/navigation/move_base.launch" />
+</launch>
