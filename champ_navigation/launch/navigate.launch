@@ -4,9 +4,9 @@
     <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
 
     <!-- AMCL used for localization -->
-    <include file="$(find champ_navigation)/launch/amcl.launch" />
+    <include file="$(find champ_navigation)/launch/navigation/amcl.launch" />
     
     <!-- Calls navigation stack packages for compatible Linorobot base -->
     <!-- Takes reference from env variable LINOBASE. ie. export LINOBASE=2wd -->
-    <include file="$(find champ_navigation)/launch/move_base.launch" />
+    <include file="$(find champ_navigation)/launch/navigation/move_base.launch" />
 </launch>
