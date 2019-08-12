@@ -84,16 +84,6 @@
         <origin xyz="-${base_to_hip_x} -${base_to_hip_y} 0" rpy="0 ${pi/2} ${pi/2}" />
     </joint>
 
-    <!-- <xacro:include filename="$(find common_sensors)/urdf/sensors/kinect.urdf.xacro" />
-    <xacro:sensor_kinect parent="base_link">
-        <property name="cam_px" value="0.23" />
-        <property name="cam_py" value="0.0" />
-        <property name="cam_pz" value="0.115" />
-        <property name="cam_or" value="0.0" />
-        <property name="cam_op" value="0.0" />
-        <property name="cam_oy" value="0.0"/>
-    </xacro:sensor_kinect> -->
-    
     <xacro:include filename="$(find common_sensors)/urdf/sensors/hokuyo_utm30lx.urdf.xacro" />
     <xacro:hokuyo_utm30lx 
         name="hokuyo" 
@@ -105,13 +95,20 @@
         max_angle="-130" >
         <origin xyz="0.0 0.0 ${base_z_length / 2 + 0.04}" rpy="0 0 0"/>
     </xacro:hokuyo_utm30lx>
+    <gazebo reference="hokuyo_frame">
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
 
-    <gazebo>
-        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <robotNamespace>/champ</robotNamespace>
-            <legacyModeNS>true</legacyModeNS>
-        </plugin>
-    </gazebo>
+    <xacro:include filename="$(find common_sensors)/urdf/sensors/xtion.urdf.xacro" />
+    <xacro:sensor_xtion 
+        parent="base_link" 
+        camera_name="camera">
+        <origin xyz="${base_x_length / 2} 0.0 ${base_z_length / 2 + 0.01}" rpy="0 0 0"/>
+    </xacro:sensor_xtion>
+
+    <gazebo reference="hokuyo_frame">
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
 
     <gazebo>
         <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
@@ -125,6 +122,13 @@
             <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise>
             <headingDrift>0.005</headingDrift>
             <headingGaussianNoise>0.005</headingGaussianNoise>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/champ</robotNamespace>
+            <legacyModeNS>true</legacyModeNS>
         </plugin>
     </gazebo>
 </robot>
