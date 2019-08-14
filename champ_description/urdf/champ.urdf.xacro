@@ -4,7 +4,6 @@
 
     <material name="black"><color rgba="0.15 0.15 0.15 1.0" /></material>
 
-    <link name="base_footprint"/>
     <link name="base_link">
         <inertial>
             <origin xyz="0 0 0" />
@@ -30,12 +29,6 @@
     <gazebo reference="base_link">
         <material>Gazebo/FlatBlack</material>
     </gazebo>
-
-    <joint name="base_to_footprint" type="fixed">
-        <parent link="base_footprint" />
-        <child link="base_link" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
-    </joint>
 
     <link name="imu_link">
         <inertial>
