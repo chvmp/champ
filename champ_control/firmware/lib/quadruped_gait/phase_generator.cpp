@@ -75,8 +75,10 @@ void PhaseGenerator::run(float target_velocity, float step_length)
     if(!has_swung_)
     {
         if(stance_phase_signal[0] < 0.5)
+        {
             stance_phase_signal[0] = 0.5;
             stance_phase_signal[3] = 0.5; 
+        }
     }  
 }
     
