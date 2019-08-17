@@ -15,10 +15,10 @@ class FootRelay:
 
     def foot_callback(self, points):
         marker_array = MarkerArray()
-        marker_array.markers.append(self.create_marker(points.lf.x, points.lf.y, points.lf.z, 0, "lf_hip_debug_link"))
+        # marker_array.markers.append(self.create_marker(points.lf.x, points.lf.y, points.lf.z, 0, "lf_hip_debug_link"))
         marker_array.markers.append(self.create_marker(points.rf.x, points.rf.y, points.rf.z, 1, "rf_hip_debug_link"))
-        marker_array.markers.append(self.create_marker(points.lh.x, points.lh.y, points.lh.z, 2, "lh_hip_debug_link"))
-        marker_array.markers.append(self.create_marker(points.rh.x, points.rh.y, points.rh.z, 3, "rh_hip_debug_link"))
+        # marker_array.markers.append(self.create_marker(points.lh.x, points.lh.y, points.lh.z, 2, "lh_hip_debug_link"))
+        # marker_array.markers.append(self.create_marker(points.rh.x, points.rh.y, points.rh.z, 3, "rh_hip_debug_link"))
         # marker_array.markers.append(self.create_marker(points.lf.x, points.lf.y, points.lf.z, 0, "base_link"))
         # marker_array.markers.append(self.create_marker(points.rf.x, points.rf.y, points.rf.z, 1, "base_link"))
         # marker_array.markers.append(self.create_marker(points.lh.x, points.lh.y, points.lh.z, 2, "base_link"))
@@ -40,11 +40,9 @@ class FootRelay:
     def create_marker(self, x, y, z, id, frame_id):
         point_marker = Marker()
         point_marker.header.frame_id = frame_id
-        point_marker.header.stamp = rospy.Time.now()
-        point_marker.lifetime = rospy.Duration.from_sec(10)
 
         point_marker.type = Marker.SPHERE
-        point_marker.action = Marker.MODIFY
+        point_marker.action = Marker.ADD
         point_marker.id = id
         point_marker.pose.position.x = x
         point_marker.pose.position.y = y
