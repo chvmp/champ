@@ -8,7 +8,7 @@
         <param if="$(arg sim)" name="fix_pyserial_for_test" value="true" />
         <param unless="$(arg sim)" name="fix_pyserial_for_test" value="false" />
         <param name="baud" value="115200" />
-        <!-- <remap from="champ/cmd_vel" to "cmd_vel" /> -->
+        <!-- <remap from="champ/cmd_vel" to="cmd_vel" /> -->
     </node>
 
     <node pkg="champ_control" name="foot_relay" type="foot_relay.py" output="screen"/>
