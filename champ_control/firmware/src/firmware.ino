@@ -15,9 +15,14 @@ float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
 float g_req_angular_vel_z = 0;
 
+float g_req_roll = 0;
+float g_req_pitch = 0;
+float g_req_yaw = 0;
+
 unsigned long g_prev_command_time = 0;
 
-void commandCallback(const geometry_msgs::Twist& cmd_msg);
+void velocityCommandCallback(const geometry_msgs::Twist& vel_cmd_msg);
+void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg);
 
 ros::NodeHandle nh;
 champ_msgs::PointArray point_msg;
@@ -29,7 +34,8 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 champ_msgs::Pose pose_msg;
 ros::Publisher pose_pub("/champ/pose/raw", &pose_msg);
 
-ros::Subscriber<geometry_msgs::Twist> cmd_sub("champ/cmd_vel", commandCallback);
+ros::Subscriber<geometry_msgs::Twist> vel_cmd_sub("champ/cmd_vel", velocityCommandCallback);
+ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCallback);
 
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
@@ -45,7 +51,8 @@ void setup()
     // nh.advertise(point_pub);
     nh.advertise(jointstates_pub);
     nh.advertise(pose_pub);
-    nh.subscribe(cmd_sub);
+    nh.subscribe(vel_cmd_sub);
+    nh.subscribe(pose_cmd_sub);
 
     while (!nh.connected())
     {
@@ -72,7 +79,7 @@ void loop() {
 
         float target_base_height = base.lf->nominal_stance().Z() + NOMINAL_HEIGHT;
 
-        balancer.balance(foot_positions, 0.0, 0.0, 0.0, 0.0, 0.0, target_base_height);
+        balancer.balance(foot_positions, g_req_roll, g_req_pitch, g_req_yaw, 0.0, 0.0, target_base_height);
         gait.generate(foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(foot_positions, joint_positions);
 
@@ -98,13 +105,20 @@ void stopBase()
     g_req_angular_vel_z = 0;
 }
 
-void commandCallback(const geometry_msgs::Twist& cmd_msg)
+void velocityCommandCallback(const geometry_msgs::Twist& vel_cmd_msg)
 {
-    g_req_linear_vel_x = cmd_msg.linear.x;
-    g_req_linear_vel_y = cmd_msg.linear.y;
-    g_req_angular_vel_z = cmd_msg.angular.z;
+    g_req_linear_vel_x = vel_cmd_msg.linear.x;
+    g_req_linear_vel_y = vel_cmd_msg.linear.y;
+    g_req_angular_vel_z = vel_cmd_msg.angular.z;
 
     g_prev_command_time = micros();
+}
+
+void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg)
+{
+    g_req_roll = pose_cmd_msg.roll;
+    g_req_pitch = pose_cmd_msg.pitch;
+    g_req_yaw = pose_cmd_msg.yaw;
 }
 
 void publishJointStates(float joint_positions[12])
