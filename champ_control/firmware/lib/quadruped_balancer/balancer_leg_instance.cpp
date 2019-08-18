@@ -9,6 +9,10 @@ BalancerLegInstance::BalancerLegInstance(QuadrupedLeg *leg):
 void BalancerLegInstance::legGroundIntersection(Transformation &foot_position, float target_roll, float target_pitch, 
                         float target_yaw, float target_x, float target_y, float target_z)
 {
+    target_roll = -target_roll;
+    target_pitch = -target_pitch;
+    target_yaw = -target_yaw;
+
     Transformation normal_vector;
     Transformation plane_p;
     Transformation normal_vector_origin;
