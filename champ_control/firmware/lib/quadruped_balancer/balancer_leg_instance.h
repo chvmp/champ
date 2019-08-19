@@ -11,11 +11,10 @@ class BalancerLegInstance
     public:
         BalancerLegInstance(QuadrupedLeg *leg);
 
-        void balance(float target_roll, float target_pitch, float target_yaw, 
-                     float target_x, float target_y, float target_z);
+        void balance(Transformation &new_foot_position, float body_roll, float body_pitch, 
+                                   float body_yaw, float target_z);
 
-        void legGroundIntersection(Transformation &new_foot_position, float target_roll, float target_pitch, 
-                                   float target_yaw, float target_x, float target_y, float target_z);
+         void setBodyPose(Transformation &new_foot_position, float target_roll, float target_pitch, float target_yaw);
 };
 
 #endif

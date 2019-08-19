@@ -16,11 +16,12 @@ QuadrupedBalancer::QuadrupedBalancer(QuadrupedBase &quadruped_base):
     legs_[total_stances++] = &rh;
 }
 
-void QuadrupedBalancer::balance(Transformation (&foot_positions)[4], float target_roll, float target_pitch, 
-                        float target_yaw, float target_x, float target_y, float target_z)
+void QuadrupedBalancer::setBodyPose(Transformation (&foot_positions)[4], float target_roll, float target_pitch, 
+                        float target_yaw, float target_z)
 {
     for(int i = 0; i < 4; i++)
     {
-        legs_[i]->legGroundIntersection(foot_positions[i], target_roll, target_pitch, target_yaw, target_x, target_y, target_z);
+        legs_[i]->balance(foot_positions[i], base_->roll(), base_->pitch(), base_->yaw(), target_z);
+        legs_[i]->setBodyPose(foot_positions[i], target_roll, target_pitch, target_yaw);
     }
 }

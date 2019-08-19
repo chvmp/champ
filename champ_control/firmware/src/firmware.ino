@@ -79,7 +79,7 @@ void loop() {
 
         float target_base_height = base.lf->nominal_stance().Z() + NOMINAL_HEIGHT;
 
-        balancer.balance(foot_positions, g_req_roll, g_req_pitch, g_req_yaw, 0.0, 0.0, target_base_height);
+        balancer.setBodyPose(foot_positions, g_req_roll, g_req_pitch, g_req_yaw, target_base_height);
         gait.generate(foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(foot_positions, joint_positions);
 

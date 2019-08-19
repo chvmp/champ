@@ -6,13 +6,9 @@ BalancerLegInstance::BalancerLegInstance(QuadrupedLeg *leg):
 {
 }
 
-void BalancerLegInstance::legGroundIntersection(Transformation &foot_position, float target_roll, float target_pitch, 
-                        float target_yaw, float target_x, float target_y, float target_z)
+void BalancerLegInstance::balance(Transformation &foot_position, float body_roll, float body_pitch, 
+                        float body_yaw, float target_z)
 {
-    target_roll = -target_roll;
-    target_pitch = -target_pitch;
-    target_yaw = -target_yaw;
-
     Transformation normal_vector;
     Transformation plane_p;
     Transformation normal_vector_origin;
@@ -35,16 +31,16 @@ void BalancerLegInstance::legGroundIntersection(Transformation &foot_position, f
     normal_vector.p = normal_vector_origin.p;
     normal_vector.Translate(0, 0, 0.1);
 
-    plane_p.RotateX(target_roll);
-    plane_p.RotateY(target_pitch);
+    plane_p.RotateX(body_roll);
+    plane_p.RotateY(body_pitch);
 
-    line_p0.RotateZ(target_yaw);
+    line_p0.RotateZ(body_yaw);
 
-    normal_vector_origin.RotateX(target_roll);
-    normal_vector_origin.RotateY(target_pitch);
+    normal_vector_origin.RotateX(body_roll);
+    normal_vector_origin.RotateY(body_pitch);
 
-    normal_vector.RotateX(target_roll);
-    normal_vector.RotateY(target_pitch);
+    normal_vector.RotateX(body_roll);
+    normal_vector.RotateY(body_pitch);
 
     normal_vector.X() = normal_vector.X() - normal_vector_origin.X();
     normal_vector.Y() = normal_vector.Y() - normal_vector_origin.Y();
@@ -91,6 +87,14 @@ void BalancerLegInstance::legGroundIntersection(Transformation &foot_position, f
     foot_position.p.X() = x_numerator.Det() / denominator.Det();
     foot_position.p.Y() = y_numerator.Det() / denominator.Det();
     foot_position.p.Z() = z_numerator.Det() / denominator.Det();
-    
+}
+
+
+void BalancerLegInstance::setBodyPose(Transformation &foot_position, float target_roll, float target_pitch, float target_yaw)
+{
+    foot_position.RotateX(-target_roll);
+    foot_position.RotateY(-target_pitch);
+    foot_position.RotateZ(-target_yaw);
+
     leg_->transformToHip(foot_position);
 }

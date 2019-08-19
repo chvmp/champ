@@ -14,8 +14,8 @@ class QuadrupedBalancer
     public:
         QuadrupedBalancer(QuadrupedBase &quadruped_base);
 
-        void balance(Transformation (&foot_positions)[4], float target_roll, float target_pitch, 
-                        float target_yaw, float target_x, float target_y, float target_z);
+        void setBodyPose(Transformation (&foot_positions)[4], float target_roll, float target_pitch, 
+                        float target_yaw, float target_z);
         
         BalancerLegInstance lf;
         BalancerLegInstance rf;
