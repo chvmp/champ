@@ -3,6 +3,7 @@
 #define BASE_TO_HIP_X 0.175
 #define BASE_TO_HIP_Y 0.105
 
+//RevoluteJoint joint(d, theta, r, alpha);
 RevoluteJoint lf_hip(0, 0, 0, 1.5708);
 RevoluteJoint lf_upper_leg(0.06, 0, 0.141, 0);
 RevoluteJoint lf_lower_leg(0, 0, 0.141, 0);
