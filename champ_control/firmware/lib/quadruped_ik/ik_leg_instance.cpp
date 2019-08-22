@@ -8,12 +8,13 @@ IKLegInstance::IKLegInstance(QuadrupedLeg *leg):
 void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float &upper_leg_joint, float &lower_leg_joint)
 {
     Rotation hip_theta;
+    Point foot_pos = foot_position.p;
     Transformation transformed_foot_position = foot_position;
-
+    
     hip_joint = -(atan(transformed_foot_position.Z() / transformed_foot_position.X()) - (1.5708 - acos(leg_->upper_leg->d() / sqrt(pow(transformed_foot_position.Z(), 2) + pow(transformed_foot_position.X(), 2)))));
     // foot_position.RotateY(joints_[0]);
     hip_theta.RotateY(hip_joint);
-    transformed_foot_position.p = hip_theta * foot_position.p;
+    transformed_foot_position.p = hip_theta * foot_pos;
      // // reverse
     lower_leg_joint = -acos((pow(transformed_foot_position.X(), 2) + pow(transformed_foot_position.Y(), 2) - pow(leg_->upper_leg->r() ,2) - pow(leg_->lower_leg->r() ,2)) / (2 * leg_->upper_leg->r() * leg_->lower_leg->r()));
     upper_leg_joint = (atan(transformed_foot_position.Y() / transformed_foot_position.X()) - atan( (leg_->lower_leg->r() * sin(lower_leg_joint)) / (leg_->upper_leg->r() + (leg_->lower_leg->r() * cos(lower_leg_joint)))));
