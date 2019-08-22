@@ -14,7 +14,7 @@ class BalancerLegInstance
         void balance(Transformation &new_foot_position, float body_roll, float body_pitch, 
                                    float body_yaw, float target_z);
 
-        void setBodyPose(Transformation &new_foot_position, float target_roll, float target_pitch, float target_yaw);
+        void setBodyPose(Transformation &new_foot_position, float target_roll, float target_pitch, float target_yaw, float target_z);
 };
 
 #endif

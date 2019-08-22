@@ -90,8 +90,14 @@ void BalancerLegInstance::balance(Transformation &foot_position, float body_roll
 }
 
 
-void BalancerLegInstance::setBodyPose(Transformation &foot_position, float target_roll, float target_pitch, float target_yaw)
+void BalancerLegInstance::setBodyPose(Transformation &foot_position, float target_roll, float target_pitch, float target_yaw, float target_z)
 {
+    float delta_height = leg_->nominal_stance().Z() + target_z;
+
+    foot_position = leg_->nominal_stance();
+
+    foot_position.Translate(0, 0, -delta_height);
+
     foot_position.RotateX(-target_roll);
     foot_position.RotateY(-target_pitch);
     foot_position.RotateZ(-target_yaw);
