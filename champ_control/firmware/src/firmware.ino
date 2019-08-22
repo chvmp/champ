@@ -5,6 +5,7 @@
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Joints.h>
 #include <champ_msgs/Pose.h>
+#include <champ_msgs/Imu.h>
 #include <champ_description.h>
 #include <champ_config.h>
 #include <quadruped_ik.h>
@@ -19,10 +20,15 @@ float g_req_roll = 0;
 float g_req_pitch = 0;
 float g_req_yaw = 0;
 
+float g_sim_roll = 0;
+float g_sim_pitch = 0;
+float g_sim_yaw = 0;
+
 unsigned long g_prev_command_time = 0;
 
 void velocityCommandCallback(const geometry_msgs::Twist& vel_cmd_msg);
 void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg);
+void simPoseCallback(const champ_msgs::Pose& sim_pose_msg);
 
 ros::NodeHandle nh;
 champ_msgs::PointArray point_msg;
@@ -36,6 +42,7 @@ ros::Publisher pose_pub("/champ/pose/raw", &pose_msg);
 
 ros::Subscriber<geometry_msgs::Twist> vel_cmd_sub("champ/cmd_vel", velocityCommandCallback);
 ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCallback);
+ros::Subscriber<champ_msgs::Pose> sim_pose_sub("/champ/gazebo/pose", simPoseCallback);
 
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
@@ -53,6 +60,7 @@ void setup()
     nh.advertise(pose_pub);
     nh.subscribe(vel_cmd_sub);
     nh.subscribe(pose_cmd_sub);
+    nh.subscribe(sim_pose_sub);
 
     while (!nh.connected())
     {
@@ -75,7 +83,7 @@ void loop() {
         base.rf->joints(0, 0, 0);
         base.lh->joints(0, 0, 0);
         base.rh->joints(0, 0, 0);
-        base.attitude(0.0, 0.0, 0.0);
+        base.attitude(g_sim_roll, g_sim_pitch, g_sim_yaw);
 
         float target_base_height = base.lf->nominal_stance().Z() + NOMINAL_HEIGHT;
 
@@ -84,7 +92,7 @@ void loop() {
         ik.solve(foot_positions, joint_positions);
 
         // publishPoints(foot_positions);
-        publishPose(0, 0, NOMINAL_HEIGHT, 0, 0, 0);
+        publishPose(0, 0, NOMINAL_HEIGHT, base.roll(), base.pitch(), base.yaw());
         publishJointStates(joint_positions);
 
         prev_control_time = micros();
@@ -119,6 +127,13 @@ void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg)
     g_req_roll = pose_cmd_msg.roll;
     g_req_pitch = pose_cmd_msg.pitch;
     g_req_yaw = pose_cmd_msg.yaw;
+}
+
+void simPoseCallback(const champ_msgs::Pose& sim_pose_msg)
+{
+    g_sim_roll = sim_pose_msg.roll;
+    g_sim_pitch = sim_pose_msg.pitch;
+    g_sim_yaw = sim_pose_msg.yaw;
 }
 
 void publishJointStates(float joint_positions[12])
