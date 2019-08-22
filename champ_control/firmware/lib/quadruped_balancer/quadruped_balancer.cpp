@@ -21,7 +21,7 @@ void QuadrupedBalancer::setBodyPose(Transformation (&foot_positions)[4], float t
 {
     for(int i = 0; i < 4; i++)
     {
-        legs_[i]->balance(foot_positions[i], base_->roll(), base_->pitch(), base_->yaw(), target_z);
+        legs_[i]->balance(foot_positions[i], base_->roll(), base_->pitch(), 0, target_z);
         legs_[i]->setBodyPose(foot_positions[i], target_roll, target_pitch, target_yaw);
     }
 }
