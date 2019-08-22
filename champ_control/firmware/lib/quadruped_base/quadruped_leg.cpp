@@ -19,7 +19,10 @@ QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_lin
     addLink(hip);
     addLink(upper_leg);
     addLink(lower_leg);
-    nominal_stance_ = foot_from_base();
+
+    nominal_stance_.X() = x_ ;
+    nominal_stance_.Y() = y_ + upper_leg->d();
+    nominal_stance_.Z() = -(upper_leg->r() + lower_leg->r());
 }
 
 void QuadrupedLeg::addLink(RevoluteJoint *l)
