@@ -24,7 +24,7 @@ void BalancerLegInstance::balance(Transformation &foot_position, float body_roll
     line_p0 = leg_->nominal_stance();
     line_p1 = leg_->nominal_stance();
     line_p0.Translate(0, 0, -target_z);
-    line_p1.Translate(0, 0, leg_->upper_leg->r() + leg_->lower_leg->r());
+    line_p1.Translate(0, 0, leg_->lower_leg->x() + leg_->foot->x());
 
     normal_vector_origin = leg_->nominal_stance();
     normal_vector_origin.Translate(-0.1, -0.1, -target_z);

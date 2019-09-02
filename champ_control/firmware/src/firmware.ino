@@ -7,9 +7,9 @@
 #include <champ_msgs/Pose.h>
 #include <champ_description.h>
 #include <champ_config.h>
-#include <quadruped_ik.h>
 #include <quadruped_balancer.h>
 #include <quadruped_gait.h>
+#include <quadruped_ik.h>
 
 float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
@@ -39,8 +39,8 @@ ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCall
 
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
 QuadrupedBalancer balancer(base);
-QuadrupedIK ik(base);
 QuadrupedGait gait(base, MAX_XY_VELOCITY, MAX_STEP_LENGTH, MAX_ANGULAR_VELOCITY, MAX_THETA, SWING_HEIGHT, STANCE_DEPTH);
+QuadrupedIK ik(base);
 
 void setup()
 {
@@ -71,10 +71,10 @@ void loop() {
         Transformation foot_positions[4];
         float joint_positions[12]; 
 
-        base.lf->joints(0, 0, 0);
-        base.rf->joints(0, 0, 0);
-        base.lh->joints(0, 0, 0);
-        base.rh->joints(0, 0, 0);
+        base.lf->joints(0.0, 0.0, 0.0);
+        base.rf->joints(0.0, 0.0, 0.0);
+        base.lh->joints(0.0, 0.0, 0.0);
+        base.rh->joints(0.0, 0.0, 0.0);
         base.attitude(0.0, 0.0, 0.0);
 
         balancer.setBodyPose(foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);

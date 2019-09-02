@@ -1,65 +1,70 @@
 #include<quadruped_leg.h>
 
-QuadrupedLeg::QuadrupedLeg(RevoluteJoint &hip_link, RevoluteJoint &upper_leg_link, RevoluteJoint &lower_leg_link, 
-    float pos_x, float pos_y, float pos_z, float or_r, float or_p, float or_y):
+QuadrupedLeg::QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lower_leg_joint,  Joint &foot_joint):
     no_of_links_(0),
-    x_(pos_x), 
-    y_(pos_y),
-    z_(pos_z),
-    roll_(or_r),
-    pitch_(or_p),
-    yaw_(or_y),
     leg_id_(0),
     last_touchdown_(0),
     in_contact_(0),
-    hip(&hip_link),
-    upper_leg(&upper_leg_link),
-    lower_leg(&lower_leg_link)
+    hip(&hip_joint),
+    upper_leg(&upper_leg_joint),
+    lower_leg(&lower_leg_joint),
+    foot(&foot_joint)
 {
     addLink(hip);
     addLink(upper_leg);
     addLink(lower_leg);
+    addLink(foot);
 
-    nominal_stance_.X() = x_ ;
-    nominal_stance_.Y() = y_ + upper_leg->d();
-    nominal_stance_.Z() = -(upper_leg->r() + lower_leg->r());
+    nominal_stance_.X() = hip->x();
+    nominal_stance_.Y() = hip->y() + upper_leg->z();
+    nominal_stance_.Z() = -(lower_leg->x() + foot->x());
 }
 
-void QuadrupedLeg::addLink(RevoluteJoint *l)
+void QuadrupedLeg::addLink(Joint *l)
 {
     chain[no_of_links_++] = l;
 }
 
-Transformation QuadrupedLeg::forwardKinematics(Transformation &pose)
+Transformation QuadrupedLeg::foot_from_hip()
 {
-    for(int i = no_of_links_ - 1; i >= 0; i--)
-    {
-        pose.RotateX(chain[i]->alpha());
-        pose.Translate(chain[i]->r(), 0, 0);
-        pose.Translate(0, 0, chain[i]->d());
-        pose.RotateZ(chain[i]->theta());
-    }
-    pose.RotateX(-PI/2);
+    //forward kinematics
+    Transformation foot_position;
+    foot_position = Identity<4,4>();
 
-    return pose;
-}
+    foot_position.Translate(chain[3]->x(), 0, 0);
+    foot_position.RotateZ(chain[2]->theta());
 
-Transformation QuadrupedLeg::foot()
-{
-    foot_from_hip_ = Identity<4,4>();
+    foot_position.Translate(chain[2]->x(), 0, 0);
+    foot_position.RotateZ(chain[1]->theta());
 
-    return forwardKinematics(foot_from_hip_);
+    foot_position.Translate(0, 0, chain[1]->z());
+    foot_position.RotateY(chain[0]->theta());
+
+    return foot_position;
 }
 
 Transformation QuadrupedLeg::foot_from_base()
 {
-    foot_from_base_.p = foot().p;
-    foot_from_base_.RotateX(roll_);
-    foot_from_base_.RotateY(pitch_);
-    foot_from_base_.RotateZ(yaw_);
-    foot_from_base_.Translate(x_, y_, z_);
+    Transformation foot_position;
 
-    return foot_from_base_;
+    foot_position.p = foot_from_hip().p;
+    
+    foot_position.RotateX(hip->roll());
+    foot_position.RotateY(hip->pitch());
+    foot_position.RotateZ(hip->yaw());
+    foot_position.Translate(hip->x(), hip->y(), hip->z());
+
+    return foot_position;
+}
+
+void QuadrupedLeg::transformToHip(Transformation &foot)
+{
+    Point temp_point;
+    temp_point.X() = -foot.Z();
+    temp_point.Y() =  hip->x() - foot.X();
+    temp_point.Z() = foot.Y() - hip->y();
+
+    foot.p = temp_point;
 }
 
 void QuadrupedLeg::joints(float hip_joint, float upper_leg_joint, float lower_leg_joint)
@@ -75,36 +80,6 @@ void QuadrupedLeg::joints(float *joints)
     {
         chain[i]->theta(joints[i]);
     }
-}
-
-float QuadrupedLeg::x()
-{
-    return x_;
-}
-
-float QuadrupedLeg::y()
-{
-    return y_;
-}
-
-float QuadrupedLeg::z()
-{
-    return z_;
-}
-
-float QuadrupedLeg::roll()
-{
-    return roll_;
-}
-
-float QuadrupedLeg::pitch()
-{
-    return pitch_;
-}
-
-float QuadrupedLeg::yaw()
-{
-    return yaw_;
 }
 
 Transformation QuadrupedLeg::nominal_stance()
@@ -125,16 +100,6 @@ unsigned long int  QuadrupedLeg::last_touchdown()
 void  QuadrupedLeg::last_touchdown(unsigned long int current_time)
 {
     last_touchdown_ = current_time;
-}
-
-void QuadrupedLeg::transformToHip(Transformation &foot)
-{
-    Point temp_point;
-    temp_point.X() = - foot.Z();
-    temp_point.Y() = x_ - foot.X();
-    temp_point.Z() = foot.Y() - y_;
-
-    foot.p = temp_point;
 }
 
 void QuadrupedLeg::leg_id(unsigned int id)
