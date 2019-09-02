@@ -54,34 +54,6 @@
     <xacro:champ_leg leg="rf"/>
     <xacro:champ_leg leg="rh"/>
 
-    <link name="lf_hip_debug_link"/>
-    <joint name="lf_debug_joint" type="fixed">
-        <parent link="base_link" />
-        <child link="lf_hip_debug_link" />
-        <origin xyz="${base_to_hip_x} ${base_to_hip_y} 0" rpy="0 ${pi/2} ${pi/2}" />
-    </joint>
-
-    <link name="rf_hip_debug_link"/>
-    <joint name="rf_debug_joint" type="fixed">
-        <parent link="base_link" />
-        <child link="rf_hip_debug_link" />
-        <origin xyz="${base_to_hip_x} -${base_to_hip_y} 0" rpy="0 ${pi/2} ${pi/2}" />
-    </joint>
-
-    <link name="lh_hip_debug_link"/>
-    <joint name="lh_debug_joint" type="fixed">
-        <parent link="base_link" />
-        <child link="lh_hip_debug_link" />
-        <origin xyz="-${base_to_hip_x} ${base_to_hip_y} 0" rpy="0 ${pi/2} ${pi/2}" />
-    </joint>
-
-    <link name="rh_hip_debug_link"/>
-    <joint name="rh_debug_joint" type="fixed">
-        <parent link="base_link" />
-        <child link="rh_hip_debug_link" />
-        <origin xyz="-${base_to_hip_x} -${base_to_hip_y} 0" rpy="0 ${pi/2} ${pi/2}" />
-    </joint>
-
     <xacro:include filename="$(find common_sensors)/urdf/sensors/hokuyo_utm30lx.urdf.xacro" />
     <xacro:hokuyo_utm30lx 
         name="hokuyo" 

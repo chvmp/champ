@@ -22,6 +22,8 @@
             <xacro:property name="hip_to_upper_leg" value="-${hip_to_upper_leg_distance}" />
         </xacro:if>
 
+        <link name="${leg}_hip_debug_link"/>
+
         <link name="${leg}_hip_link">
             <inertial>
                 <mass value="${hip_mass}" />
@@ -106,6 +108,12 @@
         </gazebo>
 
         <link name="${leg}_foot_link" />
+
+        <joint name="${leg}_debug_joint" type="fixed">
+            <parent link="base_link" />
+            <child link="${leg}_hip_debug_link" />
+            <origin xyz="${base_to_hip_xyz}" rpy="0 ${pi/2} ${pi/2}" />
+        </joint>
 
         <joint name="${leg}_hip_joint" type="revolute">
             <axis xyz="0 1 0" />
