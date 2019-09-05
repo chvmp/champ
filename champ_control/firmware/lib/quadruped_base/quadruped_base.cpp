@@ -19,7 +19,7 @@ QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, Quadrup
     }
 }
 
-void QuadrupedBase::joints(float *joints)
+void QuadrupedBase::getJointStates(float *joints)
 {
     unsigned int total_joints = 0;
 

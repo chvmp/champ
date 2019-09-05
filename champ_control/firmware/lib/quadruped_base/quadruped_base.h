@@ -11,7 +11,7 @@ class QuadrupedBase
     
     public:
         QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg);
-        void joints(float *joints);
+        void getJointStates(float *joints);
 
         float roll();
         void roll(float roll);
