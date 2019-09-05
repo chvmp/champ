@@ -7,10 +7,10 @@ TrajectoryPlanner::TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, floa
     total_control_points_(12),
     // foot_(leg_->nominal_stance()),
     factorial_{1.0,1.0,2.0,6.0,24.0,120.0,720.0,5040.0,40320.0,362880.0,3628800.0,39916800.0,479001600.0},
-    ref_control_points_x_{-0.15, -0.2805,-0.3,-0.3,-0.3,   0.0, 0.0 ,   0.0, 0.3032, 0.3032, 0.2826, 0.15},
-    ref_control_points_y_{0.5,  0.5, 0.3611, 0.3611, 0.3611, 0.3611, 0.3611, 0.3214, 0.3214, 0.3214, 0.5, 0.5},
-    control_points_x_{-0.15, -0.2805,-0.3,-0.3,-0.3,   0.0, 0.0 ,   0.0, 0.3032, 0.3032, 0.2826, 0.15},
-    control_points_y_{0.5,  0.5, 0.3611, 0.3611, 0.3611, 0.3611, 0.3611, 0.3214, 0.3214, 0.3214, 0.5, 0.5},
+    ref_control_points_x_{-0.15, -0.2805,-0.3,-0.3,-0.3, 0.0, 0.0, 0.0, 0.3032, 0.3032, 0.2826, 0.15},
+    ref_control_points_y_{-0.5, -0.5, -0.3611, -0.3611, -0.3611, -0.3611, -0.3611, -0.3214, -0.3214, -0.3214, -0.5, -0.5},
+    control_points_x_{-0.15, -0.2805,-0.3,-0.3,-0.3, 0.0, 0.0 , 0.0, 0.3032, 0.3032, 0.2826, 0.15},
+    control_points_y_{-0.5, -0.5, -0.3611, -0.3611, -0.3611, -0.3611, -0.3611, -0.3214, -0.3214, -0.3214, -0.5, -0.5},
     height_ratio_(0),
     length_ratio_(0)
 {
@@ -27,7 +27,7 @@ void TrajectoryPlanner::updateControlPointsHeight(float swing_height)
         height_ratio_ = new_height_ratio;
         for(unsigned int i = 0; i < 12; i++)
         {
-            control_points_y_[i] = (ref_control_points_y_[i] * height_ratio_) - (0.5 * height_ratio_);
+            control_points_y_[i] = -((ref_control_points_y_[i] * height_ratio_) + (0.5 * height_ratio_));
         }    
     }
 }
@@ -61,11 +61,11 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float step_lengt
     if(stance_phase_signal > swing_phase_signal)
     {
         float x = (step_length / 2) * (1 - (2 * stance_phase_signal));
-        float y = stance_depth_ * cos((3.1416 * x) / step_length);
+        float y = -stance_depth_ * cos((3.1416 * x) / step_length);
 
-        new_foot_position.X() = foot_position.X() + y;
-        new_foot_position.Y() = -x * cos(rotation);
-        new_foot_position.Z() = foot_position.Z() + (x * sin(rotation));
+        new_foot_position.X() = foot_position.X() + (x * cos(rotation));
+        new_foot_position.Y() = foot_position.Y() + (x * sin(rotation));
+        new_foot_position.Z() = foot_position.Z() + y;
     }
     else if(stance_phase_signal < swing_phase_signal)
     {
@@ -77,12 +77,12 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float step_lengt
             float coeff = factorial_[n] / (factorial_[i] * factorial_[n - i]);
 
             x += coeff * pow(swing_phase_signal, i) * pow((1 - swing_phase_signal), (n - i)) * control_points_x_[i];
-            y += coeff * pow(swing_phase_signal, i) * pow((1 - swing_phase_signal), (n - i)) * control_points_y_[i];
+            y -= coeff * pow(swing_phase_signal, i) * pow((1 - swing_phase_signal), (n - i)) * control_points_y_[i];
         }
 
-        new_foot_position.X() = foot_position.X() + y;
-        new_foot_position.Y() = -x * cos(rotation);
-        new_foot_position.Z() = foot_position.Z() + (x * sin(rotation));
+        new_foot_position.X() = foot_position.X() + (x * cos(rotation));
+        new_foot_position.Y() = foot_position.Y() + (x * sin(rotation));
+        new_foot_position.Z() = foot_position.Z() + y;
     }
     else if((!swing_phase_signal && !stance_phase_signal) && step_length > 0)
     {
