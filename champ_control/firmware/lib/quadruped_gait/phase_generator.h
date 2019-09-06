@@ -4,7 +4,6 @@
 #include<Arduino.h>
 #include<Geometry.h>
 #include<quadruped_leg.h>
-#include<champ_config.h>
 
 #define SECONDS_TO_MICROS 1000000
 
