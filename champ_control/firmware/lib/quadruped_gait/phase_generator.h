@@ -6,9 +6,10 @@
 #include<quadruped_leg.h>
 #include<champ_config.h>
 
+#define SECONDS_TO_MICROS 1000000
+
 class PhaseGenerator
 {
-        // float step_length_;
         unsigned long int last_touchdown_;
 
         float leg_clocks_[4];
