@@ -45,7 +45,7 @@ class QuadrupedLeg
         Joint *lower_leg;
         Joint *foot;
 
-        Joint *chain[4];
+        Joint *joint_chain[4];
 };
 
 #endif

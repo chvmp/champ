@@ -22,7 +22,7 @@ QuadrupedLeg::QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lowe
 
 void QuadrupedLeg::addLink(Joint *l)
 {
-    chain[no_of_links_++] = l;
+    joint_chain[no_of_links_++] = l;
 }
 
 Transformation QuadrupedLeg::foot_from_hip()
@@ -31,14 +31,14 @@ Transformation QuadrupedLeg::foot_from_hip()
     Transformation foot_position;
     foot_position = Identity<4,4>();
 
-    foot_position.Translate(0, 0, chain[3]->z());
-    foot_position.RotateY(chain[2]->theta());
+    foot_position.Translate(0, 0, joint_chain[3]->z());
+    foot_position.RotateY(joint_chain[2]->theta());
 
-    foot_position.Translate(0, 0, chain[2]->z());
-    foot_position.RotateY(chain[1]->theta());
+    foot_position.Translate(0, 0, joint_chain[2]->z());
+    foot_position.RotateY(joint_chain[1]->theta());
 
-    foot_position.Translate(0, chain[1]->y(), 0);
-    foot_position.RotateX(chain[0]->theta());
+    foot_position.Translate(0, joint_chain[1]->y(), 0);
+    foot_position.RotateX(joint_chain[0]->theta());
 
     return foot_position;
 }
@@ -78,7 +78,7 @@ void QuadrupedLeg::joints(float *joints)
 {
     for(unsigned int i = 0; i < 3; i++)
     {
-        chain[i]->theta(joints[i]);
+        joint_chain[i]->theta(joints[i]);
     }
 }
 
