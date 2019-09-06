@@ -1,6 +1,7 @@
 <launch>
     <!-- Start ROS communication between the robot's computer and base -->
     <arg name="sim" default="false" />
+    <arg name="gazebo" default="false" />
 
     <node pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
         <param if="$(arg sim)" name="port" value="/tmp/simavr-uart0" />
@@ -11,21 +12,18 @@
         <!-- <remap from="champ/cmd_vel" to="cmd_vel" /> -->
     </node>
 
-    <node pkg="champ_control" name="foot_relay" type="foot_relay.py" output="screen"/>
-    <node pkg="champ_control" name="joints_relay" type="joints_relay.py" output="screen"/>
-    <node pkg="champ_control" name="pose_relay" type="pose_relay.py" output="screen"/>
+    <include file="$(find champ_control)/launch/include/velocity_smoother.launch" />
 
-    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find champ_description)/urdf/champ.urdf.xacro' " />
-    <node name="champ_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
-        <param name="publish_frequency" type="double" value="100.0" />
-        <param name="ignore_timestamp" type="bool" value="false" />
-        <remap from="/joint_states" to="/champ/joint_states/relay" />
-    </node>
+    <include file="$(find champ_description)/launch/description.launch" />
 
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
         <remap from="odometry/filtered" to="odom" />
         <rosparam command="load" file="$(find champ_control)/config/ekf/ekf.yaml" />
     </node>
 
-    <include file="$(find champ_control)/launch/include/velocity_smoother.launch" />
+    <node pkg="champ_control" name="foot_relay" type="foot_relay.py" output="screen"/>
+    <node pkg="champ_control" name="pose_relay" type="pose_relay.py" output="screen"/>
+    <group unless="$(arg gazebo)">
+        <node pkg="champ_control" name="joints_relay" type="joints_relay.py" output="screen"/>
+    </group>
 </launch>

@@ -6,7 +6,7 @@ from sensor_msgs.msg import JointState
 class JointsRelay:
     def __init__(self):
         rospy.Subscriber("/champ/joint_states/raw", Joints, self.joint_states_callback)
-        self.joint_states_pub = rospy.Publisher('/champ/joint_states/relay', JointState, queue_size = 100)
+        self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 100)
 
     def joint_states_callback(self, joints):
         joint_states = JointState()
