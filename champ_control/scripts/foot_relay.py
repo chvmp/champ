@@ -5,13 +5,11 @@ from champ_msgs.msg import PointArray
 from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Quaternion
 from tf.transformations import quaternion_from_euler
-import tf
 
 class FootRelay:
     def __init__(self):
         rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
         self.marker_array_pub = rospy.Publisher('/champ/foot', MarkerArray, queue_size = 100)
-        self.base_broadcaster = tf.TransformBroadcaster()
 
     def foot_callback(self, points):
         marker_array = MarkerArray()
@@ -26,16 +24,6 @@ class FootRelay:
         self.marker_array_pub.publish(marker_array)
 
         current_time = rospy.Time.now()
-
-        base_orientation = tf.transformations.quaternion_from_euler(0, 0, 0)
-
-        self.base_broadcaster.sendTransform(
-            (0, 0, points.lf.x),
-            base_orientation,
-            current_time,
-            "base_link",
-            "base_footprint"
-        )
 
     def create_marker(self, x, y, z, id, frame_id):
         point_marker = Marker()
