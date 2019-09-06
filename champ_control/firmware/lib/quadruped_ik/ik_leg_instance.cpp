@@ -13,9 +13,14 @@ void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float
     float x = transformed_foot_position.X();
     float y = transformed_foot_position.Z();
     float z = transformed_foot_position.Y();
-    float l0 = leg_->upper_leg->y();
+    float l0 = 0;
     float l1 = leg_->lower_leg->z();
     float l2 = leg_->foot->z();
+
+    for(unsigned int i = 1; i < 4; i++)
+    {
+        l0 += leg_->joint_chain[i]->y();
+    }
 
     hip_joint = -(atan(z / y) - (1.5708 - acos(-l0 / sqrt(pow(z, 2) + pow(y, 2)))));
     hip_theta.RotateX(-hip_joint);
