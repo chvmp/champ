@@ -21,9 +21,11 @@
         <rosparam command="load" file="$(find champ_control)/config/ekf/ekf.yaml" />
     </node>
 
-    <node pkg="champ_control" name="foot_relay" type="foot_relay.py" output="screen"/>
     <node pkg="champ_control" name="pose_relay" type="pose_relay.py" output="screen"/>
+    <node pkg="champ_control" name="foot_relay" type="foot_relay.py" output="screen"/>
     <group unless="$(arg gazebo)">
-        <node pkg="champ_control" name="joints_relay" type="joints_relay.py" output="screen"/>
+        <node pkg="champ_control" name="joints_relay" type="joints_relay.py" output="screen">
+            <rosparam command="load" file="$(find champ_control)/config/joints_map/joints.yaml" />
+        </node>
     </group>
 </launch>
