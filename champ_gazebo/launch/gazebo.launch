@@ -3,6 +3,7 @@
     <arg name="gui" default="true"/>
     <arg name="headless" default="false"/>
     <arg name="paused" default="false"/>
+    <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(find champ_gazebo)/worlds/outdoor.world"/>
@@ -12,7 +13,10 @@
         <arg name="headless" value="$(arg headless)"/>
     </include>
 
-    <include file="$(find champ_description)/launch/description.launch"/>
+    <include file="$(find champ_description)/launch/description.launch">
+            <arg name="description_file" value="$(arg description_file)"/>
+    </include>
+
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model champ -param robot_description -z 0.15" />
     
     <rosparam file="$(find champ_gazebo)/config/champ.yaml" command="load"/>

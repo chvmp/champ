@@ -4,10 +4,9 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Axes1
+        - /RobotModel1
         - /TF1/Frames1
         - /MarkerArray1
-        - /MarkerArray1/Status1
       Splitter Ratio: 0.383333325
     Tree Height: 739
   - Class: rviz/Selection
@@ -67,6 +66,44 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        camera_base_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_rgb_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        hokuyo_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hokuyo_scan_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         lf_foot_link:
           Alpha: 1
           Show Axes: false
@@ -159,10 +196,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        world:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -181,7 +214,27 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        base_footprint:
+          Value: true
         base_link:
+          Value: true
+        camera_base_frame:
+          Value: true
+        camera_depth_frame:
+          Value: true
+        camera_depth_optical_frame:
+          Value: true
+        camera_link:
+          Value: true
+        camera_rgb_frame:
+          Value: true
+        camera_rgb_optical_frame:
+          Value: true
+        hokuyo_frame:
+          Value: true
+        hokuyo_scan_link:
+          Value: true
+        imu_link:
           Value: true
         lf_foot_link:
           Value: true
@@ -223,16 +276,28 @@ Visualization Manager:
           Value: true
         rh_upper_leg_link:
           Value: true
-        world:
-          Value: true
       Marker Scale: 0.25
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        world:
+        base_footprint:
           base_link:
+            camera_base_frame:
+              camera_depth_frame:
+                camera_depth_optical_frame:
+                  {}
+              camera_link:
+                {}
+              camera_rgb_frame:
+                camera_rgb_optical_frame:
+                  {}
+            hokuyo_frame:
+              hokuyo_scan_link:
+                {}
+            imu_link:
+              {}
             lf_hip_debug_link:
               {}
             lf_hip_link:
@@ -332,5 +397,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 791
-  X: 63
-  Y: -1052
+  X: 977
+  Y: 62

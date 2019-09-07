@@ -1,7 +1,10 @@
 <launch>
     <!-- Start ROS communication between the robot's computer and base -->
-    <arg name="sim" default="false" />
-    <arg name="gazebo" default="false" />
+    <arg name="sim"              default="false" />
+    <arg name="gazebo"           default="false" />
+    <arg name="joints_map_file"  default="$(find champ_control)/config/joints_map/joints.yaml"/>
+    <arg name="description_name" default="robot_description"/>
+    <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
 
     <node pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
         <param if="$(arg sim)" name="port" value="/tmp/simavr-uart0" />
@@ -14,8 +17,10 @@
 
     <include file="$(find champ_control)/launch/include/velocity_smoother.launch" />
 
-    <include file="$(find champ_description)/launch/description.launch" />
-
+    <include file="$(find champ_description)/launch/description.launch">
+            <arg name="description_file" value="$(arg description_file)"/>
+    </include>
+    
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
         <remap from="odometry/filtered" to="odom" />
         <rosparam command="load" file="$(find champ_control)/config/ekf/ekf.yaml" />
@@ -25,7 +30,7 @@
     <node pkg="champ_control" name="foot_relay" type="foot_relay.py" output="screen"/>
     <group unless="$(arg gazebo)">
         <node pkg="champ_control" name="joints_relay" type="joints_relay.py" output="screen">
-            <rosparam command="load" file="$(find champ_control)/config/joints_map/joints.yaml" />
+            <rosparam command="load" file="$(arg joints_map_file)" />
         </node>
     </group>
 </launch>
