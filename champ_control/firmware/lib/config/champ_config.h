@@ -1,3 +1,4 @@
+#define KNEE_ORIENTATION     ">>"
 #define MAX_XY_VELOCITY      0.5
 #define MAX_STEP_LENGTH      0.11
 #define MAX_ANGULAR_VELOCITY 1.0

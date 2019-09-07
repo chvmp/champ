@@ -5,6 +5,7 @@ QuadrupedLeg::QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lowe
     leg_id_(0),
     last_touchdown_(0),
     in_contact_(0),
+    knee_direction_(0),
     hip(&hip_joint),
     upper_leg(&upper_leg_joint),
     lower_leg(&lower_leg_joint),
@@ -118,4 +119,14 @@ void QuadrupedLeg::in_contact(bool in_contact)
 bool QuadrupedLeg::in_contact()
 {
     return in_contact_;
+}
+
+int QuadrupedLeg::knee_direction()
+{
+    return knee_direction_;
+}
+
+void QuadrupedLeg::knee_direction(int direction)
+{
+    knee_direction_ = direction;
 }

@@ -30,22 +30,8 @@ void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float
     y = transformed_foot_position.Z();
     z = transformed_foot_position.Y();
     
-    lower_leg_joint = -acos((pow(y, 2) + pow(x, 2) - pow(l1 ,2) - pow(l2 ,2)) / (2 * l1 * l2));
+    lower_leg_joint = leg_->knee_direction() * acos((pow(y, 2) + pow(x, 2) - pow(l1 ,2) - pow(l2 ,2)) / (2 * l1 * l2));
     upper_leg_joint = (atan(x / y) - atan( (l2 * sin(lower_leg_joint)) / (l1 + (l2 * cos(lower_leg_joint)))));
-
-    // if(leg_->leg_id()< 2)
-    // {
-    //     // // reverse
-    //     lower_leg_joint = -acos((pow(y, 2) + pow(x, 2) - pow(l1 ,2) - pow(l2 ,2)) / (2 * l1 * l2));
-    //     upper_leg_joint = (atan(x / y) - atan( (l2 * sin(lower_leg_joint)) / (l1 + (l2 * cos(lower_leg_joint)))));
-        
-    // }
-    // else
-    // {
-    //     // ik for knee forward
-    //     lower_leg_joint = acos((pow(y , 2) + pow(x , 2) - pow(l1 , 2) - pow(l2, 2)) / (2 * l1 * l2));
-    //     upper_leg_joint = atan(x / y) - atan( (l2 * sin(lower_leg_joint)) / (l1 + (l2 * cos(lower_leg_joint))));
-    // }
 }
 
 float *IKLegInstance::joints()

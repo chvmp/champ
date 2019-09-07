@@ -1,6 +1,7 @@
 #include<quadruped_base.h>
 
-QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg):        
+QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, const char *knee_orientation):        
+    knee_orientation_(knee_orientation),
     lf(&lf_leg),
     rf(&rf_leg),
     lh(&lh_leg),
@@ -15,7 +16,31 @@ QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, Quadrup
 
     for(unsigned int i=0; i < 4; i++)
     {
+        int dir;
         legs[i]->leg_id(i);
+        if(i < 2)
+        {
+            dir = getKneeDirection(knee_orientation_[0]);
+        }
+        else
+        {
+            dir = getKneeDirection(knee_orientation_[1]);
+        }
+        
+        legs[i]->knee_direction(dir);
+    }
+}
+
+int QuadrupedBase::getKneeDirection(char direction)
+{
+    switch (direction) 
+    {
+        case '>':
+            return -1;
+        case '<':
+            return 1;
+        default:
+            return -1;
     }
 }
 

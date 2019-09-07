@@ -8,9 +8,13 @@ class QuadrupedBase
     float current_roll_;
     float current_pitch_;
     float current_yaw_;
+
+    const char * knee_orientation_;
+    
+    int getKneeDirection(char direction);
     
     public:
-        QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg);
+        QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, const char *knee_orientation);
         void getJointStates(float *joints);
 
         float roll();

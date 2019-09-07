@@ -37,7 +37,7 @@ ros::Publisher pose_pub("/champ/pose/raw", &pose_msg);
 ros::Subscriber<geometry_msgs::Twist> vel_cmd_sub("champ/cmd_vel", velocityCommandCallback);
 ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCallback);
 
-QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg);
+QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg, KNEE_ORIENTATION);
 QuadrupedBalancer balancer(base);
 QuadrupedGait gait(base, MAX_XY_VELOCITY, MAX_STEP_LENGTH, MAX_ANGULAR_VELOCITY, MAX_THETA, SWING_HEIGHT, STANCE_DEPTH);
 QuadrupedIK ik(base);

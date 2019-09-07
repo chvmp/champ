@@ -19,6 +19,8 @@ class QuadrupedLeg
 
     bool in_contact_;
 
+    int knee_direction_;
+
     public:
         QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lower_leg_link, Joint &foot_joint);
         
@@ -40,6 +42,9 @@ class QuadrupedLeg
         void in_contact(bool in_contact);
         bool in_contact();
 
+        int knee_direction();
+        void knee_direction(int direction);
+        
         Joint *hip;
         Joint *upper_leg;
         Joint *lower_leg;
