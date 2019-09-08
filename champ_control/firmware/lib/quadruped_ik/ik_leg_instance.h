@@ -10,6 +10,10 @@ class IKLegInstance
 
     float joints_[3];
 
+    float ik_alpha_;
+    float ik_beta_;
+    float ik_gamma_;
+
     public:
         IKLegInstance(QuadrupedLeg *leg);
         
