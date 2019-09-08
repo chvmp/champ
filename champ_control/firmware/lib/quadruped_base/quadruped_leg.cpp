@@ -16,9 +16,9 @@ QuadrupedLeg::QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lowe
     addLink(lower_leg);
     addLink(foot);
 
-    nominal_stance_.X() = hip->x();
-    nominal_stance_.Y() = hip->y() + upper_leg->y();
-    nominal_stance_.Z() = lower_leg->z() + foot->z();
+    nominal_stance_.X() = hip->x() + upper_leg->x() + lower_leg->x();
+    nominal_stance_.Y() = hip->y() + upper_leg->y() + lower_leg->y() + foot->y();
+    nominal_stance_.Z() = hip->z() + upper_leg->z() + lower_leg->z() + foot->z();
 }
 
 void QuadrupedLeg::addLink(Joint *l)
@@ -66,6 +66,14 @@ void QuadrupedLeg::transformToHip(Transformation &foot)
     temp_point.Y() = foot.Y() - hip->y();
     temp_point.Z() = foot.Z();
     foot.p = temp_point;
+}
+
+void QuadrupedLeg::transformToBase(Transformation &foot)
+{
+    foot.RotateX(hip->roll());
+    foot.RotateY(hip->pitch());
+    foot.RotateZ(hip->yaw());
+    foot.Translate(hip->x(), hip->y(), hip->z());
 }
 
 void QuadrupedLeg::joints(float hip_joint, float upper_leg_joint, float lower_leg_joint)

@@ -37,6 +37,7 @@ class QuadrupedLeg
         void last_touchdown(unsigned long int current_time);
 
         void transformToHip(Transformation &foot);
+        void transformToBase(Transformation &foot);
 
         void leg_id(unsigned int id);
         void in_contact(bool in_contact);
