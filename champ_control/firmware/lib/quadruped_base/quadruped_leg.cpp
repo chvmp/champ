@@ -32,14 +32,11 @@ Transformation QuadrupedLeg::foot_from_hip()
     Transformation foot_position;
     foot_position = Identity<4,4>();
 
-    foot_position.Translate(0, 0, joint_chain[3]->z());
-    foot_position.RotateY(joint_chain[2]->theta());
-
-    foot_position.Translate(0, 0, joint_chain[2]->z());
-    foot_position.RotateY(joint_chain[1]->theta());
-
-    foot_position.Translate(0, joint_chain[1]->y(), 0);
-    foot_position.RotateX(joint_chain[0]->theta());
+    for(unsigned int i = 3; i > 0; i--)
+    {
+        foot_position.Translate(joint_chain[i]->x(), joint_chain[i]->y(), joint_chain[i]->z());
+        foot_position.RotateY(joint_chain[i-1]->theta());  
+    }
 
     return foot_position;
 }
