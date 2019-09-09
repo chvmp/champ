@@ -3,42 +3,41 @@
 IKLegInstance::IKLegInstance(QuadrupedLeg *leg):
     leg_(leg),
     ik_alpha_(0),
+    ik_alpha_h_(0),
     ik_beta_(0),
-    ik_gamma_(0)
+    ik_beta_h_(0)
 {
-    float hip_to_upper_leg_y = 0;
-    float upper_leg_to_foot_x = leg_->joint_chain[2]->x() + leg_->joint_chain[3]->x();
+    float hip_to_foot_y = 0;
+    float hip_to_foot_z = 0;
+    float upper_to_lower_leg_x = leg_->joint_chain[2]->x();
     float lower_leg_to_foot_x = leg_->joint_chain[3]->x();
-    float upper_leg_to_foot_z = leg_->joint_chain[2]->z() + leg_->joint_chain[3]->z();
+    float upper_to_lower_leg_z = leg_->joint_chain[2]->z();
     float lower_leg_to_foot_z = leg_->joint_chain[3]->z();
 
     for(unsigned int i = 1; i < 4; i++)
     {
-        hip_to_upper_leg_y += leg_->joint_chain[i]->y();
+        hip_to_foot_y += leg_->joint_chain[i]->y();
+        hip_to_foot_z += leg_->joint_chain[i]->z();
     }
 
-    float alpha_h = sqrt(pow(hip_to_upper_leg_y, 2) + pow(leg_->nominal_stance().Z(),2));
-    float alpha_phi = acos(hip_to_upper_leg_y / alpha_h); 
-    ik_alpha_ += PI / 2;
+    ik_alpha_h_ = -sqrt(pow(upper_to_lower_leg_x, 2) + pow(upper_to_lower_leg_z, 2));
+    ik_alpha_ = acos(upper_to_lower_leg_x / ik_alpha_h_) - (PI/2); 
 
-    float beta_h = sqrt(pow(upper_leg_to_foot_x, 2) + pow(upper_leg_to_foot_z, 2));
-    ik_beta_ = (PI/2) - acos(upper_leg_to_foot_x / beta_h); 
-
-    float gamma_h = sqrt(pow(lower_leg_to_foot_x, 2) + pow(lower_leg_to_foot_z, 2));
-    ik_gamma_ = (PI/2) - acos(lower_leg_to_foot_x / gamma_h); 
+    ik_beta_h_ = -sqrt(pow(lower_leg_to_foot_x, 2) + pow(lower_leg_to_foot_z, 2));
+    ik_beta_ = acos(lower_leg_to_foot_x / ik_beta_h_) - (PI/2); 
 }
 
 void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float &upper_leg_joint, float &lower_leg_joint)
 {
     Rotation hip_theta;
     Point foot_pos = foot_position.p;
-    Transformation transformed_foot_position = foot_position;
-    float x = transformed_foot_position.X();
-    float y = transformed_foot_position.Z();
-    float z = transformed_foot_position.Y();
+    Transformation temp_foot_pos = foot_position;
+    float x = temp_foot_pos.X();
+    float y = temp_foot_pos.Z();
+    float z = temp_foot_pos.Y();
     float l0 = 0;
-    float l1 = leg_->lower_leg->z();
-    float l2 = leg_->foot->z();
+    float l1 = ik_alpha_h_;
+    float l2 = ik_beta_h_;
 
     for(unsigned int i = 1; i < 4; i++)
     {
@@ -48,17 +47,18 @@ void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float
     hip_joint = -(atan(z / y) - ((PI/2) - acos(-l0 / sqrt(pow(z, 2) + pow(y, 2)))));
 
     hip_theta.RotateX(-hip_joint);
-    transformed_foot_position.p = hip_theta * foot_pos;
+    temp_foot_pos.p = hip_theta * foot_pos;
+    temp_foot_pos.Translate(-leg_->upper_leg->x(), 0, -leg_->upper_leg->z());
 
-    x = transformed_foot_position.X();
-    y = transformed_foot_position.Z();
-    z = transformed_foot_position.Y();
+    x = temp_foot_pos.X();
+    y = temp_foot_pos.Z();
+    z = temp_foot_pos.Y();
     
     lower_leg_joint = leg_->knee_direction() * acos((pow(y, 2) + pow(x, 2) - pow(l1 ,2) - pow(l2 ,2)) / (2 * l1 * l2));
-    lower_leg_joint += ik_gamma_;
-
     upper_leg_joint = (atan(x / y) - atan((l2 * sin(lower_leg_joint)) / (l1 + (l2 * cos(lower_leg_joint)))));
-    upper_leg_joint += ik_beta_;
+    
+    lower_leg_joint += ik_beta_;
+    upper_leg_joint += ik_alpha_;
 }        
 
 float *IKLegInstance::joints()

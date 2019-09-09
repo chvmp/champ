@@ -11,8 +11,9 @@ class IKLegInstance
     float joints_[3];
 
     float ik_alpha_;
+    float ik_alpha_h_;
     float ik_beta_;
-    float ik_gamma_;
+    float ik_beta_h_;
 
     public:
         IKLegInstance(QuadrupedLeg *leg);
