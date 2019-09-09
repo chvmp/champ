@@ -7,18 +7,10 @@ IKLegInstance::IKLegInstance(QuadrupedLeg *leg):
     ik_beta_(0),
     ik_beta_h_(0)
 {
-    float hip_to_foot_y = 0;
-    float hip_to_foot_z = 0;
     float upper_to_lower_leg_x = leg_->joint_chain[2]->x();
     float lower_leg_to_foot_x = leg_->joint_chain[3]->x();
     float upper_to_lower_leg_z = leg_->joint_chain[2]->z();
     float lower_leg_to_foot_z = leg_->joint_chain[3]->z();
-
-    for(unsigned int i = 1; i < 4; i++)
-    {
-        hip_to_foot_y += leg_->joint_chain[i]->y();
-        hip_to_foot_z += leg_->joint_chain[i]->z();
-    }
 
     ik_alpha_h_ = -sqrt(pow(upper_to_lower_leg_x, 2) + pow(upper_to_lower_leg_z, 2));
     ik_alpha_ = acos(upper_to_lower_leg_x / ik_alpha_h_) - (PI/2); 
@@ -29,9 +21,8 @@ IKLegInstance::IKLegInstance(QuadrupedLeg *leg):
 
 void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float &upper_leg_joint, float &lower_leg_joint)
 {
-    Rotation hip_theta;
-    Point foot_pos = foot_position.p;
     Transformation temp_foot_pos = foot_position;
+
     float x = temp_foot_pos.X();
     float y = temp_foot_pos.Z();
     float z = temp_foot_pos.Y();
@@ -46,8 +37,7 @@ void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float
 
     hip_joint = -(atan(z / y) - ((PI/2) - acos(-l0 / sqrt(pow(z, 2) + pow(y, 2)))));
 
-    hip_theta.RotateX(-hip_joint);
-    temp_foot_pos.p = hip_theta * foot_pos;
+    temp_foot_pos.RotateX(-hip_joint);
     temp_foot_pos.Translate(-leg_->upper_leg->x(), 0, -leg_->upper_leg->z());
 
     x = temp_foot_pos.X();
