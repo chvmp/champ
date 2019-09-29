@@ -37,9 +37,9 @@ class FootRelay:
         point_marker.pose.position.z = z
         point_marker.pose.orientation = Quaternion(*quaternion_from_euler(0.0, 0.0, 0.0))
         
-        point_marker.scale.x = 0.018
-        point_marker.scale.y = 0.018
-        point_marker.scale.z = 0.018
+        point_marker.scale.x = 0.025
+        point_marker.scale.y = 0.025
+        point_marker.scale.z = 0.025
 
         point_marker.color.r = 0.780
         point_marker.color.g = 0.082
