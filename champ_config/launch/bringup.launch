@@ -1,0 +1,14 @@
+<launch>
+    <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
+    <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
+    <arg name="base_frame"       default="base_link"/>
+
+    <include file="$(find champ_base)/launch/bringup.launch">
+        <arg name="joints_map_file" value="$(arg joints_map_file)"/>
+        <arg name="description_file" value="$(arg description_file)"/>
+    </include>
+
+    <node name="rviz" pkg="rviz" type="rviz"
+            args="-d $(find champ_description)/rviz/urdf_viewer.rviz -f $(arg base_frame)"
+            output="screen"/>
+</launch>
