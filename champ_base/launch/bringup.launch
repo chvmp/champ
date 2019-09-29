@@ -2,8 +2,7 @@
     <!-- Start ROS communication between the robot's computer and base -->
     <arg name="sim"              default="false" />
     <arg name="gazebo"           default="false" />
-    <arg name="joints_map_file"  default="$(find champ_base)/config/joints_map/joints.yaml"/>
-    <arg name="description_name" default="robot_description"/>
+    <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
 
     <node pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
