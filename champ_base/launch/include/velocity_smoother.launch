@@ -6,7 +6,7 @@
 <launch>
     <arg name="node_name"             default="velocity_smoother"/>
     <arg name="nodelet_manager_name"  default="nodelet_manager"/>
-    <arg name="config_file"           default="$(find champ_control)/config/velocity_smoother/velocity_smoother.yaml"/>
+    <arg name="config_file"           default="$(find champ_base)/config/velocity_smoother/velocity_smoother.yaml"/>
     <arg name="raw_cmd_vel_topic"     default="cmd_vel"/>
     <arg name="smooth_cmd_vel_topic"  default="champ/cmd_vel"/>
     <arg name="robot_cmd_vel_topic"   default="cmd_vel"/>
