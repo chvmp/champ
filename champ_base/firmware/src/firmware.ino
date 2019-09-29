@@ -5,11 +5,11 @@
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Joints.h>
 #include <champ_msgs/Pose.h>
-#include <champ_description.h>
-#include <champ_config.h>
 #include <quadruped_balancer.h>
 #include <quadruped_gait.h>
 #include <quadruped_ik.h>
+#include <quadruped_description.h>
+#include <gait_config.h>
 
 float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
