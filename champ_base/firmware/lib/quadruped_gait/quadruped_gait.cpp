@@ -1,12 +1,13 @@
 #include<quadruped_gait.h>
 
-QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, float max_xy_velocity, float max_step_length, float max_angular_velocity, float max_theta, float swing_height, float stance_depth):
+QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, float max_linear_velocity_x,float max_linear_velocity_y, float max_angular_velocity, float max_step_length, float max_theta, float swing_height, float stance_depth):
     base_(&quadruped_base),
     trajectory_planners_{0,0,0,0},
     phase_gen_(),
-    max_xy_velocity_(max_xy_velocity),
-    max_step_length_(max_step_length),
+    max_linear_velocity_x_(max_linear_velocity_x),
+    max_linear_velocity_y_(max_linear_velocity_y),
     max_angular_velocity_(max_angular_velocity),
+    max_step_length_(max_step_length),
     max_theta_(max_theta),
     lf(base_->lf, swing_height, max_step_length_, stance_depth),
     rf(base_->rf, swing_height, max_step_length_, stance_depth),
@@ -25,12 +26,12 @@ void QuadrupedGait::transformTrajectory(QuadrupedLeg *leg, float linear_velocity
 {    
     float theta = 0;
 
-    linear_velocity_x = constrain(linear_velocity_x, -max_xy_velocity_, max_xy_velocity_);
-    linear_velocity_y = constrain(linear_velocity_y, -max_xy_velocity_, max_xy_velocity_);
+    linear_velocity_x = constrain(linear_velocity_x, -max_linear_velocity_x_, max_linear_velocity_x_);
+    linear_velocity_y = constrain(linear_velocity_y, -max_linear_velocity_y_, max_linear_velocity_y_);
     angular_velocity_z = constrain(angular_velocity_z, -max_angular_velocity_, max_angular_velocity_);
 
-    float step_x = mapFloat(linear_velocity_x, -max_xy_velocity_, max_xy_velocity_, -max_step_length_, max_step_length_);
-    float step_y = mapFloat(linear_velocity_y, -max_xy_velocity_, max_xy_velocity_, -max_step_length_, max_step_length_);
+    float step_x = mapFloat(linear_velocity_x, -max_linear_velocity_x_, max_linear_velocity_x_, -max_step_length_, max_step_length_);
+    float step_y = mapFloat(linear_velocity_y, -max_linear_velocity_y_, max_linear_velocity_y_, -max_step_length_, max_step_length_);
     float step_theta = mapFloat(angular_velocity_z, -max_angular_velocity_, max_angular_velocity_, -max_theta_, max_theta_);
 
     if(angular_velocity_z)
