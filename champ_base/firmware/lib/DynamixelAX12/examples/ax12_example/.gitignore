@@ -1,0 +1,11 @@
+# Visual studio + visual micro
+
+.vs/
+Debug/
+Release/
+*.sln
+__vm/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vscode

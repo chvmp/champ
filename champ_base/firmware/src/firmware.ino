@@ -10,6 +10,7 @@
 #include <quadruped_ik.h>
 #include <quadruped_description.h>
 #include <gait_config.h>
+#include <hardware_config.h>
 
 float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
