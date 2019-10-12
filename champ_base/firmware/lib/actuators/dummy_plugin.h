@@ -1,35 +1,42 @@
 #ifndef _DUMMY_PLUGIN_H_
 #define _DUMMY_PLUGIN_H_
 
-#include<DynamixelAX12.h>
+#include <DynamixelAX12.h>
 
 namespace Dummy
 {
-    class ActuatorPlugin
+    class Plugin
     {
         OneWireMInterface ax12Interface_;
         DynamixelAX12 ax12_;
 
-        float angle_offset_;
+        int angle_offset_degrees_;
+        float angle_offset_radians_;
+        
         float min_angle_;
         float max_angle_;
         bool inverted_;
+        int inverter_;
 
         public:
             unsigned int leg_id;
-            ActuatorPlugin(HardwareSerial &serial_interface, unsigned int actuator_leg_id, unsigned int actuator_driver_id, float min_angle, float max_angle, bool inverted):
+            Plugin(HardwareSerial &serial_interface, unsigned int actuator_leg_id, unsigned int actuator_driver_id, float min_angle, float max_angle, bool inverted):
             ax12Interface_(serial_interface),
             ax12_(ax12Interface_, actuator_driver_id),
-            angle_offset_(0.523599),
+            angle_offset_degrees_(30),
+            angle_offset_radians_(0.523599),            
             min_angle_(0),
             max_angle_(0),
             inverted_(false),
+            inverter_(1),
             leg_id(0)
             {
                 leg_id = actuator_leg_id;
                 min_angle_ = min_angle;
                 max_angle_ = max_angle;
                 inverted_ = inverted;
+                if(inverted_)
+                    inverter_ *= -1;
 
                 initialize();
             }
@@ -44,14 +51,14 @@ namespace Dummy
 
             void positionControl(float angle)
             {
-                ax12_.goalPositionDegree(toActuatorAngle(angle) - angle_offset_);
+                ax12_.goalPositionDegree(toActuatorAngle(angle * inverter_) - angle_offset_degrees_);
             }
 
             float getJointPosition()
             {
                 uint16_t current_angle = 0;
                 ax12_.currentPositionDegree(current_angle);
-                return toEulerAngle(current_angle) - angle_offset_;
+                return toEulerAngle(current_angle * inverter_) - angle_offset_radians_;
             }
 
             int toActuatorAngle(float angle)
@@ -92,7 +99,6 @@ namespace Dummy
             }
     };
 }
-
 
 #endif
 
