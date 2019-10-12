@@ -88,6 +88,7 @@ void loop() {
         publishPose(0, 0, NOMINAL_HEIGHT, 0, 0, 0);
         publishJointStates(joint_positions);
 
+        actuators.moveJoints(joint_positions);
         prev_control_time = micros();
     }
 
