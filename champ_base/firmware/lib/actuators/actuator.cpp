@@ -2,9 +2,10 @@
 
 Actuator::Actuator()
 {
+
 }
 
-void Actuator::add(unsigned int leg_id, ActuatorPlugin &actuator_plugin)
+void Actuator::add(unsigned int leg_id, DynamixelAX12A::ActuatorPlugin &actuator_plugin)
 {
     actuator_chain_[leg_id] = &actuator_plugin;
 }

@@ -1,10 +1,9 @@
-#ifndef _DYNAMIXEL12A_PLUGIN_H_
-#define _DYNAMIXEL12A_PLUGIN_H_
+#ifndef _DUMMY_PLUGIN_H_
+#define _DUMMY_PLUGIN_H_
 
+#include<DynamixelAX12.h>
 
-#include <DynamixelAX12.h>
-
-namespace DynamixelAX12A
+namespace Dummy
 {
     class ActuatorPlugin
     {
@@ -93,6 +92,7 @@ namespace DynamixelAX12A
             }
     };
 }
+
 
 #endif
 
