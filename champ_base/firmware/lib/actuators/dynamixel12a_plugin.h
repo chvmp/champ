@@ -17,7 +17,7 @@ namespace DynamixelAX12A
         float max_angle_;
         bool inverted_;
         int inverter_;
-
+        int actuator_driver_id_;
         public:
             unsigned int leg_id;
             Plugin(HardwareSerial &serial_interface, unsigned int actuator_leg_id, unsigned int actuator_driver_id, float min_angle, float max_angle, bool inverted):
@@ -29,6 +29,7 @@ namespace DynamixelAX12A
             max_angle_(0),
             inverted_(false),
             inverter_(1),
+            actuator_driver_id_(actuator_driver_id),
             leg_id(0)
             {
                 leg_id = actuator_leg_id;
@@ -43,8 +44,16 @@ namespace DynamixelAX12A
 
             void initialize()
             {
+                OneWireStatus com_status;
+
                 ax12Interface_.begin(1000000, 100);   
-                ax12_.init();
+                com_status = ax12_.init();
+                if (com_status != OW_STATUS_OK)
+                {
+                    ax12_.changeActuatorID(1);
+                    ax12_.setActuatorID(actuator_driver_id_);
+                }
+                
                 ax12_.jointMode();
                 ax12_.enableTorque();
             }

@@ -58,6 +58,9 @@ public:
 	{
 		return mInterface.factoryReset(mID, mStatusReturnLevel, &mStatus);
 	}
+
+    void updateId(uint8_t newId);
+
 	
 private:
 	OneWireMInterface &mInterface;

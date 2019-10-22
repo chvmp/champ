@@ -126,3 +126,8 @@ int DynamixelDevice::statusReturnLevel(uint8_t aSRL)
         return EXIT_FAILURE;
     }
 }
+
+void DynamixelDevice::updateId(uint8_t newId)
+{
+    mID = newId;
+}

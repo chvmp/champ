@@ -121,3 +121,13 @@ OneWireStatus DynamixelAX12::currentPositionDegree(uint16_t &aPosition)
     }
     return status;
 }
+
+void DynamixelAX12::setActuatorID(uint8_t newId)
+{
+    setId(newId);
+}
+
+void DynamixelAX12::changeActuatorID(uint8_t newId)
+{
+    updateId(newId);
+}
