@@ -1,0 +1,9 @@
+<launch>
+    <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
+
+    <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" output="screen">
+        <remap from="image" to="/camera/depth/image_raw"/>
+        <remap from="camera_info" to="/camera/depth/camera_info"/>
+        <param name="output_frame_id" value="laser" />
+    </node>
+</launch>
