@@ -2,8 +2,10 @@
     <!-- Start ROS communication between the robot's computer and base -->
     <arg name="sim"              default="false" />
     <arg name="gazebo"           default="false" />
+    <arg name="has_odom"         default="false" />
     <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
+    <arg name="odom_type"        default="optenv CHAMP_ODOM JOINTS" />
 
     <node pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
         <param if="$(arg sim)" name="port" value="/tmp/simavr-uart0" />
@@ -20,9 +22,15 @@
             <arg name="description_file" value="$(arg description_file)"/>
     </include>
     
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
+    <node if="$(arg has_odom)" pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
         <remap from="odometry/filtered" to="odom" />
         <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
+    </node>
+
+    <node unless="$(arg has_odom)" pkg="laser_scan_matcher" type="laser_scan_matcher_node" 
+        name="laser_scan_matcher_node" output="screen">
+        <param name="fixed_frame" value = "odom"/>
+        <param name="max_iterations" value="10"/>
     </node>
 
     <node pkg="champ_base" name="pose_relay" type="pose_relay.py" output="screen"/>
