@@ -4,10 +4,14 @@
     <arg name="base_frame"       default="base_link"/>
     <arg name="rviz"             default="false"/>
     <arg name="laser"            default="d435"/>
+    <arg name="has_odom"         default="false" />
+    <arg name="gazebo"           default="false" />
 
     <include file="$(find champ_base)/launch/bringup.launch">
         <arg name="joints_map_file" value="$(arg joints_map_file)"/>
         <arg name="description_file" value="$(arg description_file)"/>
+        <arg name="gazebo" value="$(arg gazebo)"/>
+        <arg name="has_odom" value="$(arg has_odom)"/>
         <arg name="laser" value="$(arg laser)"/>
     </include>
 
