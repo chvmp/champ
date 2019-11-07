@@ -1,7 +1,7 @@
-#ifndef _PLUGINS_H_
-#define _PLUGINS_H_
+#ifndef _ACTUATOR_PLUGINS_H_
+#define _ACTUATOR_PLUGINS_H_
 
 #include <dynamixel12a_plugin.h>
-#include <dummy_plugin.h>
+// #include <dummy_actuator_plugin.h>
 
 #endif

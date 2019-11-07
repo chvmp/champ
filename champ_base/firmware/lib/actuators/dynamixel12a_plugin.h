@@ -44,10 +44,11 @@ namespace DynamixelAX12A
 
             void initialize()
             {
-                OneWireStatus com_status;
+                // OneWireStatus com_status;
 
                 ax12Interface_.begin(1000000, 100);   
-                com_status = ax12_.init();
+                ax12_.init();
+                // com_status = ax12_.init();
                 // if (com_status != OW_STATUS_OK)
                 // {
                 //     ax12_.changeActuatorID(1);
