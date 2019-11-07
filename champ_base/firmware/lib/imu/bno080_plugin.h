@@ -10,8 +10,7 @@ namespace BNO0809DOF
     {
         BNO080 imu_;
         public:
-            Plugin():
-            imu_()
+            Plugin()
             {
                 initialize();
             }
@@ -21,14 +20,18 @@ namespace BNO0809DOF
                 Wire.begin();
                 imu_.begin();
                 Wire.setClock(400000);
-                imu_.enableLinearAccelerometer(8);
+                imu_.enableAccelerometer(8);
                 imu_.enableGyro(8); 
                 imu_.enableMagnetometer(8);
             }
 
             float readGyroscopeX()
             {
-                return imu_.getGyroX();
+                //somehow the library requires to call this function once in the loop
+                if(imu_.dataAvailable())    
+                    return imu_.getGyroX();
+                else
+                    return 0;
             }
 
             float readGyroscopeY()
