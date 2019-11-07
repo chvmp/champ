@@ -1,9 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0 0 0 0 /base_link /laser"/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="laser_to_realsense" args="0 0 0 0 0 0 /laser /camera_link"/>
-
-    <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
-
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0 0 0 0 /base_link /laser" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="laser_to_realsense" args="0 0 0 0 0 0 /laser /camera_link" />
+	
+    <include file="$(find realsense2_camera)/launch/rs_rgbd.launch" />
     <!-- <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" output="screen">
         <remap from="image" to="/camera/aligned_depth_to_color/image_raw"/>
         <remap from="camera_info" to="/camera/aligned_depth_to_color/camera_info"/>
@@ -11,9 +11,8 @@
     </node> -->
 
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
-        <remap from="cloud_in" to="/camera/depth_registered/points"/>
-        <rosparam>
-            target_frame: laser
+        <remap from="cloud_in" to="/camera/depth_registered/points" />
+        <rosparam>target_frame: laser
             transform_tolerance: 0.01
             min_height: 0.0
             max_height: 0.5
@@ -30,8 +29,25 @@
             # Concurrency level, affects number of pointclouds queued for processing, thread number governed by nodelet manager
             # 0 : Detect number of cores
             # 1 : Single threaded
-            # 2->inf : Parallelism level
-            concurrency_level: 0
-        </rosparam>
+            # 2-&gt;inf : Parallelism level
+            concurrency_level: 0</rosparam>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
+        <remap from="rgb/image" to="/camera/color/image_rect_color" />
+        <remap from="depth/image" to="/camera/aligned_depth_to_color/image_raw" />
+        <remap from="rgb/camera_info" to="/camera/color/camera_info" />
+        <remap from="rgbd_image" to="rgbd_image" />
+        <param name="approx_sync" value="false" />
+    </node>
+
+    <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" output="screen">
+        <param name="subscribe_rgbd" type="bool" value="true" />
+        <param name="frame_id" type="string" value="base_footprint" />
+        <remap from="rgbd_image" to="rgbd_image" />
+        <param name="Odom/Strategy" value="1" />
+        <param name="Vis/CorType" value="1" />
+        <param name="OdomF2M/MaxSize" type="string" value="1000" />
+        <param name="Vis/MaxFeatures" type="string" value="600" />
     </node>
 </launch>
