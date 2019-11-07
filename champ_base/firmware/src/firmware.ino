@@ -5,12 +5,14 @@
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Joints.h>
 #include <champ_msgs/Pose.h>
+#include <champ_msgs/Imu.h>
 #include <quadruped_balancer.h>
 #include <quadruped_gait.h>
 #include <quadruped_ik.h>
 #include <quadruped_description.h>
 #include <gait_config.h>
 #include <actuator_plugins.h>
+#include <imu_plugins.h>
 #include <hardware_config.h>
 
 float g_req_linear_vel_x = 0;
@@ -36,6 +38,9 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 champ_msgs::Pose pose_msg;
 ros::Publisher pose_pub("/champ/pose/raw", &pose_msg);
 
+champ_msgs::Imu imu_msg;
+ros::Publisher imu_pub("/champ/imu/raw", &imu_msg);
+
 ros::Subscriber<geometry_msgs::Twist> vel_cmd_sub("champ/cmd_vel", velocityCommandCallback);
 ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCallback);
 
@@ -50,10 +55,13 @@ void setup()
     joints_msg.position_length = 12;
 
     nh.initNode();
-    nh.getHardware()->setBaud(115200);
+    nh.getHardware()->setBaud(500000);
+    
     nh.advertise(point_pub);
     nh.advertise(jointstates_pub);
     nh.advertise(pose_pub);
+    nh.advertise(imu_pub);
+
     nh.subscribe(vel_cmd_sub);
     nh.subscribe(pose_cmd_sub);
 
@@ -73,6 +81,13 @@ void loop() {
     {
         Transformation foot_positions[4];
         float joint_positions[12]; 
+        Accelerometer accel;
+        Gyroscope gyro;
+        Magnetometer mag;
+
+        imu.readAccelerometer(accel);
+        imu.readGyroscope(gyro);
+        imu.readMagnetometer(mag);
 
         base.lf->joints(0.0, 0.0, 0.0);
         base.rf->joints(0.0, 0.0, 0.0);
@@ -85,8 +100,9 @@ void loop() {
         ik.solve(foot_positions, joint_positions);
 
         publishPoints(foot_positions);
-        publishPose(0, 0, NOMINAL_HEIGHT, 0, 0, 0);
+        // publishPose(0, 0, NOMINAL_HEIGHT, 0, 0, 0);
         publishJointStates(joint_positions);
+        publishIMU(accel, gyro, mag);
 
         actuators.moveJoints(joint_positions);
         prev_control_time = micros();
@@ -160,4 +176,21 @@ void publishPose(float x, float y, float z, float roll, float pitch, float yaw)
     pose_msg.yaw = yaw;
 
     pose_pub.publish(&pose_msg);
+}
+
+void publishIMU(Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
+{
+    imu_msg.linear_acceleration.x = accel.x;
+    imu_msg.linear_acceleration.y = accel.y;
+    imu_msg.linear_acceleration.z = accel.z;
+
+    imu_msg.angular_velocity.x = gyro.x;
+    imu_msg.angular_velocity.y = gyro.y;
+    imu_msg.angular_velocity.z = gyro.z;
+
+    imu_msg.magnetic_field.x = mag.x;
+    imu_msg.magnetic_field.y = mag.y;
+    imu_msg.magnetic_field.z = mag.z;
+
+    imu_pub.publish(&imu_msg);
 }

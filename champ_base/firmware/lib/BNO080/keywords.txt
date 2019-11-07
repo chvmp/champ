@@ -1,0 +1,121 @@
+#######################################
+# Syntax Coloring Map 
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+BNO080	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+beginSPI	KEYWORD2
+
+enableDebugging	KEYWORD2
+
+softReset	KEYWORD2
+resetReason	KEYWORD2
+
+qToFloat	KEYWORD2
+
+waitForI2C	KEYWORD2
+waitForSPI	KEYWORD2
+receivePacket	KEYWORD2
+getData	KEYWORD2
+sendPacket	KEYWORD2
+printPacket	KEYWORD2
+
+enableRotationVector	KEYWORD2
+enableGameRotationVector	KEYWORD2
+enableAccelerometer	KEYWORD2
+enableGyro	KEYWORD2
+enableMagnetometer	KEYWORD2
+enableStepCounter	KEYWORD2
+enableStabilityClassifier	KEYWORD2
+enableActivityClassifier	KEYWORD2
+enableLinearAccelerometer	KEYWORD2
+enableRawAccelerometer	KEYWORD2
+enableRawGyro	KEYWORD2
+enableRawMagnetometer	KEYWORD2
+
+dataAvailable	KEYWORD2
+parseInputReport	KEYWORD2
+parseCommandReport	KEYWORD2
+
+getQuatI	KEYWORD2
+getQuatJ	KEYWORD2
+getQuatK	KEYWORD2
+getQuatReal	KEYWORD2
+getQuatRadianAccuracy	KEYWORD2
+getQuatAccuracy	KEYWORD2
+
+getAccelX	KEYWORD2
+getAccelY	KEYWORD2
+getAccelZ	KEYWORD2
+getAccelAccuracy	KEYWORD2
+
+getGyroX	KEYWORD2
+getGyroY	KEYWORD2
+getGyroZ	KEYWORD2
+getGyroAccuracy	KEYWORD2
+
+getMagX	KEYWORD2
+getMagY	KEYWORD2
+getMagZ	KEYWORD2
+getMagAccuracy	KEYWORD2
+
+getLinAccelX	KEYWORD2
+getLinAccelY	KEYWORD2
+getLinAccelZ	KEYWORD2
+getLinAccelAccuracy	KEYWORD2
+
+calibrateAccelerometer	KEYWORD2
+calibrateGyro	KEYWORD2
+calibrateMagnetometer	KEYWORD2
+calibratePlanarAccelerometer	KEYWORD2
+calibrateAll	KEYWORD2
+endCalibration	KEYWORD2
+saveCalibration	KEYWORD2
+requestCalibrationStatus	KEYWORD2
+calibrationComplete	KEYWORD2
+
+getTimeStamp	KEYWORD2
+getStepCount	KEYWORD2
+getStabilityClassifier	KEYWORD2
+getActivityClassifier	KEYWORD2
+
+setFeatureCommand	KEYWORD2
+setFeatureCommand	KEYWORD2
+sendCommand	KEYWORD2
+sendCalibrateCommand	KEYWORD2
+calibrationComplete	KEYWORD2
+
+getQ1	KEYWORD2
+getQ2	KEYWORD2
+getQ3	KEYWORD2
+getResolution	KEYWORD2
+getRange	KEYWORD2
+readFRSword	KEYWORD2
+frsReadRequest	KEYWORD2
+readFRSdata	KEYWORD2
+
+getRawAccelX	KEYWORD2
+getRawAccelY	KEYWORD2
+getRawAccelZ	KEYWORD2
+
+getRawGyroX	KEYWORD2
+getRawGyroY	KEYWORD2
+getRawGyroZ	KEYWORD2
+
+getRawMagX	KEYWORD2
+getRawMagY	KEYWORD2
+getRawMagZ	KEYWORD2
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
