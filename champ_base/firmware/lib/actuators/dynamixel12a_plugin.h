@@ -48,11 +48,11 @@ namespace DynamixelAX12A
 
                 ax12Interface_.begin(1000000, 100);   
                 com_status = ax12_.init();
-                if (com_status != OW_STATUS_OK)
-                {
-                    ax12_.changeActuatorID(1);
-                    ax12_.setActuatorID(actuator_driver_id_);
-                }
+                // if (com_status != OW_STATUS_OK)
+                // {
+                //     ax12_.changeActuatorID(1);
+                //     ax12_.setActuatorID(actuator_driver_id_);
+                // }
                 
                 ax12_.jointMode();
                 ax12_.enableTorque();
