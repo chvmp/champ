@@ -3,7 +3,7 @@
     <xacro:include filename="$(find common_sensors)/urdf/sensors/hokuyo_utm30lx.urdf.xacro" />
     <xacro:include filename="$(find common_sensors)/urdf/sensors/xtion.urdf.xacro" />
 
-    <xacro:hokuyo_utm30lx 
+    <!-- <xacro:hokuyo_utm30lx 
         name="hokuyo" 
         parent="base_link" 
         ros_topic="scan" 
@@ -16,7 +16,7 @@
     
     <gazebo reference="hokuyo_frame">
 		<material>Gazebo/FlatBlack</material>
-	</gazebo>
+	</gazebo> -->
 
     <xacro:sensor_xtion 
         parent="base_link" 
@@ -33,7 +33,7 @@
             <robotNamespace>/</robotNamespace>
             <updateRate>50.0</updateRate>
             <bodyName>imu_link</bodyName>
-            <topicName>imu/data</topicName>
+            <topicName>champ/imu/data</topicName>
             <accelDrift>0.005 0.005 0.005</accelDrift>
             <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
             <rateDrift>0.005 0.005 0.005 </rateDrift>

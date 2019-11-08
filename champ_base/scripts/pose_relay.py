@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 import rospy
-from champ_msgs.msg import Imu
 from champ_msgs.msg import PointArray
+from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Quaternion, TransformStamped
 from tf.transformations import quaternion_from_euler
 import tf2_ros
 
 class PoseRelay:
     def __init__(self):
-        rospy.Subscriber("/champ/imu/raw", Imu, self.imu_callback)
+        rospy.Subscriber("/champ/imu/data", Imu, self.imu_callback)
         rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
     
         self.robot_height = 0
