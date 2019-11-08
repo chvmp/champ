@@ -35,9 +35,6 @@ ros::Publisher point_pub("/champ/foot/raw", &point_msg);
 champ_msgs::Joints joints_msg;
 ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 
-champ_msgs::Pose pose_msg;
-ros::Publisher pose_pub("/champ/pose/raw", &pose_msg);
-
 champ_msgs::Imu imu_msg;
 ros::Publisher imu_pub("/champ/imu/raw", &imu_msg);
 
@@ -59,7 +56,6 @@ void setup()
     
     nh.advertise(point_pub);
     nh.advertise(jointstates_pub);
-    nh.advertise(pose_pub);
     nh.advertise(imu_pub);
 
     nh.subscribe(vel_cmd_sub);
@@ -102,7 +98,6 @@ void loop() {
         ik.solve(foot_positions, joint_positions);
 
         publishPoints(foot_positions);
-        // publishPose(0, 0, NOMINAL_HEIGHT, 0, 0, 0);
         publishJointStates(joint_positions);
         publishIMU(rotation, accel, gyro, mag);
 
@@ -168,17 +163,7 @@ void publishPoints(Transformation foot_positions[4])
     point_pub.publish(&point_msg);
 }
 
-void publishPose(float x, float y, float z, float roll, float pitch, float yaw)
-{
-    pose_msg.x = x;
-    pose_msg.y = y;
-    pose_msg.z = z;
-    pose_msg.roll = roll;
-    pose_msg.pitch = pitch;
-    pose_msg.yaw = yaw;
 
-    pose_pub.publish(&pose_msg);
-}
 
 void publishIMU(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
 {
