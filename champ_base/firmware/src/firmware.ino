@@ -84,9 +84,11 @@ void loop() {
         Accelerometer accel;
         Gyroscope gyro;
         Magnetometer mag;
+        Orientation rotation;
 
-        imu.readAccelerometer(accel);
         imu.readGyroscope(gyro);
+        imu.readOrientation(rotation);
+        imu.readAccelerometer(accel);
         imu.readMagnetometer(mag);
 
         base.lf->joints(0.0, 0.0, 0.0);
@@ -102,7 +104,7 @@ void loop() {
         publishPoints(foot_positions);
         // publishPose(0, 0, NOMINAL_HEIGHT, 0, 0, 0);
         publishJointStates(joint_positions);
-        publishIMU(accel, gyro, mag);
+        publishIMU(rotation, accel, gyro, mag);
 
         actuators.moveJoints(joint_positions);
         prev_control_time = micros();
@@ -178,8 +180,13 @@ void publishPose(float x, float y, float z, float roll, float pitch, float yaw)
     pose_pub.publish(&pose_msg);
 }
 
-void publishIMU(Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
+void publishIMU(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
 {
+    imu_msg.orientation.w = rotation.w;
+    imu_msg.orientation.x = rotation.x;
+    imu_msg.orientation.y = rotation.y;
+    imu_msg.orientation.z = rotation.z;
+
     imu_msg.linear_acceleration.x = accel.x;
     imu_msg.linear_acceleration.y = accel.y;
     imu_msg.linear_acceleration.z = accel.z;
