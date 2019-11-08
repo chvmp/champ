@@ -23,12 +23,12 @@
         <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
     </node>
 
-    <node unless="$(arg has_odom)" pkg="laser_scan_matcher" type="laser_scan_matcher_node" 
+    <!-- <node unless="$(arg has_odom)" pkg="laser_scan_matcher" type="laser_scan_matcher_node" 
         name="laser_scan_matcher_node" output="screen">
         <param name="fixed_frame" value = "odom"/>
         <param name="base_frame" value = "base_footprint"/>
         <param name="max_iterations" value="10"/>
-    </node>
+    </node> -->
 
     <include file="$(find champ_description)/launch/description.launch">
         <arg name="description_file" value="$(arg description_file)"/>
@@ -44,6 +44,6 @@
         <include file="$(find champ_base)/launch/include/tf.launch" />
         <node pkg="champ_base" name="imu_relay" type="imu_relay.py" output="screen"/>
 
-        <!-- <include file="$(find champ_base)/launch/include/laser/$(arg laser).launch" /> -->
+        <include file="$(find champ_base)/launch/include/laser/$(arg laser).launch" />
     </group>
 </launch>
