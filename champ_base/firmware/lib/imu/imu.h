@@ -2,7 +2,6 @@
 #define _IMU_H_
 
 #include <imu_plugins.h>
-#include <imu_components.h>
 
 template<typename Plugin>
 class IMU
@@ -16,25 +15,24 @@ class IMU
         {
         }
 
+        void readOrientation(Orientation &rotation)
+        {
+            imu_plugin_.readOrientation(rotation);
+        }
+
         void readGyroscope(Gyroscope &gyro)
         {
-            gyro.x = imu_plugin_.readGyroscopeX();
-            gyro.y = imu_plugin_.readGyroscopeY();
-            gyro.z = imu_plugin_.readGyroscopeZ();
+            imu_plugin_.readGyroscope(gyro);
         }
 
         void readAccelerometer(Accelerometer &accel)
         {
-            accel.x = imu_plugin_.readAccelerometerX();
-            accel.y = imu_plugin_.readAccelerometerY();
-            accel.z = imu_plugin_.readAccelerometerZ();
+            imu_plugin_.readAccelerometer(accel);
         }
 
         void readMagnetometer(Magnetometer &mag)
         {
-            mag.x = imu_plugin_.readMagnetometerX();
-            mag.y = imu_plugin_.readMagnetometerY();
-            mag.z = imu_plugin_.readMagnetometerZ();
+            imu_plugin_.readMagnetometer(mag);
         }
 };
 

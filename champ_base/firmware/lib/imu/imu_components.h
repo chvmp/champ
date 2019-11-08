@@ -1,10 +1,22 @@
+#ifndef _IMU_COMPONENTS_H_
+#define _IMU_COMPONENTS_H_
+
+class Orientation
+{
+    public:
+        float x;
+        float y;
+        float z;
+        float w;
+};
+
 class Accelerometer
-    {
-        public:
-            float x;
-            float y;
-            float z;
-    };
+{
+    public:
+        float x;
+        float y;
+        float z;
+};
 
 class Gyroscope
 {
@@ -21,3 +33,5 @@ class Magnetometer
         float y;
         float z;
 };
+
+#endif
