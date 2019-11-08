@@ -18,7 +18,7 @@
 
     <include file="$(find champ_base)/launch/include/velocity_smoother.launch" />
     
-    <node if="$(arg has_odom)" pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
         <remap from="odometry/filtered" to="odom" />
         <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
     </node>
@@ -43,7 +43,6 @@
     <group unless="$(arg gazebo)">
         <include file="$(find champ_base)/launch/include/tf.launch" />
         <node pkg="champ_base" name="imu_relay" type="imu_relay.py" output="screen"/>
-
         <include file="$(find champ_base)/launch/include/laser/$(arg laser).launch" />
     </group>
 </launch>
