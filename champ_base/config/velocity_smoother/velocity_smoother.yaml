@@ -8,8 +8,8 @@ speed_lim_v_y: 0.35
 
 speed_lim_w: 0.4
 
-accel_lim_v: 3.0
-accel_lim_w: 4.0
+accel_lim_v: 1.0
+accel_lim_w: 2.0
 
 # Optional parameters
 frequency: 10.0
