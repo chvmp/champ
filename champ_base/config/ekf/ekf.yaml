@@ -19,7 +19,7 @@ odom0_config: [false, false, false,
 odom0_differential: true
 odom0_relative: false
 
-imu0: /imu/data
+imu0: champ/imu/data
 
 # NOTE: If you find that your robot has x drift,
 # the most likely candidate is the x'' (acceleration) fr$
