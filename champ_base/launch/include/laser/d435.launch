@@ -10,7 +10,8 @@
 
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
         <remap from="cloud_in" to="/camera/depth_registered/points" />
-        <rosparam>target_frame: laser
+        <rosparam>
+            target_frame: laser
             transform_tolerance: 0.01
             min_height: 0.0
             max_height: 0.5
@@ -28,7 +29,8 @@
             # 0 : Detect number of cores
             # 1 : Single threaded
             # 2-&gt;inf : Parallelism level
-            concurrency_level: 0</rosparam>
+            concurrency_level: 0
+        </rosparam>
     </node>
 
     <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
@@ -40,7 +42,9 @@
     </node>
 
     <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" output="screen">
+        <remap from="odom" to="odom/raw" />
         <param name="subscribe_rgbd" type="bool" value="true" />
+        <param name="publish_tf" type="bool" value="false" />
         <param name="frame_id" type="string" value="base_footprint" />
         <remap from="rgbd_image" to="rgbd_image" />
         <param name="Odom/Strategy" value="1" />
