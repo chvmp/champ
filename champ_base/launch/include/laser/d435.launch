@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0 0 0 0 /base_link /laser" />
     <node pkg="tf2_ros" type="static_transform_publisher" name="laser_to_realsense" args="0 0 0 0 0 0 /laser /camera_link" />
 	
     <include file="$(find realsense2_camera)/launch/rs_rgbd.launch" />

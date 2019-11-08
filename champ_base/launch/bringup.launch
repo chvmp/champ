@@ -7,6 +7,8 @@
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
     <arg name="laser"            default="d435" />
 
+    <include file="$(find champ_base)/launch/include/tf.launch" />
+
     <node pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
         <param if="$(arg sim)" name="port" value="/tmp/simavr-uart0" />
         <param unless="$(arg sim)" name="port" value="/dev/ttyACM0" />
@@ -34,6 +36,7 @@
         <arg name="description_file" value="$(arg description_file)"/>
     </include>
 
+    <node pkg="champ_base" name="imu_relay" type="imu_relay.py" output="screen"/>
     <node pkg="champ_base" name="pose_relay" type="pose_relay.py" output="screen"/>
     <node pkg="champ_base" name="foot_relay" type="foot_relay.py" output="screen"/>
     <node pkg="champ_base" name="joints_relay" type="joints_relay.py" output="screen">
