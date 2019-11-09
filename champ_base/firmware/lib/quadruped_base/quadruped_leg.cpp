@@ -6,6 +6,7 @@ QuadrupedLeg::QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lowe
     last_touchdown_(0),
     in_contact_(0),
     knee_direction_(0),
+    gait_phase_(1),
     hip(&hip_joint),
     upper_leg(&upper_leg_joint),
     lower_leg(&lower_leg_joint),
@@ -124,6 +125,16 @@ void QuadrupedLeg::in_contact(bool in_contact)
 bool QuadrupedLeg::in_contact()
 {
     return in_contact_;
+}
+
+void QuadrupedLeg::gait_phase(bool phase)
+{
+    gait_phase_ =  phase;
+}
+
+bool QuadrupedLeg::gait_phase()
+{
+    return gait_phase_;
 }
 
 int QuadrupedLeg::knee_direction()

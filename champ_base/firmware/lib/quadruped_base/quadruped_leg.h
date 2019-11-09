@@ -21,6 +21,8 @@ class QuadrupedLeg
 
     int knee_direction_;
 
+    bool gait_phase_;
+    
     public:
         QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lower_leg_link, Joint &foot_joint);
         
@@ -45,7 +47,9 @@ class QuadrupedLeg
 
         int knee_direction();
         void knee_direction(int direction);
-        
+        void gait_phase(bool phase);
+        bool gait_phase();
+
         Joint *hip;
         Joint *upper_leg;
         Joint *lower_leg;
