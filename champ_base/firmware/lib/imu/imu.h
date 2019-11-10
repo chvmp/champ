@@ -9,7 +9,7 @@ class IMU
     Plugin imu_plugin_;
 
     public:
-        enum Sensor {BNO0809DOF};
+        enum Sensor { SimulationIMU, BNO0809DOF};
 
         IMU()
         {
