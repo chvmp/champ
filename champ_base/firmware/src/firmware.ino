@@ -6,6 +6,7 @@
 #include <champ_msgs/Joints.h>
 #include <champ_msgs/Pose.h>
 #include <champ_msgs/Imu.h>
+#include <champ_msgs/Velocities.h>
 #include <quadruped_balancer.h>
 #include <quadruped_gait.h>
 #include <quadruped_ik.h>
@@ -14,6 +15,7 @@
 #include <actuator_plugins.h>
 #include <imu_plugins.h>
 #include <hardware_config.h>
+#include <odometry.h>
 
 float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
@@ -38,6 +40,9 @@ ros::Publisher jointstates_pub("/champ/joint_states/raw", &joints_msg);
 champ_msgs::Imu imu_msg;
 ros::Publisher imu_pub("/champ/imu/raw", &imu_msg);
 
+champ_msgs::Velocities vel_msg;
+ros::Publisher vel_pub("/champ/velocities/raw", &vel_msg);
+
 ros::Subscriber<geometry_msgs::Twist> vel_cmd_sub("champ/cmd_vel", velocityCommandCallback);
 ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCallback);
 
@@ -46,6 +51,7 @@ QuadrupedBalancer balancer(base);
 QuadrupedGait gait(base, MAX_LINEAR_VELOCITY_X, MAX_LINEAR_VELOCITY_Y, MAX_ANGULAR_VELOCITY_Z, 
                          MAX_STEP_LENGTH, MAX_THETA, SWING_HEIGHT, STANCE_DEPTH);
 QuadrupedIK ik(base);
+Odometry odometry(base);
 
 void setup()
 {
@@ -57,6 +63,7 @@ void setup()
     nh.advertise(point_pub);
     nh.advertise(jointstates_pub);
     nh.advertise(imu_pub);
+    nh.advertise(vel_pub);
 
     nh.subscribe(vel_cmd_sub);
     nh.subscribe(pose_cmd_sub);
@@ -77,29 +84,30 @@ void loop() {
     {
         Transformation foot_positions[4];
         float joint_positions[12]; 
+        float joint_states[12];
         Accelerometer accel;
         Gyroscope gyro;
         Magnetometer mag;
         Orientation rotation;
+        Velocities velocities;
 
         imu.readGyroscope(gyro);
         imu.readOrientation(rotation);
         imu.readAccelerometer(accel);
         imu.readMagnetometer(mag);
-
-        base.lf->joints(0.0, 0.0, 0.0);
-        base.rf->joints(0.0, 0.0, 0.0);
-        base.lh->joints(0.0, 0.0, 0.0);
-        base.rh->joints(0.0, 0.0, 0.0);
-        base.attitude(0.0, 0.0, 0.0);
+        actuators.getJointPositions(joint_states);
+        
+        base.joint_states(joint_states);
+        odometry.getVelocities(velocities);
 
         balancer.setBodyPose(foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);
         gait.generate(foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(foot_positions, joint_positions);
 
         publishPoints(foot_positions);
-        publishJointStates(joint_positions);
+        publishJointStates(joint_states);
         publishIMU(rotation, accel, gyro, mag);
+        publishVelocities(velocities);
 
         actuators.moveJoints(joint_positions);
         prev_control_time = micros();
@@ -164,7 +172,6 @@ void publishPoints(Transformation foot_positions[4])
 }
 
 
-
 void publishIMU(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
 {
     imu_msg.orientation.w = rotation.w;
@@ -185,4 +192,14 @@ void publishIMU(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Ma
     imu_msg.magnetic_field.z = mag.z;
 
     imu_pub.publish(&imu_msg);
+}
+
+void publishVelocities(Velocities vel)
+{
+    vel_msg.linear_x = vel.linear_velocity_x;
+    vel_msg.linear_y = vel.linear_velocity_y;
+    vel_msg.angular_z = vel.angular_velocity_z;
+
+    //publish raw_vel_msg
+    vel_pub.publish(&vel_msg);
 }
