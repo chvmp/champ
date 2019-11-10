@@ -10,7 +10,7 @@ class Actuator
     Plugin *actuator_chain_[12];
 
     public:
-        enum Driver { DynamixelAX12A, Servo, Odrive };
+        enum Driver { Simulation, DynamixelAX12A, Servo, Odrive };
 
         Actuator(Plugin &plugin0, Plugin &plugin1, Plugin &plugin2,
                  Plugin &plugin3, Plugin &plugin4, Plugin &plugin5,
