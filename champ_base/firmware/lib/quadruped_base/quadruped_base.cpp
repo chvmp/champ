@@ -48,11 +48,22 @@ void QuadrupedBase::getJointStates(float *joints)
 {
     unsigned int total_joints = 0;
 
-    for(unsigned int i=0; i < 4; i++)
+    for(unsigned int i = 0; i < 4; i++)
     {
         joints[total_joints++] = legs[i]->hip->theta();
         joints[total_joints++] = legs[i]->upper_leg->theta();
         joints[total_joints++] = legs[i]->lower_leg->theta();
+    }
+}
+
+void QuadrupedBase::joint_states(float joints[12])
+{
+    for(unsigned int i = 0; i < 4; i++)
+    {
+        int index = i * 3;
+        legs[i]->hip->theta(joints[index]);
+        legs[i]->upper_leg->theta(joints[index + 1]);
+        legs[i]->lower_leg->theta(joints[index + 2]);
     }
 }
 

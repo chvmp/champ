@@ -16,7 +16,8 @@ class QuadrupedBase
     public:
         QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, const char *knee_orientation);
         void getJointStates(float *joints);
-
+        void joint_states(float joints_states[12]);
+        
         float roll();
         void roll(float roll);
 
