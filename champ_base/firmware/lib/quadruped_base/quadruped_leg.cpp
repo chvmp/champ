@@ -53,6 +53,8 @@ Transformation QuadrupedLeg::foot_from_base()
     foot_position.RotateZ(hip->yaw());
     foot_position.Translate(hip->x(), hip->y(), hip->z());
 
+    foot_position.RotateX(hip->theta());
+
     return foot_position;
 }
 
@@ -72,6 +74,8 @@ void QuadrupedLeg::transformToBase(Transformation &foot)
     foot.RotateY(hip->pitch());
     foot.RotateZ(hip->yaw());
     foot.Translate(hip->x(), hip->y(), hip->z());
+
+    foot.RotateX(hip->theta());
 }
 
 void QuadrupedLeg::joints(float hip_joint, float upper_leg_joint, float lower_leg_joint)
