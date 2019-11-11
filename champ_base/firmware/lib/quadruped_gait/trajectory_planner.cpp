@@ -57,11 +57,10 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float step_lengt
     updateControlPointsLength(step_length);
 
     int n = total_control_points_ - 1;
-  
+    leg_->gait_phase(1);
+
     if(stance_phase_signal > swing_phase_signal)
     {
-        leg_->gait_phase(1);
-
         float x = (step_length / 2) * (1 - (2 * stance_phase_signal));
         float y = -stance_depth_ * cos((3.1416 * x) / step_length);
 
