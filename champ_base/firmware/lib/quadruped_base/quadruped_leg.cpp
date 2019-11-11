@@ -36,7 +36,11 @@ Transformation QuadrupedLeg::foot_from_hip()
     for(unsigned int i = 3; i > 0; i--)
     {
         foot_position.Translate(joint_chain[i]->x(), joint_chain[i]->y(), joint_chain[i]->z());
-        foot_position.RotateY(joint_chain[i-1]->theta());  
+        //prevent hip from being rotated as hip is on a different axis of rotation
+        if(i > 1)
+        {
+            foot_position.RotateY(joint_chain[i-1]->theta());          
+        }
     }
 
     return foot_position;
