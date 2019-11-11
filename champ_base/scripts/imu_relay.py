@@ -43,7 +43,6 @@ class IMURelay:
 
         self.imu_pub.publish(imu_data_msg)
 
-
         imu_mag_msg.header.stamp = rospy.Time.now()
         imu_mag_msg.header.frame_id = "imu_link"
 
@@ -56,7 +55,6 @@ class IMURelay:
         imu_mag_msg.magnetic_field_covariance[8] = 0.000001
 
         self.mag_pub.publish(imu_mag_msg)
-
 
 if __name__ == "__main__":
     rospy.init_node('champ_imu_relay', anonymous=True)
