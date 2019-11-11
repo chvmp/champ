@@ -36,6 +36,7 @@
 
     <node pkg="champ_base" name="pose_relay" type="pose_relay.py" output="screen"/>
     <node pkg="champ_base" name="foot_relay" type="foot_relay.py" output="screen"/>
+    <node pkg="champ_base" name="odometry_relay" type="odometry_relay.py" output="screen"/>
     <node pkg="champ_base" name="joints_relay" type="joints_relay.py" output="screen">
         <rosparam command="load" file="$(arg joints_map_file)" />
     </node>
