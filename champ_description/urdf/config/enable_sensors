@@ -1,4 +1,0 @@
-#!/bin/bash
-export ENABLE_SENSORS=1
-$@
-
