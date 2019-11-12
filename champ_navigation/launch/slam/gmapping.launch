@@ -1,7 +1,7 @@
 <launch>
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
-        <param name="base_frame" value="/base_footprint" />
-        <param name="odom_frame" value="/odom" />
+        <param name="base_frame" value="base_footprint" />
+        <param name="odom_frame" value="odom" />
         <param name="map_update_interval" value="15.0"/>
         <param name="maxUrange" value="5.0"/>
         <param name="minRange" value="-0.5"/>

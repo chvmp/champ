@@ -1,6 +1,6 @@
 global_costmap:
-  global_frame: /map
-  robot_base_frame: /base_footprint
+  global_frame: map
+  robot_base_frame: base_footprint
   update_frequency: 1.0 #before: 5.0
   publish_frequency: 0.5 #before 0.5
   static_map: true

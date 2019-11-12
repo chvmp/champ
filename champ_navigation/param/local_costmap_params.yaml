@@ -1,6 +1,6 @@
 local_costmap:
-  global_frame: /odom
-  robot_base_frame: /base_footprint
+  global_frame: odom
+  robot_base_frame: base_footprint
   update_frequency: 1.0 #before 5.0
   publish_frequency: 2.0 #before 2.0
   static_map: false
