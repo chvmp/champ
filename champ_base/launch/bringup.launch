@@ -13,7 +13,6 @@
         <param if="$(arg sim)" name="fix_pyserial_for_test" value="true" />
         <param unless="$(arg sim)" name="fix_pyserial_for_test" value="false" />
         <param name="baud" value="500000" />
-        <!-- <remap from="champ/cmd_vel" to="cmd_vel" /> -->
     </node>
 
     <include file="$(find champ_base)/launch/include/velocity_smoother.launch" />
@@ -22,28 +21,22 @@
         <remap from="odometry/filtered" to="odom" />
         <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
     </node>
-
-    <!-- <node unless="$(arg has_odom)" pkg="laser_scan_matcher" type="laser_scan_matcher_node" 
-        name="laser_scan_matcher_node" output="screen">
-        <param name="fixed_frame" value = "odom"/>
-        <param name="base_frame" value = "base_footprint"/>
-        <param name="max_iterations" value="10"/>
-    </node> -->
-
-    <include file="$(find champ_description)/launch/description.launch">
-        <arg name="description_file" value="$(arg description_file)"/>
-    </include>
-
+    
+    <node pkg="champ_base" name="odometry_relay" type="odometry_relay.py" output="screen"/>
     <node pkg="champ_base" name="pose_relay" type="pose_relay.py" output="screen"/>
     <node pkg="champ_base" name="foot_relay" type="foot_relay.py" output="screen"/>
-    <node pkg="champ_base" name="odometry_relay" type="odometry_relay.py" output="screen"/>
     <node pkg="champ_base" name="joints_relay" type="joints_relay.py" output="screen">
         <rosparam command="load" file="$(arg joints_map_file)" />
     </node>
 
     <group unless="$(arg gazebo)">
-        <include file="$(find champ_base)/launch/include/tf.launch" />
         <node pkg="champ_base" name="imu_relay" type="imu_relay.py" output="screen"/>
+
+        <include file="$(find champ_base)/launch/include/tf.launch" />
+        <include file="$(find champ_description)/launch/description.launch">
+            <arg name="description_file" value="$(arg description_file)"/>
+        </include>
+        
         <include file="$(find champ_base)/launch/include/laser/$(arg laser).launch" />
     </group>
 </launch>
