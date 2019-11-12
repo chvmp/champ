@@ -20,7 +20,7 @@
             angle_max: 1.5708 # M_PI/2
             angle_increment: 0.0087 # M_PI/360.0
             scan_time: 0.3333
-            range_min: 0.45
+            range_min: 0.15
             range_max: 15
             use_inf: true
             inf_epsilon: 1.0
@@ -28,28 +28,8 @@
             # Concurrency level, affects number of pointclouds queued for processing, thread number governed by nodelet manager
             # 0 : Detect number of cores
             # 1 : Single threaded
-            # 2-&gt;inf : Parallelism level
+            # 2 : Parallelism level
             concurrency_level: 0
         </rosparam>
-    </node>
-
-    <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
-        <remap from="rgb/image" to="/camera/color/image_rect_color" />
-        <remap from="depth/image" to="/camera/aligned_depth_to_color/image_raw" />
-        <remap from="rgb/camera_info" to="/camera/color/camera_info" />
-        <remap from="rgbd_image" to="rgbd_image" />
-        <param name="approx_sync" value="false" />
-    </node>
-
-    <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" output="screen">
-        <remap from="odom" to="odom/raw" />
-        <param name="subscribe_rgbd" type="bool" value="true" />
-        <param name="publish_tf" type="bool" value="false" />
-        <param name="frame_id" type="string" value="base_footprint" />
-        <remap from="rgbd_image" to="rgbd_image" />
-        <param name="Odom/Strategy" value="1" />
-        <param name="Vis/CorType" value="1" />
-        <param name="OdomF2M/MaxSize" type="string" value="1000" />
-        <param name="Vis/MaxFeatures" type="string" value="600" />
     </node>
 </launch>
