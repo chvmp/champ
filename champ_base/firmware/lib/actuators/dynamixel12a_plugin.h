@@ -68,7 +68,7 @@ namespace DynamixelAX12A
             {
                 uint16_t current_angle = 0;
                 ax12_.currentPositionDegree(current_angle);
-                return toEulerAngle(current_angle * inverter_) - angle_offset_radians_;
+                return inverter_ * (toEulerAngle(current_angle) + angle_offset_radians_);
             }
 
             int toActuatorAngle(float angle)
