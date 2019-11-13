@@ -4,6 +4,7 @@
     <arg name="gazebo"           default="false" />
     <arg name="has_odom"         default="false" />
     <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
+    <arg name="links_map_file"  default="$(find champ_config)/config/links/links.yaml"/>
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
     <arg name="laser"            default="d435" />
 
@@ -28,7 +29,9 @@
 
     <node pkg="champ_base" name="odometry_relay" type="odometry_relay.py" output="screen"/>
     <node pkg="champ_base" name="pose_relay" type="pose_relay.py" output="screen"/>
-    <node pkg="champ_base" name="foot_relay" type="foot_relay.py" output="screen"/>
+    <node pkg="champ_base" name="foot_relay" type="foot_relay.py" output="screen">
+        <rosparam command="load" file="$(arg links_map_file)" />
+    </node>
     <node pkg="champ_base" name="joints_relay" type="joints_relay.py" output="screen">
         <rosparam command="load" file="$(arg joints_map_file)" />
     </node>
