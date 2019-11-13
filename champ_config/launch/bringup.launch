@@ -15,6 +15,9 @@
         <arg name="laser" value="$(arg laser)"/>
     </include>
 
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0 0 0 0 /base_link /laser" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_imu" args="0 0 0 0 0 0 /base_link /imu_link" />
+
     <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
             args="-d $(find champ_description)/rviz/urdf_viewer.rviz -f $(arg base_frame)"
             output="screen"/>

@@ -1,4 +1,0 @@
-<launch>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0 0 0 0 /base_link /laser" />
-    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_imu" args="0 0 0 0 0 0 /base_link /imu_link" />
-</launch>

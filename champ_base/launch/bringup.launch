@@ -35,7 +35,6 @@
 
     <group unless="$(arg gazebo)">
         <node pkg="champ_base" name="imu_relay" type="imu_relay.py" output="screen"/>
-        <include file="$(find champ_base)/launch/include/tf.launch" />
         <include file="$(find champ_base)/launch/include/laser/$(arg laser).launch" />
     </group>
 </launch>
