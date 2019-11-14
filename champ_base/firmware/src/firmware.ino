@@ -80,11 +80,12 @@ void setup()
 void loop() { 
     static unsigned long prev_control_time = 0;
 
-    if ((micros() - prev_control_time) >= 10000)
+    if ((micros() - prev_control_time) >= 2000)
     {
-        Transformation foot_positions[4];
-        float joint_positions[12]; 
-        float joint_states[12];
+        Transformation target_foot_positions[4];
+        Transformation current_foot_positions[4];
+        float target_joint_position[12]; 
+        float current_joint_positions[12];
         Accelerometer accel;
         Gyroscope gyro;
         Magnetometer mag;
@@ -95,21 +96,23 @@ void loop() {
         imu.readOrientation(rotation);
         imu.readAccelerometer(accel);
         imu.readMagnetometer(mag);
-        actuators.getJointPositions(joint_states);
         
-        base.joint_states(joint_states);
+        actuators.getJointPositions(current_joint_positions);
+        base.joint_states(current_joint_positions);
+        base.getFootPositions(current_foot_positions);
         odometry.getVelocities(velocities);
 
-        balancer.setBodyPose(foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);
-        gait.generate(foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
-        ik.solve(foot_positions, joint_positions);
+        balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);
+        gait.generate(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
+        ik.solve(target_foot_positions, target_joint_position);
+        
+        actuators.moveJoints(target_joint_position);
 
-        publishPoints(foot_positions);
-        publishJointStates(joint_states);
+        publishPoints(current_foot_positions);
+        publishJointStates(current_joint_positions);
         publishIMU(rotation, accel, gyro, mag);
         publishVelocities(velocities);
 
-        actuators.moveJoints(joint_positions);
         prev_control_time = micros();
     }
 
@@ -170,7 +173,6 @@ void publishPoints(Transformation foot_positions[4])
 
     point_pub.publish(&point_msg);
 }
-
 
 void publishIMU(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
 {
