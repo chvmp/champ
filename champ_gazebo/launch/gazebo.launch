@@ -4,6 +4,8 @@
     <arg name="headless" default="false"/>
     <arg name="paused" default="false"/>
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
+    <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
+    <arg name="links_map_file"  default="$(find champ_config)/config/links/links.yaml"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(find champ_gazebo)/worlds/outdoor.world"/>
@@ -13,11 +15,13 @@
         <arg name="headless" value="$(arg headless)"/>
     </include>
 
-    <include file="$(find champ_description)/launch/description.launch">
-        <arg name="description_file" value="$(arg description_file)"/>
-    </include>
-
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find champ_description)/urdf/champ.urdf.xacro' " />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="false"/>
+        <rosparam param="/source_list">[champ/joint_states]</rosparam>
+    </node>
 
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model champ -param robot_description -z 0.15" />
     
@@ -28,10 +32,18 @@
         joint_group_position_controller
         ">
     </node>
-
+    
+    <node pkg="champ_base" name="odometry_relay" type="odometry_relay.py" output="screen"/>
+    <node pkg="champ_base" name="pose_relay" type="pose_relay.py" output="screen"/>
+    <node pkg="champ_base" name="foot_relay" type="foot_relay.py" output="screen">
+        <rosparam command="load" file="$(arg links_map_file)" />
+    </node>
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
+        <remap from="odometry/filtered" to="odom" />
+        <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
+    </node>
+        
     <node pkg="champ_gazebo" name="champ_joints_controller" type="joints_controller.py" output="screen"/>
-    <!-- <node name="odometry" pkg="champ_gazebo" type="odometry.py" output="screen" />
-    <node name="contact_sensor" pkg="champ_gazebo" type="contact_sensor.py" output="screen" /> -->
 
     <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" output="screen">
         <remap from="image" to="/camera/depth_registered/image_raw"/>

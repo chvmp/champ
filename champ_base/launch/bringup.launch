@@ -18,26 +18,26 @@
 
     <include file="$(find champ_base)/launch/include/velocity_smoother.launch" />
     
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
-        <remap from="odometry/filtered" to="odom" />
-        <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
-    </node>
-
-    <include file="$(find champ_description)/launch/description.launch">
-        <arg name="description_file" value="$(arg description_file)"/>
-    </include>
-
-    <node pkg="champ_base" name="odometry_relay" type="odometry_relay.py" output="screen"/>
-    <node pkg="champ_base" name="pose_relay" type="pose_relay.py" output="screen"/>
-    <node pkg="champ_base" name="foot_relay" type="foot_relay.py" output="screen">
-        <rosparam command="load" file="$(arg links_map_file)" />
-    </node>
-    <node pkg="champ_base" name="joints_relay" type="joints_relay.py" output="screen">
-        <rosparam command="load" file="$(arg joints_map_file)" />
-    </node>
-
     <group unless="$(arg gazebo)">
+        <include file="$(find champ_description)/launch/description.launch">
+            <arg name="description_file" value="$(arg description_file)"/>
+        </include>
+
+        <node pkg="champ_base" name="odometry_relay" type="odometry_relay.py" output="screen"/>
+        <node pkg="champ_base" name="pose_relay" type="pose_relay.py" output="screen"/>
         <node pkg="champ_base" name="imu_relay" type="imu_relay.py" output="screen"/>
+        <node pkg="champ_base" name="foot_relay" type="foot_relay.py" output="screen">
+            <rosparam command="load" file="$(arg links_map_file)" />
+        </node>
+        <node pkg="champ_base" name="joints_relay" type="joints_relay.py" output="screen">
+            <rosparam command="load" file="$(arg joints_map_file)" />
+        </node>
+        
+        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
+            <remap from="odometry/filtered" to="odom" />
+            <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
+        </node>
+        
         <include file="$(find champ_base)/launch/include/laser/$(arg laser).launch" />
     </group>
 </launch>
