@@ -182,9 +182,6 @@
       </plugin>
     </sensor>
   </gazebo>
-  <gazebo reference="hokuyo_frame">
-    <material>Gazebo/FlatBlack</material>
-  </gazebo>
   <gazebo>
     <plugin filename="libhector_gazebo_ros_imu.so" name="imu_controller">
       <robotNamespace>/</robotNamespace>
