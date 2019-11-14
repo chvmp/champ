@@ -44,15 +44,23 @@ int QuadrupedBase::getKneeDirection(char direction)
     }
 }
 
-void QuadrupedBase::getJointStates(float *joints)
+void QuadrupedBase::getJointStates(float *joint_positions)
 {
     unsigned int total_joints = 0;
 
     for(unsigned int i = 0; i < 4; i++)
     {
-        joints[total_joints++] = legs[i]->hip->theta();
-        joints[total_joints++] = legs[i]->upper_leg->theta();
-        joints[total_joints++] = legs[i]->lower_leg->theta();
+        joint_positions[total_joints++] = legs[i]->hip->theta();
+        joint_positions[total_joints++] = legs[i]->upper_leg->theta();
+        joint_positions[total_joints++] = legs[i]->lower_leg->theta();
+    }
+}
+
+void QuadrupedBase::getFootPositions(Transformation *foot_positions)
+{
+    for(unsigned int i = 0; i < 4; i++)
+    {
+        foot_positions[i] = legs[i]->foot_from_base();
     }
 }
 
