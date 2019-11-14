@@ -4,9 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /RobotModel1
         - /TF1/Frames1
-        - /MarkerArray1
       Splitter Ratio: 0.383333325
     Tree Height: 739
   - Class: rviz/Selection
@@ -56,51 +54,13 @@ Visualization Manager:
       Collision Enabled: false
       Enabled: true
       Links:
-        All Links Enabled: true
+        All Links Enabled:
+          {}
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
         base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        camera_base_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        camera_rgb_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_rgb_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        hokuyo_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hokuyo_scan_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        imu_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -116,17 +76,14 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         lf_lower_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         lf_upper_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         lh_foot_link:
           Alpha: 1
           Show Axes: false
@@ -139,17 +96,14 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         lh_lower_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         lh_upper_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         rf_foot_link:
           Alpha: 1
           Show Axes: false
@@ -162,17 +116,14 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         rf_lower_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         rf_upper_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         rh_foot_link:
           Alpha: 1
           Show Axes: false
@@ -185,17 +136,14 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         rh_lower_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         rh_upper_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -213,28 +161,14 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: true
+        All Enabled: false
         base_footprint:
-          Value: true
+          Value: false
         base_link:
-          Value: true
-        camera_base_frame:
-          Value: true
-        camera_depth_frame:
-          Value: true
-        camera_depth_optical_frame:
-          Value: true
-        camera_link:
-          Value: true
-        camera_rgb_frame:
-          Value: true
-        camera_rgb_optical_frame:
-          Value: true
-        hokuyo_frame:
-          Value: true
-        hokuyo_scan_link:
-          Value: true
+          Value: false
         imu_link:
+          Value: true
+        laser:
           Value: true
         lf_foot_link:
           Value: true
@@ -255,6 +189,8 @@ Visualization Manager:
         lh_lower_leg_link:
           Value: true
         lh_upper_leg_link:
+          Value: true
+        odom:
           Value: true
         rf_foot_link:
           Value: true
@@ -279,53 +215,45 @@ Visualization Manager:
       Marker Scale: 0.25
       Name: TF
       Show Arrows: true
-      Show Axes: true
-      Show Names: true
+      Show Axes: false
+      Show Names: false
       Tree:
-        base_footprint:
-          base_link:
-            camera_base_frame:
-              camera_depth_frame:
-                camera_depth_optical_frame:
+        base_link:
+          imu_link:
+            {}
+          laser:
+            {}
+          lf_hip_debug_link:
+            {}
+          lf_hip_link:
+            lf_upper_leg_link:
+              lf_lower_leg_link:
+                lf_foot_link:
                   {}
-              camera_link:
-                {}
-              camera_rgb_frame:
-                camera_rgb_optical_frame:
+          lh_hip_debug_link:
+            {}
+          lh_hip_link:
+            lh_upper_leg_link:
+              lh_lower_leg_link:
+                lh_foot_link:
                   {}
-            hokuyo_frame:
-              hokuyo_scan_link:
-                {}
-            imu_link:
-              {}
-            lf_hip_debug_link:
-              {}
-            lf_hip_link:
-              lf_upper_leg_link:
-                lf_lower_leg_link:
-                  lf_foot_link:
-                    {}
-            lh_hip_debug_link:
-              {}
-            lh_hip_link:
-              lh_upper_leg_link:
-                lh_lower_leg_link:
-                  lh_foot_link:
-                    {}
-            rf_hip_debug_link:
-              {}
-            rf_hip_link:
-              rf_upper_leg_link:
-                rf_lower_leg_link:
-                  rf_foot_link:
-                    {}
-            rh_hip_debug_link:
-              {}
-            rh_hip_link:
-              rh_upper_leg_link:
-                rh_lower_leg_link:
-                  rh_foot_link:
-                    {}
+          rf_hip_debug_link:
+            {}
+          rf_hip_link:
+            rf_upper_leg_link:
+              rf_lower_leg_link:
+                rf_foot_link:
+                  {}
+          rh_hip_debug_link:
+            {}
+          rh_hip_link:
+            rh_upper_leg_link:
+              rh_lower_leg_link:
+                rh_foot_link:
+                  {}
+        odom:
+          base_footprint:
+            {}
       Update Interval: 0
       Value: true
     - Class: rviz/MarkerArray
@@ -340,7 +268,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: base_link
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -376,10 +304,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.345398486
+      Pitch: 0.325398505
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.87036991
+      Yaw: 2.12536359
     Saved: ~
 Window Geometry:
   Displays:
