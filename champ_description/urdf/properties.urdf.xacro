@@ -25,7 +25,7 @@
     <xacro:property name="lower_leg_z_length" value="0.156" />
 
     <xacro:property name="base_mesh_path" value="package://champ_description/meshes/base.stl" />
-    <xacro:property name="base_mass" value="3.0" />
+    <xacro:property name="base_mass" value="2.0" />
     <xacro:property name="base_x_length" value="0.5" />
     <xacro:property name="base_y_length" value="0.29" />
     <xacro:property name="base_z_length" value="0.130" />
