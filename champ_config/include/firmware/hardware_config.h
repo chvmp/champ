@@ -6,8 +6,8 @@
 // #define USE_BRUSHLESS_ACTUATOR
 // #define USE_SERVO_ACTUATOR
 
-#define IMU_SENSOR SimulationIMU
-// #define IMU_SENSOR BNO0809DOF
+#define USE_SIMULATION_IMU
+// #define USE_BNO0809DOF_IMU
 
 #ifdef USE_DYNAMIXEL_ACTUATOR
     // (serial_interface, actuator_leg_id, actuator_driver_id,  min_angle,max_angle, inverted)
@@ -56,5 +56,10 @@ Actuator<ACTUATOR::Plugin> actuators
     rhh_actuator,rhu_actuator, rhl_actuator
 );
 
-IMU<IMU_SENSOR::Plugin> imu;
+#ifdef USE_SIMULATION_IMU
+    IMU<SimulationIMU::Plugin> imu;
+#endif
 
+#ifdef USE_BNO0809DOF_IMU
+    IMU<BNO0809DOF::Plugin> imu;
+#endif
