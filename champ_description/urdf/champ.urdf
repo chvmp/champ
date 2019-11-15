@@ -10,9 +10,9 @@
   <!-- <link name="champ"/> -->
   <link name="base_link">
     <inertial>
-      <origin xyz="0 0 0"/>
-      <mass value="3.0"/>
-      <inertia ixx="0.02525" ixy="0.0" ixz="0.0" iyy="0.066725" iyz="0.0" izz="0.083525"/>
+      <origin xyz="0.02 0 0"/>
+      <mass value="2.0"/>
+      <inertia ixx="0.0168333333333" ixy="0.0" ixz="0.0" iyy="0.0444833333333" iyz="0.0" izz="0.0556833333333"/>
     </inertial>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
