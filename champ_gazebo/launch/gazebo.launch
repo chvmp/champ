@@ -23,7 +23,7 @@
         <rosparam param="/source_list">[champ/joint_states]</rosparam>
     </node>
 
-    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model champ -param robot_description -z 0.15" />
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model champ -param robot_description -z 0.5" />
     
     <rosparam file="$(find champ_gazebo)/config/champ.yaml" command="load"/>
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
