@@ -5,7 +5,9 @@ namespace SimulationActuator
 {
     class Plugin
     {
+        float prev_angle_;
         float angle_;
+        float noise_;
         public:
             Plugin():
             angle_(0)
@@ -19,7 +21,8 @@ namespace SimulationActuator
 
             void positionControl(float angle)
             {
-                angle_ = angle;
+                float delta = (angle - angle_);
+                angle_ = angle_ + (delta * (random(70, 80) / 100.0));
             }
 
             float getJointPosition()
