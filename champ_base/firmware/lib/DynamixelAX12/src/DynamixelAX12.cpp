@@ -122,6 +122,12 @@ OneWireStatus DynamixelAX12::currentPositionDegree(uint16_t &aPosition)
     return status;
 }
 
+OneWireStatus DynamixelAX12::changeRDT(uint8_t delay)
+{
+    return write(DYN_ADDRESS_RDT, delay);
+}
+
+
 void DynamixelAX12::setActuatorID(uint8_t newId)
 {
     setId(newId);

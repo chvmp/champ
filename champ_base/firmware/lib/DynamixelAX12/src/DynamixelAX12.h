@@ -27,6 +27,8 @@ class DynamixelAX12 : public DynamixelDevice
         OneWireStatus led(uint8_t aState);
         OneWireStatus currentPosition(uint16_t &aPosition);
         OneWireStatus currentPositionDegree(uint16_t &aPosition);
+        OneWireStatus changeRDT(uint8_t delay);
+
         void setActuatorID(uint8_t newId);
         void changeActuatorID(uint8_t newId);
 };
