@@ -30,7 +30,7 @@ namespace DynamixelAX12A
             actuator_driver_id_(actuator_driver_id),
             leg_id(0)
             {
-                onewire_interface.begin(1000000, 50);
+                onewire_interface.begin(1000000, 100);
                 leg_id = actuator_leg_id;
                 min_angle_ = min_angle;
                 max_angle_ = max_angle;
