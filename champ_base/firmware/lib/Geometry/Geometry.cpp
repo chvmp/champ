@@ -18,7 +18,7 @@ float Point::Magnitude()
     for(int i = 0; i < 3; i++)
         ret += pow((*this)(i),2);
 
-    return sqrt(ret);
+    return sqrtf(ret);
 }
 
 float Point::DotProduct(Point &obj)
@@ -33,17 +33,17 @@ float Point::DotProduct(Point &obj)
 
 Rotation &Rotation::FromEulerAngles(float psi, float theta, float phi)
 {
-    (*this)(0,0) = cos(phi) * cos(theta);
-    (*this)(1,0) = cos(theta) * sin(phi);
-    (*this)(2,0) = -sin(theta);
+    (*this)(0,0) = cosf(phi) * cosf(theta);
+    (*this)(1,0) = cosf(theta) * sinf(phi);
+    (*this)(2,0) = -sinf(theta);
 
-    (*this)(0,1) = cos(phi) * sin(psi) * sin(theta) - cos(psi) * sin(phi);
-    (*this)(1,1) = cos(psi) * cos(phi) + sin(psi) * sin(phi) * sin(theta);
-    (*this)(2,1) = cos(theta) * sin(psi);
+    (*this)(0,1) = cosf(phi) * sinf(psi) * sinf(theta) - cosf(psi) * sinf(phi);
+    (*this)(1,1) = cosf(psi) * cosf(phi) + sinf(psi) * sinf(phi) * sinf(theta);
+    (*this)(2,1) = cosf(theta) * sinf(psi);
 
-    (*this)(0,2) = sin(psi) * sin(phi) + cos(psi) * cos(phi) * sin(theta);
-    (*this)(1,2) = cos(psi) * sin(phi) * sin(theta) - cos(phi) * sin(psi);
-    (*this)(2,2) = cos(psi) * cos(theta);
+    (*this)(0,2) = sinf(psi) * sinf(phi) + cosf(psi) * cosf(phi) * sinf(theta);
+    (*this)(1,2) = cosf(psi) * sinf(phi) * sinf(theta) - cosf(phi) * sinf(psi);
+    (*this)(2,2) = cosf(psi) * cosf(theta);
 
     return (*this);
 }
@@ -54,14 +54,14 @@ Matrix<3,2> Rotation::ToEulerAngles()
 
     if((*this)(2,0) != 0)
     {
-        ret(1,0) = -asin((*this)(2,0));
+        ret(1,0) = -asinf((*this)(2,0));
         ret(1,1) = M_PI - ret(1,0);
 
-        ret(0,0) = atan2((*this)(2,1) / cos(ret(1,0)),(*this)(2,2) / cos(ret(1,0)));
-        ret(0,1) = atan2((*this)(2,1) / cos(ret(1,1)),(*this)(2,2) / cos(ret(1,1)));
+        ret(0,0) = atan2f((*this)(2,1) / cosf(ret(1,0)),(*this)(2,2) / cosf(ret(1,0)));
+        ret(0,1) = atan2f((*this)(2,1) / cosf(ret(1,1)),(*this)(2,2) / cosf(ret(1,1)));
 
-        ret(2,0) = atan2((*this)(1,0) / cos(ret(1,0)),(*this)(0,0) / cos(ret(1,0)));
-        ret(2,1) = atan2((*this)(1,0) / cos(ret(1,1)),(*this)(0,0) / cos(ret(1,1)));
+        ret(2,0) = atan2f((*this)(1,0) / cosf(ret(1,0)),(*this)(0,0) / cosf(ret(1,0)));
+        ret(2,1) = atan2f((*this)(1,0) / cosf(ret(1,1)),(*this)(0,0) / cosf(ret(1,1)));
     }
     else
     {
@@ -70,12 +70,12 @@ Matrix<3,2> Rotation::ToEulerAngles()
         if((*this)(2,0) == -1)
         {
             ret(1,0) = ret(1,1) = M_PI_2;
-            ret(0,0) = ret(0,1) = atan2((*this)(0,1),(*this)(0,2));
+            ret(0,0) = ret(0,1) = atan2f((*this)(0,1),(*this)(0,2));
         }
         else
         {
             ret(1,0) = ret(1,1) = -M_PI_2;
-            ret(0,0) = ret(0,1) = atan2(-(*this)(0,1),-(*this)(0,2));
+            ret(0,0) = ret(0,1) = atan2f(-(*this)(0,1),-(*this)(0,2));
         }
     }
 
@@ -86,18 +86,18 @@ Rotation &Rotation::RotateX(float phi)
 {
     float tmp1, tmp2;
 
-    tmp1 = (*this)(1,0) * cos(phi) - (*this)(2,0) * sin(phi);
-    tmp2 = (*this)(2,0) * cos(phi) + (*this)(1,0) * sin(phi);
+    tmp1 = (*this)(1,0) * cosf(phi) - (*this)(2,0) * sinf(phi);
+    tmp2 = (*this)(2,0) * cosf(phi) + (*this)(1,0) * sinf(phi);
     (*this)(1,0) = tmp1;
     (*this)(2,0) = tmp2;
 
-    tmp1 = (*this)(1,1) * cos(phi) - (*this)(2,1) * sin(phi);
-    tmp2 = (*this)(2,1) * cos(phi) + (*this)(1,1) * sin(phi);
+    tmp1 = (*this)(1,1) * cosf(phi) - (*this)(2,1) * sinf(phi);
+    tmp2 = (*this)(2,1) * cosf(phi) + (*this)(1,1) * sinf(phi);
     (*this)(1,1) = tmp1;
     (*this)(2,1) = tmp2;
 
-    tmp1 = (*this)(1,2) * cos(phi) - (*this)(2,2) * sin(phi);
-    tmp2 = (*this)(2,2) * cos(phi) + (*this)(1,2) * sin(phi);
+    tmp1 = (*this)(1,2) * cosf(phi) - (*this)(2,2) * sinf(phi);
+    tmp2 = (*this)(2,2) * cosf(phi) + (*this)(1,2) * sinf(phi);
     (*this)(1,2) = tmp1;
     (*this)(2,2) = tmp2;
 
@@ -108,18 +108,18 @@ Rotation &Rotation::RotateY(float theta)
 {
     float tmp1, tmp2;
 
-    tmp1 = (*this)(0,0) * cos(theta) + (*this)(2,0) * sin(theta);
-    tmp2 = (*this)(2,0) * cos(theta) - (*this)(0,0) * sin(theta);
+    tmp1 = (*this)(0,0) * cosf(theta) + (*this)(2,0) * sinf(theta);
+    tmp2 = (*this)(2,0) * cosf(theta) - (*this)(0,0) * sinf(theta);
     (*this)(0,0) = tmp1;
     (*this)(2,0) = tmp2;
 
-    tmp1 = (*this)(0,1) * cos(theta) + (*this)(2,1) * sin(theta);
-    tmp2 = (*this)(2,1) * cos(theta) - (*this)(0,1) * sin(theta);
+    tmp1 = (*this)(0,1) * cosf(theta) + (*this)(2,1) * sinf(theta);
+    tmp2 = (*this)(2,1) * cosf(theta) - (*this)(0,1) * sinf(theta);
     (*this)(0,1) = tmp1;
     (*this)(2,1) = tmp2;
 
-    tmp1 = (*this)(0,2) * cos(theta) + (*this)(2,2) * sin(theta);
-    tmp2 = (*this)(2,2) * cos(theta) - (*this)(0,2) * sin(theta);
+    tmp1 = (*this)(0,2) * cosf(theta) + (*this)(2,2) * sinf(theta);
+    tmp2 = (*this)(2,2) * cosf(theta) - (*this)(0,2) * sinf(theta);
     (*this)(0,2) = tmp1;
     (*this)(2,2) = tmp2;
 
@@ -130,19 +130,19 @@ Rotation &Rotation::RotateZ(float psi)
 {
     float tmp1, tmp2;
 
-    tmp1 = (*this)(0,0) * cos(psi) -  (*this)(1,0) * sin(psi);
-    tmp2 = (*this)(1,0) * cos(psi) +  (*this)(0,0) * sin(psi);
+    tmp1 = (*this)(0,0) * cosf(psi) -  (*this)(1,0) * sinf(psi);
+    tmp2 = (*this)(1,0) * cosf(psi) +  (*this)(0,0) * sinf(psi);
     (*this)(0,0) = tmp1;
     (*this)(1,0) = tmp2;
 
-    tmp1 = (*this)(0,1) * cos(psi) -  (*this)(1,1) * sin(psi);
-    tmp2 = (*this)(1,1) * cos(psi) +  (*this)(0,1) * sin(psi);
+    tmp1 = (*this)(0,1) * cosf(psi) -  (*this)(1,1) * sinf(psi);
+    tmp2 = (*this)(1,1) * cosf(psi) +  (*this)(0,1) * sinf(psi);
     (*this)(0,1) = tmp1;
     (*this)(1,1) = tmp2;
 
 
-    tmp1 = (*this)(0,2) * cos(psi) -  (*this)(1,2) * sin(psi);
-    tmp2 = (*this)(1,2) * cos(psi) +  (*this)(0,2) * sin(psi);
+    tmp1 = (*this)(0,2) * cosf(psi) -  (*this)(1,2) * sinf(psi);
+    tmp2 = (*this)(1,2) * cosf(psi) +  (*this)(0,2) * sinf(psi);
     (*this)(0,2) = tmp1;
     (*this)(1,2) = tmp2;
 
@@ -183,8 +183,8 @@ Transformation &Transformation::RotateX(float phi)
     R.RotateX(phi);
 
     tmp.X() = p.X();
-    tmp.Y() = cos(phi) * p.Y() - sin(phi) * p.Z();
-    tmp.Z() = sin(phi) * p.Y() + cos(phi) * p.Z();
+    tmp.Y() = cosf(phi) * p.Y() - sinf(phi) * p.Z();
+    tmp.Z() = sinf(phi) * p.Y() + cosf(phi) * p.Z();
 
     p = tmp;
 
@@ -196,9 +196,9 @@ Transformation &Transformation::RotateY(float theta)
     Point tmp;
     R.RotateY(theta);
 
-    tmp.X() = cos(theta) * p.X() + sin(theta) * p.Z();
+    tmp.X() = cosf(theta) * p.X() + sinf(theta) * p.Z();
     tmp.Y() = p.Y();
-    tmp.Z() = -sin(theta) * p.X() + cos(theta) * p.Z();
+    tmp.Z() = -sinf(theta) * p.X() + cosf(theta) * p.Z();
 
     p = tmp;
 
@@ -210,8 +210,8 @@ Transformation &Transformation::RotateZ(float psi)
     Point tmp;
     R.RotateZ(psi);
 
-    tmp.X() = cos(psi) * p.X() - sin(psi) * p.Y();
-    tmp.Y() = sin(psi) * p.X() + cos(psi) * p.Y();
+    tmp.X() = cosf(psi) * p.X() - sinf(psi) * p.Y();
+    tmp.Y() = sinf(psi) * p.X() + cosf(psi) * p.Y();
     tmp.Z() = p.Z();
 
     p = tmp;

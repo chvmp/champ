@@ -21,10 +21,10 @@ namespace BNO0809DOF
                 Wire.begin();
                 imu_.begin();
                 Wire.setClock(400000);
-                imu_.enableRotationVector(8);
-                imu_.enableAccelerometer(8);
-                imu_.enableGyro(8); 
-                imu_.enableMagnetometer(8);
+                imu_.enableRotationVector(50);
+                imu_.enableAccelerometer(50);
+                imu_.enableGyro(50); 
+                imu_.enableMagnetometer(50);
             }
 
             void readOrientation(Orientation &rotation)
@@ -38,9 +38,9 @@ namespace BNO0809DOF
 
                     // to euler
                     //https://stackoverflow.com/questions/30279065/how-to-get-the-euler-angles-from-the-rotation-vector-sensor-type-rotation-vecto
-                    // rotation.x  = atan2(-2.* (q[2] * q[3] - q[0] * q[1]) , q[0] * q[0] - q[1] * q[1]- q[2] * q[2] + q[3] * q[3]); 
-                    // rotation.y  = asin(2. * (q[1] * q[3] + q[0] * q[2]));
-                    // rotation.z  = atan2( 2. * (-q[1] * q[2] + q[0] * q[3]) , q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]); 
+                    // rotation.x  = atan2f(-2.* (q[2] * q[3] - q[0] * q[1]) , q[0] * q[0] - q[1] * q[1]- q[2] * q[2] + q[3] * q[3]); 
+                    // rotation.y  = asinf(2. * (q[1] * q[3] + q[0] * q[2]));
+                    // rotation.z  = atan2f( 2. * (-q[1] * q[2] + q[0] * q[3]) , q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]); 
                 }
                 else
                 {

@@ -29,7 +29,7 @@ void Odometry::getVelocities(Velocities &vel)
         float delta_x = (prev_foot_position_[i].X() - current_foot_position.X());
         float delta_y = (prev_foot_position_[i].Y() - current_foot_position.Y());
         
-        float current_theta = atan2(current_foot_position.Y(), current_foot_position.X());
+        float current_theta = atan2f(current_foot_position.Y(), current_foot_position.X());
         float delta_theta = (prev_theta_[i] - current_theta);
 
         if(current_gait_phase && prev_gait_phase_[i])
