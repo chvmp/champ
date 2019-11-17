@@ -45,17 +45,14 @@ namespace DynamixelAX12A
             void initialize()
             {
                 OneWireStatus com_status;
-                // ax12_.init();
                 com_status = ax12_.init();
                 if (com_status != OW_STATUS_OK)
                 {                   
                     digitalWrite(LED_BUILTIN, LOW);
                     delay(1000);
                     digitalWrite(LED_BUILTIN, HIGH);
-                    // ax12_.changeActuatorID(1);
-                    // ax12_.setActuatorID(actuator_driver_id_);
                 }
-                
+                ax12_.changeRDT(0);
                 ax12_.jointMode();
                 ax12_.enableTorque();
             }
