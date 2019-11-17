@@ -7,7 +7,6 @@ namespace DynamixelAX12A
 {
     class Plugin
     {
-        OneWireMInterface ax12Interface_;
         DynamixelAX12 ax12_;
 
         int angle_offset_degrees_;
@@ -20,9 +19,8 @@ namespace DynamixelAX12A
         int actuator_driver_id_;
         public:
             unsigned int leg_id;
-            Plugin(HardwareSerial &serial_interface, unsigned int actuator_leg_id, unsigned int actuator_driver_id, float min_angle, float max_angle, bool inverted):
-            ax12Interface_(serial_interface),
-            ax12_(ax12Interface_, actuator_driver_id),
+            Plugin(OneWireMInterface &onewire_interface, unsigned int actuator_leg_id, unsigned int actuator_driver_id, float min_angle, float max_angle, bool inverted):
+            ax12_(onewire_interface, actuator_driver_id),
             angle_offset_degrees_(30),
             angle_offset_radians_(0.523599),            
             min_angle_(0),
@@ -32,6 +30,7 @@ namespace DynamixelAX12A
             actuator_driver_id_(actuator_driver_id),
             leg_id(0)
             {
+                onewire_interface.begin(1000000, 50);
                 leg_id = actuator_leg_id;
                 min_angle_ = min_angle;
                 max_angle_ = max_angle;
@@ -39,21 +38,23 @@ namespace DynamixelAX12A
                 if(inverted_)
                     inverter_ *= -1;
 
+                pinMode(LED_BUILTIN, OUTPUT);
                 initialize();
             }
 
             void initialize()
             {
-                // OneWireStatus com_status;
-
-                ax12Interface_.begin(1000000, 100);   
-                ax12_.init();
-                // com_status = ax12_.init();
-                // if (com_status != OW_STATUS_OK)
-                // {
-                //     ax12_.changeActuatorID(1);
-                //     ax12_.setActuatorID(actuator_driver_id_);
-                // }
+                OneWireStatus com_status;
+                // ax12_.init();
+                com_status = ax12_.init();
+                if (com_status != OW_STATUS_OK)
+                {                   
+                    digitalWrite(LED_BUILTIN, LOW);
+                    delay(1000);
+                    digitalWrite(LED_BUILTIN, HIGH);
+                    // ax12_.changeActuatorID(1);
+                    // ax12_.setActuatorID(actuator_driver_id_);
+                }
                 
                 ax12_.jointMode();
                 ax12_.enableTorque();
