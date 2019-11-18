@@ -52,7 +52,8 @@ namespace DynamixelAX12A
                     delay(1000);
                     digitalWrite(LED_BUILTIN, HIGH);
                 }
-                ax12_.changeRDT(0);
+                ax12_.changeRDT(2);
+                ax12_.speed(0);
                 ax12_.jointMode();
                 ax12_.enableTorque();
             }
