@@ -20,7 +20,7 @@
     DynamixelAX12A::Plugin rfu_actuator(Serial1, 4, 13, 0, 0, true);
     DynamixelAX12A::Plugin rfl_actuator(Serial1, 5, 4, 0, 0, false);
 
-    DynamixelAX12A::Plugin lhh_actuator(Serial1, 6, 10, 0, 0, false);
+    DynamixelAX12A::Plugin lhh_actuator(Serial1, 6, 2, 0, 0, false);
     DynamixelAX12A::Plugin lhu_actuator(Serial1, 7, 11, 0, 0, false);
     DynamixelAX12A::Plugin lhl_actuator(Serial1, 8, 12, 0, 0, true);
 
