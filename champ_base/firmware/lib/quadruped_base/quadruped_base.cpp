@@ -44,7 +44,7 @@ int QuadrupedBase::getKneeDirection(char direction)
     }
 }
 
-void QuadrupedBase::getJointStates(float *joint_positions)
+void QuadrupedBase::getJointPositions(float *joint_positions)
 {
     unsigned int total_joints = 0;
 
@@ -64,7 +64,7 @@ void QuadrupedBase::getFootPositions(Transformation *foot_positions)
     }
 }
 
-void QuadrupedBase::joint_states(float joints[12])
+void QuadrupedBase::updateJointPositions(float joints[12])
 {
     for(unsigned int i = 0; i < 4; i++)
     {
