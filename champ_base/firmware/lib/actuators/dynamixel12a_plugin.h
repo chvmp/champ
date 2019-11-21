@@ -30,6 +30,7 @@ namespace DynamixelAX12A
             actuator_driver_id_(actuator_driver_id),
             leg_id(0)
             {
+                delay(100);
                 onewire_interface.begin(1000000, 100);
                 leg_id = actuator_leg_id;
                 min_angle_ = min_angle;
@@ -51,9 +52,8 @@ namespace DynamixelAX12A
                     digitalWrite(LED_BUILTIN, LOW);
                     delay(1000);
                     digitalWrite(LED_BUILTIN, HIGH);
-                }
-                ax12_.changeRDT(2);
-                ax12_.speed(0);
+                }            
+                ax12_.changeRDT(0); 
                 ax12_.jointMode();
                 ax12_.enableTorque();
             }
