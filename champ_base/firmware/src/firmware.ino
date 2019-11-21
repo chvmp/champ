@@ -78,49 +78,54 @@ void setup()
 }
 
 void loop() { 
-    unsigned long start_time = micros();
+    static unsigned long prev_control_time = 0;
+    static unsigned long prev_imu_time = 0;
 
-    Transformation target_foot_positions[4];
-    Transformation current_foot_positions[4];
-    float target_joint_position[12]; 
-    float current_joint_positions[12];
-    Accelerometer accel;
-    Gyroscope gyro;
-    Magnetometer mag;
-    Orientation rotation;
-    Velocities velocities;
+    static Accelerometer accel;
+    static Gyroscope gyro;
+    static Magnetometer mag;
+    static Orientation rotation;
 
-    imu.readGyroscope(gyro);
-    imu.readOrientation(rotation);
-    imu.readAccelerometer(accel);
-    imu.readMagnetometer(mag);
-    
-    actuators.getJointPositions(current_joint_positions);
-    base.joint_states(current_joint_positions);
-    base.getFootPositions(current_foot_positions);
-    odometry.getVelocities(velocities);
+    if ((micros() - prev_control_time) >= 10000)
+    {
+        Transformation target_foot_positions[4];
+        Transformation current_foot_positions[4];
+        float target_joint_position[12]; 
+        float current_joint_positions[12];
+        Velocities velocities;
+        
+        actuators.getJointPositions(current_joint_positions);
+        base.updateJointPositions(current_joint_positions);
+        base.getFootPositions(current_foot_positions);
+        odometry.getVelocities(velocities);
 
-    balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);
-    gait.generate(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
-    ik.solve(target_foot_positions, target_joint_position);
-    
-    actuators.moveJoints(target_joint_position);
+        balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);
+        gait.generate(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
+        ik.solve(target_foot_positions, target_joint_position);
+        
+        actuators.moveJoints(target_joint_position);
 
-    publishPoints(current_foot_positions);
-    publishJointStates(current_joint_positions);
-    publishIMU(rotation, accel, gyro, mag);
-    publishVelocities(velocities);
+        publishPoints(current_foot_positions);
+        publishJointStates(current_joint_positions);
+        publishVelocities(velocities);
 
-    if ((micros() - g_prev_command_time) >= (0.5 * SECONDS_TO_MICROS))
+        prev_control_time = micros();
+    }
+
+    if ((micros() - prev_imu_time) >= 50000)
+    {
+        imu.read(rotation, accel, gyro, mag);
+        publishIMU(rotation, accel, gyro, mag);
+
+        prev_imu_time = micros();
+    }
+
+    if ((micros() - g_prev_command_time) >= 500000)
     {
         stopBase();
     }
 
     nh.spinOnce();
-
-    unsigned long time_duration = micros() - start_time;
-    if(time_duration < 10000)
-        delayMicroseconds(10000 - time_duration);
 }
 
 void stopBase()

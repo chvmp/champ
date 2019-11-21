@@ -34,6 +34,12 @@ class IMU
         {
             imu_plugin_.readMagnetometer(mag);
         }
+        
+        void read(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
+        {
+            imu_plugin_.read(rotation, accel, gyro, mag);
+        }
+
 };
 
 #endif

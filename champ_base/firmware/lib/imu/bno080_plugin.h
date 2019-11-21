@@ -18,6 +18,8 @@ namespace BNO0809DOF
 
             void initialize()
             {
+                delay(100);
+                
                 Wire.begin();
                 imu_.begin();
                 Wire.setClock(400000);
@@ -97,6 +99,48 @@ namespace BNO0809DOF
                     mag.y = 0.0;
                     mag.z = 0.0; 
                 } 
+            }
+
+            void read(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
+            {
+                if(imu_.dataAvailable())
+                {
+                    rotation.w = imu_.getQuatReal();
+                    rotation.x = imu_.getQuatI();
+                    rotation.y = imu_.getQuatJ();
+                    rotation.z = imu_.getQuatK();
+
+                    gyro.x = imu_.getGyroX();
+                    gyro.y = imu_.getGyroY();
+                    gyro.z = imu_.getGyroZ();
+
+                    accel.x = imu_.getAccelX();
+                    accel.y = imu_.getAccelY();
+                    accel.z = imu_.getAccelZ();
+
+                    mag.x = imu_.getMagX();
+                    mag.y = imu_.getMagY();
+                    mag.z = imu_.getMagZ();
+                }
+                else
+                {
+                    rotation.w = 0.0;
+                    rotation.x = 0.0;
+                    rotation.y = 0.0;
+                    rotation.z = 0.0;
+
+                    gyro.x = 0.0;
+                    gyro.y = 0.0;
+                    gyro.z = 0.0;
+
+                    accel.x = 0.0;
+                    accel.y = 0.0;
+                    accel.z = 0.0;
+
+                    mag.x = 0.0;
+                    mag.y = 0.0;
+                    mag.z = 0.0;
+                }
             }
     };
 }
