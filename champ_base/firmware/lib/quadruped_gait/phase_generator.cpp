@@ -13,7 +13,7 @@ PhaseGenerator::PhaseGenerator():
 void PhaseGenerator::run(float target_velocity, float step_length)
 {
     unsigned long elapsed_time_ref = 0;
-    float swing_phase_period = 0.250 * SECONDS_TO_MICROS;
+    float swing_phase_period = 0.25 * SECONDS_TO_MICROS;
     float leg_clocks[4] = {0,0,0,0};
 
     if(target_velocity == 0)
@@ -69,16 +69,16 @@ void PhaseGenerator::run(float target_velocity, float step_length)
             swing_phase_signal[i] = 0;
     }
 
-    if(swing_phase_signal[0] > 0)
-        has_swung_ = true;
-    
-    if(!has_swung_)
+    if(!has_swung_ && stance_phase_signal[0] < 0.5)
     {
-        if(stance_phase_signal[0] < 0.5)
-        {
-            stance_phase_signal[0] = 0.5;
-            stance_phase_signal[3] = 0.5; 
-        }
+        stance_phase_signal[0] = 0.0;
+        stance_phase_signal[3] = 0.0;
+        swing_phase_signal[1] = 0.0;
+        swing_phase_signal[2] = 0.0;
+    }
+    else
+    {
+        has_swung_ = true;
     }  
 }
     

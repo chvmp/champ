@@ -68,7 +68,7 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float step_lengt
         new_foot_position.Y() = foot_position.Y() + (x * sinf(rotation));
         new_foot_position.Z() = foot_position.Z() + y;
     }
-    else if(stance_phase_signal < swing_phase_signal)
+    else
     {
         leg_->gait_phase(0);
 
@@ -87,7 +87,8 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float step_lengt
         new_foot_position.Y() = foot_position.Y() + (x * sinf(rotation));
         new_foot_position.Z() = foot_position.Z() + y;
     }
-    else if((!swing_phase_signal && !stance_phase_signal) && step_length > 0)
+    
+    if((!swing_phase_signal && !stance_phase_signal) && step_length > 0)
     {
         new_foot_position = prev_foot_position_;
     }
