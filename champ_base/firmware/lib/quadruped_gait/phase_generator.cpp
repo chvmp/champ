@@ -1,6 +1,5 @@
 #include<phase_generator.h>
 PhaseGenerator::PhaseGenerator():
-    // step_length_(step_length),
     last_touchdown_(micros()),
     leg_clocks_{0,0,0,0},
     has_swung_(false),
@@ -17,7 +16,7 @@ void PhaseGenerator::run(float target_velocity, float step_length)
     float leg_clocks[4] = {0,0,0,0};
     float stance_phase_period =  (step_length / target_velocity) * SECONDS_TO_MICROS;
     float stride_period = stance_phase_period + swing_phase_period;
-    
+
     if(target_velocity == 0)
     {
         elapsed_time_ref = 0;
