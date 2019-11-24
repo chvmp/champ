@@ -67,7 +67,7 @@ void QuadrupedGait::generate(Transformation (&foot_positions)[4], float linear_v
     }
 
     //create a saw tooth signal gen so the trajectory planner knows whether it should swing or stride
-    phase_gen_.run(velocity, sum_of_steps / 4);
+    phase_gen_.run(velocity, sum_of_steps / 4.0);
 
     for(unsigned int i = 0; i < 4; i++)
     {

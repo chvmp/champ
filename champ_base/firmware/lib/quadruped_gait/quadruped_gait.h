@@ -21,8 +21,6 @@ class QuadrupedGait
         float max_theta_;
 
         void transformTrajectory(QuadrupedLeg *leg, float linear_velocity_x, float linear_velocity_y, float angular_velocity_z, float &step_length, float &rotation);
-        float getOptimalRotationalAngle(QuadrupedLeg *leg, float step_length);
-        float getOptimalTurningAngle(QuadrupedLeg *leg, float step_length);
         float getStepLength(float linear_velocity_x, float linear_velocity_y, float angular_velocity_z);
         float mapFloat(float x, float in_min, float in_max, float out_min, float out_max);
 
