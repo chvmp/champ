@@ -15,7 +15,9 @@ void PhaseGenerator::run(float target_velocity, float step_length)
     unsigned long elapsed_time_ref = 0;
     float swing_phase_period = 0.25 * SECONDS_TO_MICROS;
     float leg_clocks[4] = {0,0,0,0};
-
+    float stance_phase_period =  (step_length / target_velocity) * SECONDS_TO_MICROS;
+    float stride_period = stance_phase_period + swing_phase_period;
+    
     if(target_velocity == 0)
     {
         elapsed_time_ref = 0;
@@ -35,9 +37,6 @@ void PhaseGenerator::run(float target_velocity, float step_length)
         has_started = true;
         last_touchdown_ = micros();
     }
-
-    float stance_phase_period =  (step_length / target_velocity) * SECONDS_TO_MICROS;
-    float stride_period = stance_phase_period + swing_phase_period;
 
     if((micros() - last_touchdown_) >= stride_period)
     {
