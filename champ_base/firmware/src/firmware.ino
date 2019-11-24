@@ -95,15 +95,17 @@ void loop() {
         Velocities velocities;
         
         actuators.getJointPositions(current_joint_positions);
-        base.updateJointPositions(current_joint_positions);
-        base.getFootPositions(current_foot_positions);
         odometry.getVelocities(velocities);
+
+        base.updateJointPositions(current_joint_positions);
+        base.updateSpeed(velocities);
 
         balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);
         gait.generate(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(target_foot_positions, target_joint_position);
         
         actuators.moveJoints(target_joint_position);
+        base.getFootPositions(current_foot_positions);
 
         publishPoints(current_foot_positions);
         publishJointStates(current_joint_positions);

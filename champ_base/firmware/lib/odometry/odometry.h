@@ -4,14 +4,6 @@
 #include <Geometry.h>
 #include <quadruped_base.h>
 
-class Velocities
-{
-    public:
-        float linear_velocity_x;
-        float linear_velocity_y;
-        float angular_velocity_z;
-};
-
 class Odometry
 {
     QuadrupedBase *base_;

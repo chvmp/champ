@@ -77,37 +77,98 @@ void QuadrupedBase::updateJointPositions(float joints[12])
 
 float QuadrupedBase::roll()
 {
-    return current_roll_;
+    return attitude_.roll;
 }
 
 void QuadrupedBase::roll(float roll)
 {
-    current_roll_ = roll;
+    attitude_.roll = roll;
 }
 
 float QuadrupedBase::pitch()
 {
-    return current_pitch_;
+    return attitude_.pitch;
 }
 
 void QuadrupedBase::pitch(float pitch)
 {
-    current_pitch_ = pitch;
+    attitude_.pitch = pitch;
 }
 
 float QuadrupedBase::yaw()
 {
-    return current_yaw_;
+    return attitude_.yaw;
 }
 
 void QuadrupedBase::yaw(float yaw)
 {
-    current_yaw_ = yaw;
+    attitude_.yaw = yaw;
 }
 
-void QuadrupedBase::attitude(float roll, float pitch, float yaw)
+void QuadrupedBase::updateAttitude(Attitude attitude)
 {
-    current_roll_ = roll;
-    current_pitch_ = pitch;
-    current_yaw_ = yaw;
+    attitude_.roll = attitude.roll;
+    attitude_.pitch = attitude.pitch;
+    attitude_.yaw = attitude.yaw;
+}
+
+void QuadrupedBase::updateAttitude(float roll,  float pitch, float yaw)
+{
+    attitude_.roll = roll;
+    attitude_.pitch = pitch;
+    attitude_.yaw = yaw;
+}
+
+Attitude QuadrupedBase::attitude()
+{
+    return attitude_;
+}
+
+float QuadrupedBase::linear_velocity_x()
+{
+    return speed_.linear_velocity_x;
+}
+
+void QuadrupedBase::linear_velocity_x(float linear_velocity_x)
+{
+    speed_.linear_velocity_x = linear_velocity_x;
+}
+
+float QuadrupedBase::linear_velocity_y()
+{
+    return speed_.linear_velocity_y;
+}
+
+void QuadrupedBase::linear_velocity_y(float linear_velocity_y)
+{
+    speed_.linear_velocity_y = linear_velocity_y;
+}
+
+float QuadrupedBase::angular_velocity_z()
+{
+    return speed_.angular_velocity_z;
+}
+
+void QuadrupedBase::angular_velocity_z(float angular_velocity_z)
+{
+    speed_.angular_velocity_z = angular_velocity_z;
+}
+
+void QuadrupedBase::updateSpeed(Velocities speed)
+{
+    speed_.linear_velocity_x = speed.linear_velocity_x;
+    speed_.linear_velocity_y = speed.linear_velocity_y;
+    speed_.angular_velocity_z = speed.angular_velocity_z;
+}
+
+void QuadrupedBase::updateSpeed(float linear_velocity_x,  float linear_velocity_y, float angular_velocity_z)
+{
+    speed_.linear_velocity_x = linear_velocity_x;
+    speed_.linear_velocity_y = linear_velocity_y;
+    speed_.angular_velocity_z = angular_velocity_z;
+}
+
+Velocities QuadrupedBase::speed()
+{
+    return speed_;
 }

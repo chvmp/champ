@@ -3,11 +3,26 @@
 
 #include<quadruped_leg.h>
 
+class Attitude
+{
+    public:
+        float roll;
+        float pitch;
+        float yaw;
+};
+
+class Velocities
+{
+    public:
+        float linear_velocity_x;
+        float linear_velocity_y;
+        float angular_velocity_z;
+};
+
 class QuadrupedBase
 {   
-    float current_roll_;
-    float current_pitch_;
-    float current_yaw_;
+    Velocities speed_;
+    Attitude attitude_;
 
     const char * knee_orientation_;
     
@@ -28,7 +43,23 @@ class QuadrupedBase
         float yaw();
         void yaw(float yaw);
 
-        void attitude(float roll, float pitch, float yaw);
+        void updateAttitude(Attitude attitude);
+        void updateAttitude(float roll,  float pitch, float yaw);
+        Attitude attitude();
+        
+        float linear_velocity_x();
+        void linear_velocity_x(float linear_velocity_x);
+
+        float linear_velocity_y();
+        void linear_velocity_y(float linear_velocity_y);
+
+        float angular_velocity_z();
+        void angular_velocity_z(float angular_velocity_z);
+
+        void updateSpeed(Velocities speed);
+        void updateSpeed(float linear_velocity_x,  float linear_velocity_y, float angular_velocity_z);
+        Velocities speed();
+
 
         QuadrupedLeg *legs[4];
 
