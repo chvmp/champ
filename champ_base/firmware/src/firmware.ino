@@ -88,6 +88,8 @@ void loop() {
 
     if ((micros() - prev_control_time) >= 10000)
     {
+        prev_control_time = micros();
+
         Transformation target_foot_positions[4];
         Transformation current_foot_positions[4];
         float target_joint_position[12]; 
@@ -110,16 +112,14 @@ void loop() {
         publishPoints(current_foot_positions);
         publishJointStates(current_joint_positions);
         publishVelocities(velocities);
-
-        prev_control_time = micros();
     }
 
     if ((micros() - prev_imu_time) >= 50000)
     {
+        prev_imu_time = micros();
+
         imu.read(rotation, accel, gyro, mag);
         publishIMU(rotation, accel, gyro, mag);
-
-        prev_imu_time = micros();
     }
 
     if ((micros() - g_prev_command_time) >= 500000)
