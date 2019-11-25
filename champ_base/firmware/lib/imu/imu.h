@@ -40,6 +40,10 @@ class IMU
             imu_plugin_.read(rotation, accel, gyro, mag);
         }
 
+        void run()
+        {
+            imu_plugin_.run();
+        }
 };
 
 #endif

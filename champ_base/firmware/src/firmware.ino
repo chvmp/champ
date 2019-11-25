@@ -127,6 +127,7 @@ void loop() {
         stopBase();
     }
 
+    imu.run();
     nh.spinOnce();
 }
 
@@ -139,11 +140,11 @@ void stopBase()
 
 void velocityCommandCallback(const geometry_msgs::Twist& vel_cmd_msg)
 {
+    g_prev_command_time = micros();
+
     g_req_linear_vel_x = vel_cmd_msg.linear.x;
     g_req_linear_vel_y = vel_cmd_msg.linear.y;
     g_req_angular_vel_z = vel_cmd_msg.angular.z;
-
-    g_prev_command_time = micros();
 }
 
 void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg)

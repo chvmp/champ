@@ -10,6 +10,11 @@ namespace BNO0809DOF
     class Plugin
     {
         BNO080 imu_;
+        Orientation rotation_;
+        Gyroscope gyro_;
+        Accelerometer accel_;
+        Magnetometer mag_;
+
         public:
             Plugin()
             {
@@ -19,9 +24,10 @@ namespace BNO0809DOF
             void initialize()
             {
                 delay(100);
-                
+
                 Wire.begin();
-                imu_.begin();
+                imu_.begin(0x4B, Wire, 15);
+
                 Wire.setClock(400000);
                 imu_.enableRotationVector(50);
                 imu_.enableAccelerometer(50);
@@ -46,7 +52,7 @@ namespace BNO0809DOF
                 }
                 else
                 {
-                    rotation.w = 0.0;
+                    rotation.w = 1.0;
                     rotation.x = 0.0;
                     rotation.y = 0.0;
                     rotation.z = 0.0;
@@ -103,43 +109,63 @@ namespace BNO0809DOF
 
             void read(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
             {
+                rotation.w = rotation_.w;
+                rotation.x = rotation_.x;
+                rotation.y = rotation_.y;
+                rotation.z = rotation_.z;
+
+                gyro.x = gyro_.x;
+                gyro.y = gyro_.y;
+                gyro.z = gyro_.z;
+
+                accel.x = accel_.x;
+                accel.y = accel_.y;
+                accel.z = accel_.z;
+
+                mag.x = mag_.x;
+                mag.y = mag_.y;
+                mag.z = mag_.z;
+            }
+
+            void run()
+            {
                 if(imu_.dataAvailable())
                 {
-                    rotation.w = imu_.getQuatReal();
-                    rotation.x = imu_.getQuatI();
-                    rotation.y = imu_.getQuatJ();
-                    rotation.z = imu_.getQuatK();
+                    rotation_.w = imu_.getQuatReal();
+                    rotation_.x = imu_.getQuatI();
+                    rotation_.y = imu_.getQuatJ();
+                    rotation_.z = imu_.getQuatK();
 
-                    gyro.x = imu_.getGyroX();
-                    gyro.y = imu_.getGyroY();
-                    gyro.z = imu_.getGyroZ();
+                    gyro_.x = imu_.getGyroX();
+                    gyro_.y = imu_.getGyroY();
+                    gyro_.z = imu_.getGyroZ();
 
-                    accel.x = imu_.getAccelX();
-                    accel.y = imu_.getAccelY();
-                    accel.z = imu_.getAccelZ();
+                    accel_.x = imu_.getAccelX();
+                    accel_.y = imu_.getAccelY();
+                    accel_.z = imu_.getAccelZ();
 
-                    mag.x = imu_.getMagX();
-                    mag.y = imu_.getMagY();
-                    mag.z = imu_.getMagZ();
+                    mag_.x = imu_.getMagX();
+                    mag_.y = imu_.getMagY();
+                    mag_.z = imu_.getMagZ();
                 }
                 else
                 {
-                    rotation.w = 0.0;
-                    rotation.x = 0.0;
-                    rotation.y = 0.0;
-                    rotation.z = 0.0;
+                    rotation_.w = 1.0;
+                    rotation_.x = 0.0;
+                    rotation_.y = 0.0;
+                    rotation_.z = 0.0;
 
-                    gyro.x = 0.0;
-                    gyro.y = 0.0;
-                    gyro.z = 0.0;
+                    gyro_.x = 0.0;
+                    gyro_.y = 0.0;
+                    gyro_.z = 0.0;
 
-                    accel.x = 0.0;
-                    accel.y = 0.0;
-                    accel.z = 0.0;
+                    accel_.x = 0.0;
+                    accel_.y = 0.0;
+                    accel_.z = 0.0;
 
-                    mag.x = 0.0;
-                    mag.y = 0.0;
-                    mag.z = 0.0;
+                    mag_.x = 0.0;
+                    mag_.y = 0.0;
+                    mag_.z = 0.0;
                 }
             }
     };
