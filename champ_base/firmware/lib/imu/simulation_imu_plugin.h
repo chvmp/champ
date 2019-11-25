@@ -63,6 +63,11 @@ namespace SimulationIMU
                 mag.y = 0.0;
                 mag.z = 0.0;
             }
+
+            void run()
+            {
+                
+            }
     };
 }
 
