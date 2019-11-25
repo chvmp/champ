@@ -15,8 +15,10 @@ class PhaseGenerator
 
         bool has_swung_;
 
+        float stance_duration_;
+
     public:
-        PhaseGenerator();
+        PhaseGenerator(float stance_duration);
         
         bool has_started;
 
