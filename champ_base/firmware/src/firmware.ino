@@ -49,7 +49,7 @@ ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCall
 QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg, KNEE_ORIENTATION);
 QuadrupedBalancer balancer(base);
 QuadrupedGait gait(base, MAX_LINEAR_VELOCITY_X, MAX_LINEAR_VELOCITY_Y, MAX_ANGULAR_VELOCITY_Z, 
-                         MAX_STEP_LENGTH, MAX_THETA, SWING_HEIGHT, STANCE_DEPTH);
+                         STANCE_DURATION, SWING_HEIGHT, STANCE_DEPTH);
 QuadrupedIK ik(base);
 Odometry odometry(base);
 
