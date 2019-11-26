@@ -17,17 +17,18 @@ void BalancerLegInstance::balance(Transformation &foot_position, float body_roll
 
     Point line_vector;
     float d;
-    
+    float delta_height = leg_->nominal_stance().Z() + target_z;
+
     plane_p = leg_->nominal_stance();
-    plane_p.Translate(0, 0, -target_z);
+    plane_p.Translate(0, 0, -delta_height);
 
     line_p0 = leg_->nominal_stance();
     line_p1 = leg_->nominal_stance();
-    line_p0.Translate(0, 0, -target_z);
+    line_p0.Translate(0, 0, -delta_height);
     line_p1.Translate(0, 0, leg_->lower_leg->x() + leg_->foot->x());
 
     normal_vector_origin = leg_->nominal_stance();
-    normal_vector_origin.Translate(-0.1, -0.1, -target_z);
+    normal_vector_origin.Translate(-0.1, -0.1, -delta_height);
     normal_vector.p = normal_vector_origin.p;
     normal_vector.Translate(0, 0, 0.1);
 
@@ -87,6 +88,8 @@ void BalancerLegInstance::balance(Transformation &foot_position, float body_roll
     foot_position.p.X() = x_numerator.Det() / denominator.Det();
     foot_position.p.Y() = y_numerator.Det() / denominator.Det();
     foot_position.p.Z() = z_numerator.Det() / denominator.Det();
+    
+    leg_->transformToHip(foot_position);
 }
 
 
