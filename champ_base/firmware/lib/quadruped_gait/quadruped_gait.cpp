@@ -29,10 +29,10 @@ float QuadrupedGait::raibertsHeuristic(float stance_duration, float target_veloc
 void QuadrupedGait::transformTrajectory(QuadrupedLeg *leg, float linear_velocity_x, float linear_velocity_y, float angular_velocity_z, float &step_length, float &rotation)
 {   
     //do velocity scaling, shorter steps when velocity command is lower, longer steps when velocity command is higher
-    float target_tangential_velocity = angular_velocity_z * (base_->lf->nominal_stance().Y() +  base_->lf->nominal_stance().X());
+    float target_tangential_velocity = angular_velocity_z * leg->center_to_nominal();
     float target_velocity =  sqrtf(pow(linear_velocity_x, 2) + pow(linear_velocity_y + abs(target_tangential_velocity), 2));
 
-    float current_tangential_velocity = base_->angular_velocity_z() * (base_->lf->nominal_stance().Y() +  base_->lf->nominal_stance().X());
+    float current_tangential_velocity = base_->angular_velocity_z() * leg->center_to_nominal();
     float current_velocity =  sqrtf(pow(base_->linear_velocity_x(), 2) + pow(base_->linear_velocity_y() + abs(current_tangential_velocity), 2));
 
     float step_x = raibertsHeuristic(stance_duration_, linear_velocity_x);
@@ -59,7 +59,7 @@ void QuadrupedGait::generate(Transformation (&foot_positions)[4], float linear_v
     linear_velocity_y = constrain(linear_velocity_y, -max_linear_velocity_y_, max_linear_velocity_y_);
     angular_velocity_z = constrain(angular_velocity_z, -max_angular_velocity_, max_angular_velocity_);
     
-    float tangential_velocity = angular_velocity_z * (base_->lf->nominal_stance().Y() +  base_->lf->nominal_stance().X());
+    float tangential_velocity = angular_velocity_z * base_->lf->center_to_nominal();
     float velocity =  sqrtf(pow(linear_velocity_x, 2) + pow(linear_velocity_y + abs(tangential_velocity), 2));
     float step_lengths[4] = {0,0,0,0};
     float trajectory_rotations[4] = {0,0,0,0};    
