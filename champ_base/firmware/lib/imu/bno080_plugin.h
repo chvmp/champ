@@ -49,14 +49,7 @@ namespace BNO0809DOF
                     // rotation.x  = atan2f(-2.* (q[2] * q[3] - q[0] * q[1]) , q[0] * q[0] - q[1] * q[1]- q[2] * q[2] + q[3] * q[3]); 
                     // rotation.y  = asinf(2. * (q[1] * q[3] + q[0] * q[2]));
                     // rotation.z  = atan2f( 2. * (-q[1] * q[2] + q[0] * q[3]) , q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]); 
-                }
-                else
-                {
-                    rotation.w = 1.0;
-                    rotation.x = 0.0;
-                    rotation.y = 0.0;
-                    rotation.z = 0.0;
-                }    
+                }   
             }
 
             void readGyroscope(Gyroscope &gyro)
@@ -66,13 +59,7 @@ namespace BNO0809DOF
                     gyro.x = imu_.getGyroX();
                     gyro.y = imu_.getGyroY();
                     gyro.z = imu_.getGyroZ();
-                }
-                else
-                {
-                    gyro.x = 0.0;
-                    gyro.y = 0.0;
-                    gyro.z = 0.0;
-                }    
+                } 
             }
 
             void readAccelerometer(Accelerometer &accel)
@@ -82,12 +69,6 @@ namespace BNO0809DOF
                     accel.x = imu_.getAccelX();
                     accel.y = imu_.getAccelY();
                     accel.z = imu_.getAccelZ();
-                }
-                else
-                {
-                    accel.x = 0.0;
-                    accel.y = 0.0;
-                    accel.z = 0.0; 
                 }
             }
 
@@ -99,12 +80,6 @@ namespace BNO0809DOF
                     mag.y = imu_.getMagY();
                     mag.z = imu_.getMagZ();
                 }
-                else
-                {
-                    mag.x = 0.0;
-                    mag.y = 0.0;
-                    mag.z = 0.0; 
-                } 
             }
 
             void read(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
@@ -147,25 +122,6 @@ namespace BNO0809DOF
                     mag_.x = imu_.getMagX();
                     mag_.y = imu_.getMagY();
                     mag_.z = imu_.getMagZ();
-                }
-                else
-                {
-                    rotation_.w = 1.0;
-                    rotation_.x = 0.0;
-                    rotation_.y = 0.0;
-                    rotation_.z = 0.0;
-
-                    gyro_.x = 0.0;
-                    gyro_.y = 0.0;
-                    gyro_.z = 0.0;
-
-                    accel_.x = 0.0;
-                    accel_.y = 0.0;
-                    accel_.z = 0.0;
-
-                    mag_.x = 0.0;
-                    mag_.y = 0.0;
-                    mag_.z = 0.0;
                 }
             }
     };
