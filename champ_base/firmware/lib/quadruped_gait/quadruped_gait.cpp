@@ -8,10 +8,10 @@ QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, float max_linear_vel
     max_linear_velocity_y_(max_linear_velocity_y),
     max_angular_velocity_(max_angular_velocity),
     stance_duration_(stance_duration),
-    lf(base_->lf, swing_height, stance_duration_, stance_depth),
-    rf(base_->rf, swing_height, stance_duration_, stance_depth),
-    lh(base_->lh, swing_height, stance_duration_, stance_depth),
-    rh(base_->rh, swing_height, stance_duration_, stance_depth)
+    lf(base_->lf, swing_height, stance_depth),
+    rf(base_->rf, swing_height, stance_depth),
+    lh(base_->lh, swing_height, stance_depth),
+    rh(base_->rh, swing_height, stance_depth)
 {
     unsigned int total_legs = 0;
     

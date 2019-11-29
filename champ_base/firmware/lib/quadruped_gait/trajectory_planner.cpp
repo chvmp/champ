@@ -1,6 +1,6 @@
 #include<trajectory_planner.h>
 
-TrajectoryPlanner::TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float step_length, float stance_depth):
+TrajectoryPlanner::TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float stance_depth):
     leg_(leg),
     swing_height_(swing_height),
     stance_depth_(stance_depth),

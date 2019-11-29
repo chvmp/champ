@@ -30,7 +30,7 @@ class TrajectoryPlanner
     void updateControlPointsLength(float step_length);
 
     public:
-        TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float step_length, float stance_depth);
+        TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float stance_depth);
         void generate(Transformation &foot_position, float step_length, float rotation, float swing_phase_signal, float stance_phase_signal);
 };
 
