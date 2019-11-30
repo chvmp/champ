@@ -24,6 +24,7 @@ float g_req_angular_vel_z = 0;
 float g_req_roll = 0;
 float g_req_pitch = 0;
 float g_req_yaw = 0;
+float g_req_height = NOMINAL_HEIGHT;
 
 unsigned long g_prev_command_time = 0;
 
@@ -102,7 +103,7 @@ void loop() {
         base.updateJointPositions(current_joint_positions);
         base.updateSpeed(velocities);
 
-        balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);
+        balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, g_req_height);
         gait.generate(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(target_foot_positions, target_joint_position);
         
@@ -152,6 +153,7 @@ void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg)
     g_req_roll = pose_cmd_msg.roll;
     g_req_pitch = pose_cmd_msg.pitch;
     g_req_yaw = pose_cmd_msg.yaw;
+    g_req_height = pose_cmd_msg.z;
 }
 
 void publishJointStates(float joint_positions[12])
