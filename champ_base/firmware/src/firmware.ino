@@ -81,22 +81,23 @@ void setup()
 void loop() { 
     static unsigned long prev_control_time = 0;
     static unsigned long prev_imu_time = 0;
+    static unsigned long prev_publish_time = 0;
 
     static Accelerometer accel;
     static Gyroscope gyro;
     static Magnetometer mag;
     static Orientation rotation;
+    static Transformation current_foot_positions[4];
+    static float current_joint_positions[12];
+    static Velocities velocities;
 
-    if ((micros() - prev_control_time) >= 10000)
+    if ((micros() - prev_control_time) >= 2000)
     {
         prev_control_time = micros();
 
         Transformation target_foot_positions[4];
-        Transformation current_foot_positions[4];
         float target_joint_position[12]; 
-        float current_joint_positions[12];
-        Velocities velocities;
-        
+     
         actuators.getJointPositions(current_joint_positions);
         odometry.getVelocities(velocities);
 
@@ -109,6 +110,11 @@ void loop() {
         
         actuators.moveJoints(target_joint_position);
         base.getFootPositions(current_foot_positions);
+    }
+
+    if ((micros() - prev_publish_time) >= 20000)
+    {
+        prev_publish_time = micros();
 
         publishPoints(current_foot_positions);
         publishJointStates(current_joint_positions);
@@ -127,7 +133,7 @@ void loop() {
     {
         stopBase();
     }
-
+ 
     imu.run();
     nh.spinOnce();
 }
