@@ -74,8 +74,10 @@ void setup()
         nh.spinOnce();
     }
 
-    nh.loginfo("CHAMP CONNECTED");
     delay(1);
+    standUp();
+
+    nh.loginfo("CHAMP CONNECTED");
 }
 
 void loop() { 
@@ -96,7 +98,7 @@ void loop() {
         prev_control_time = micros();
 
         Transformation target_foot_positions[4];
-        float target_joint_position[12]; 
+        float target_joint_positions[12]; 
      
         actuators.getJointPositions(current_joint_positions);
         odometry.getVelocities(velocities);
@@ -106,9 +108,9 @@ void loop() {
 
         balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, g_req_height);
         gait.generate(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
-        ik.solve(target_foot_positions, target_joint_position);
+        ik.solve(target_foot_positions, target_joint_positions);
         
-        actuators.moveJoints(target_joint_position);
+        actuators.moveJoints(target_joint_positions);
         base.getFootPositions(current_foot_positions);
     }
 
@@ -219,4 +221,44 @@ void publishVelocities(Velocities vel)
 
     //publish raw_vel_msg
     vel_pub.publish(&vel_msg);
+}
+
+void standUp()
+{
+    Transformation target_foot_positions[4];
+    float target_joint_positions[12]; 
+
+    float initial_height = NOMINAL_HEIGHT * 0.75;
+    float hip_angle = 0.959931;
+
+    balancer.setBodyPose(target_foot_positions, 0, 0, 0, initial_height);
+    ik.solve(target_foot_positions, target_joint_positions);
+    target_joint_positions[0] = hip_angle;
+    target_joint_positions[3] = -hip_angle;
+    target_joint_positions[6] = hip_angle;
+    target_joint_positions[9] = -hip_angle;
+    actuators.moveJoints(target_joint_positions);
+    delay(1000);
+
+    for(int i = 100; i > -1; i--)
+    {
+        float current_angle = (i / 100.0) * hip_angle;
+        target_joint_positions[0] = current_angle;
+        target_joint_positions[3] = -current_angle;
+        target_joint_positions[6] = current_angle;
+        target_joint_positions[9] = -current_angle;
+        actuators.moveJoints(target_joint_positions);
+        delay(2);
+    }
+    delay(1000);
+
+    float current_height = initial_height;
+    for(unsigned int i = 0; i < 100; i++)
+    {
+        current_height += (NOMINAL_HEIGHT - initial_height) / 100.0;
+        balancer.setBodyPose(target_foot_positions, 0, 0, 0, current_height);
+        ik.solve(target_foot_positions, target_joint_positions);
+        actuators.moveJoints(target_joint_positions);
+        delay(2);
+    }
 }
