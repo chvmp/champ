@@ -227,38 +227,54 @@ void standUp()
 {
     Transformation target_foot_positions[4];
     float target_joint_positions[12]; 
+    float current_joint_positions[12];
 
     float initial_height = NOMINAL_HEIGHT * 0.75;
     float hip_angle = 0.959931;
 
-    balancer.setBodyPose(target_foot_positions, 0, 0, 0, initial_height);
-    ik.solve(target_foot_positions, target_joint_positions);
-    target_joint_positions[0] = hip_angle;
-    target_joint_positions[3] = -hip_angle;
-    target_joint_positions[6] = hip_angle;
-    target_joint_positions[9] = -hip_angle;
-    actuators.moveJoints(target_joint_positions);
-    delay(1000);
+    actuators.getJointPositions(current_joint_positions);
+    base.updateJointPositions(current_joint_positions);
 
-    for(int i = 100; i > -1; i--)
-    {
-        float current_angle = (i / 100.0) * hip_angle;
-        target_joint_positions[0] = current_angle;
-        target_joint_positions[3] = -current_angle;
-        target_joint_positions[6] = current_angle;
-        target_joint_positions[9] = -current_angle;
-        actuators.moveJoints(target_joint_positions);
-        delay(2);
-    }
-    delay(1000);
+    float sum_of_hip_angles = current_joint_positions[0] + current_joint_positions[3] +
+                              current_joint_positions[6] + current_joint_positions[9];
 
-    float current_height = initial_height;
-    for(unsigned int i = 0; i < 100; i++)
+    if(abs(sum_of_hip_angles) > 0.349066)
     {
-        current_height += (NOMINAL_HEIGHT - initial_height) / 100.0;
-        balancer.setBodyPose(target_foot_positions, 0, 0, 0, current_height);
+        balancer.setBodyPose(target_foot_positions, 0, 0, 0, initial_height);
         ik.solve(target_foot_positions, target_joint_positions);
+        target_joint_positions[0] = hip_angle;
+        target_joint_positions[3] = -hip_angle;
+        target_joint_positions[6] = hip_angle;
+        target_joint_positions[9] = -hip_angle;
         actuators.moveJoints(target_joint_positions);
-        delay(2);
+        delay(1000);
+
+        for(int i = 100; i > -1; i--)
+        {
+            float current_angle = (i / 100.0) * hip_angle;
+            target_joint_positions[0] = current_angle;
+            target_joint_positions[3] = -current_angle;
+            target_joint_positions[6] = current_angle;
+            target_joint_positions[9] = -current_angle;
+            actuators.moveJoints(target_joint_positions);
+            delay(2);
+        }
+        delay(1000);
+    }
+
+    float average_leg_height = (base.legs[0]->foot_from_hip().Z() + base.legs[1]->foot_from_hip().Z() +
+                                base.legs[2]->foot_from_hip().Z() + base.legs[3]->foot_from_hip().Z()) / 4.0;
+
+    if(abs(NOMINAL_HEIGHT + average_leg_height) > 0.01)
+    {
+        float current_height = initial_height;
+        for(unsigned int i = 0; i < 100; i++)
+        {
+            current_height += (NOMINAL_HEIGHT - initial_height) / 100.0;
+            balancer.setBodyPose(target_foot_positions, 0, 0, 0, current_height);
+            ik.solve(target_foot_positions, target_joint_positions);
+            actuators.moveJoints(target_joint_positions);
+            delay(2);
+        }
     }
 }
