@@ -17,17 +17,17 @@ void BalancerLegInstance::balance(Transformation &foot_position, float body_roll
 
     Point line_vector;
     float d;
-    float delta_height = leg_->nominal_stance().Z() + target_z;
+    float delta_height = leg_->zero_stance().Z() + target_z;
 
-    plane_p = leg_->nominal_stance();
+    plane_p = leg_->zero_stance();
     plane_p.Translate(0, 0, -delta_height);
 
-    line_p0 = leg_->nominal_stance();
-    line_p1 = leg_->nominal_stance();
+    line_p0 = leg_->zero_stance();
+    line_p1 = leg_->zero_stance();
     line_p0.Translate(0, 0, -delta_height);
     line_p1.Translate(0, 0, leg_->lower_leg->x() + leg_->foot->x());
 
-    normal_vector_origin = leg_->nominal_stance();
+    normal_vector_origin = leg_->zero_stance();
     normal_vector_origin.Translate(-0.1, -0.1, -delta_height);
     normal_vector.p = normal_vector_origin.p;
     normal_vector.Translate(0, 0, 0.1);
@@ -95,9 +95,9 @@ void BalancerLegInstance::balance(Transformation &foot_position, float body_roll
 
 void BalancerLegInstance::setBodyPose(Transformation &foot_position, float target_roll, float target_pitch, float target_yaw, float target_z)
 {
-    float delta_height = leg_->nominal_stance().Z() + target_z;
+    float delta_height = leg_->zero_stance().Z() + target_z;
 
-    foot_position = leg_->nominal_stance();
+    foot_position = leg_->zero_stance();
 
     foot_position.Translate(0, 0, -delta_height);
 

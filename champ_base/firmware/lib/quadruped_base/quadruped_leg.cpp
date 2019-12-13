@@ -18,11 +18,11 @@ QuadrupedLeg::QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lowe
     addLink(lower_leg);
     addLink(foot);
 
-    nominal_stance_.X() = hip->x();
-    nominal_stance_.Y() = hip->y() + upper_leg->y() + lower_leg->y() + foot->y();
-    nominal_stance_.Z() = hip->z() + upper_leg->z() + lower_leg->z() + foot->z();
+    zero_stance_.X() = hip->x();
+    zero_stance_.Y() = hip->y() + upper_leg->y() + lower_leg->y() + foot->y();
+    zero_stance_.Z() = hip->z() + upper_leg->z() + lower_leg->z() + foot->z();
 
-    center_to_nominal_ = sqrtf(pow(nominal_stance_.X(),2) + pow(nominal_stance_.Y(),2));
+    center_to_nominal_ = sqrtf(pow(zero_stance_.X(),2) + pow(zero_stance_.Y(),2));
 }
 
 void QuadrupedLeg::addLink(Joint *l)
@@ -97,9 +97,9 @@ void QuadrupedLeg::joints(float *joints)
     }
 }
 
-Transformation QuadrupedLeg::nominal_stance()
+Transformation QuadrupedLeg::zero_stance()
 {
-    return nominal_stance_;
+    return zero_stance_;
 }
 
 float QuadrupedLeg::center_to_nominal()

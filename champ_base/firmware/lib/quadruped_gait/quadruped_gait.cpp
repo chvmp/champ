@@ -39,15 +39,15 @@ void QuadrupedGait::transformTrajectory(QuadrupedLeg *leg, float linear_velocity
     float step_y = raibertsHeuristic(stance_duration_, linear_velocity_y);
     float step_theta = raibertsHeuristic(stance_duration_, target_tangential_velocity);
                                             
-    float center_to_nominal = sqrtf(pow(base_->lf->nominal_stance().X(), 2) + pow(base_->lf->nominal_stance().Y(), 2));
+    float center_to_nominal = sqrtf(pow(base_->lf->zero_stance().X(), 2) + pow(base_->lf->zero_stance().Y(), 2));
     float theta = sinf((step_theta / 2) / center_to_nominal) * 2;
 
-    Transformation transformed_stance = leg->nominal_stance();    
+    Transformation transformed_stance = leg->zero_stance();    
     transformed_stance.Translate(step_x, step_y, 0);
     transformed_stance.RotateZ(theta);
 
-    float delta_x = transformed_stance.X() - leg->nominal_stance().X();
-    float delta_y = transformed_stance.Y() - leg->nominal_stance().Y();
+    float delta_x = transformed_stance.X() - leg->zero_stance().X();
+    float delta_y = transformed_stance.Y() - leg->zero_stance().Y();
 
     step_length = sqrtf(pow(delta_x, 2) + pow(delta_y, 2)) * 2;
     rotation = atan2f(delta_y, delta_x);

@@ -11,7 +11,7 @@ class QuadrupedLeg
     
     void addLink(Joint *l);
 
-    Transformation nominal_stance_;
+    Transformation zero_stance_;
     float center_to_nominal_;
 
     unsigned int leg_id_;
@@ -33,7 +33,7 @@ class QuadrupedLeg
         void joints(float hip_joint, float upper_leg_joint, float lower_leg_joint);
         void joints(float *joints);
 
-        Transformation nominal_stance();
+        Transformation zero_stance();
         float center_to_nominal();
 
         unsigned int leg_id();
