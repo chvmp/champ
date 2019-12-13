@@ -231,7 +231,7 @@ void standUp()
 
     float initial_height = NOMINAL_HEIGHT * 0.75;
     float hip_angle = 0.785398;
-    float angle_increment = 0.0174533;
+    
     actuators.getJointPositions(current_joint_positions);
     base.updateJointPositions(current_joint_positions);
 
@@ -248,17 +248,6 @@ void standUp()
         target_joint_positions[9] = -hip_angle;
         actuators.moveJoints(target_joint_positions);
         delay(1000);
-
-        for(unsigned int i = 0; i < 15; i++)
-        {
-            target_joint_positions[0] += angle_increment;
-            target_joint_positions[3] -= angle_increment;
-            target_joint_positions[6] += angle_increment;
-            target_joint_positions[9] -= angle_increment;
-            actuators.moveJoints(target_joint_positions);
-            delay(20);
-        }
-        delay(500);
 
         for(int i = 100; i > -1; i--)
         {
@@ -279,7 +268,7 @@ void standUp()
     if(abs(NOMINAL_HEIGHT + average_leg_height) > 0.01)
     {
         float current_height = initial_height;
-        for(unsigned int i = 0; i < 100; i++)
+        for(unsigned int i = 0; i < 101; i++)
         {
             current_height += (NOMINAL_HEIGHT - initial_height) / 100.0;
             balancer.setBodyPose(target_foot_positions, 0, 0, 0, current_height);
