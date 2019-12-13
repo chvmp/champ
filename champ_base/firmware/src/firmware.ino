@@ -230,8 +230,8 @@ void standUp()
     float current_joint_positions[12];
 
     float initial_height = NOMINAL_HEIGHT * 0.75;
-    float hip_angle = 0.959931;
-
+    float hip_angle = 0.785398;
+    float angle_increment = 0.0174533;
     actuators.getJointPositions(current_joint_positions);
     base.updateJointPositions(current_joint_positions);
 
@@ -249,6 +249,17 @@ void standUp()
         actuators.moveJoints(target_joint_positions);
         delay(1000);
 
+        for(unsigned int i = 0; i < 15; i++)
+        {
+            target_joint_positions[0] += angle_increment;
+            target_joint_positions[3] -= angle_increment;
+            target_joint_positions[6] += angle_increment;
+            target_joint_positions[9] -= angle_increment;
+            actuators.moveJoints(target_joint_positions);
+            delay(20);
+        }
+        delay(500);
+
         for(int i = 100; i > -1; i--)
         {
             float current_angle = (i / 100.0) * hip_angle;
@@ -257,9 +268,9 @@ void standUp()
             target_joint_positions[6] = current_angle;
             target_joint_positions[9] = -current_angle;
             actuators.moveJoints(target_joint_positions);
-            delay(2);
+            delay(5);
         }
-        delay(1000);
+        delay(500);
     }
 
     float average_leg_height = (base.legs[0]->foot_from_hip().Z() + base.legs[1]->foot_from_hip().Z() +
