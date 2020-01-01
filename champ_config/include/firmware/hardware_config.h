@@ -1,10 +1,10 @@
 #include <actuator.h>
 #include <imu.h>
 
-#define USE_SIMULATION_ACTUATOR
+// #define USE_SIMULATION_ACTUATOR
 // #define USE_DYNAMIXEL_ACTUATOR
+#define USE_SERVO_ACTUATOR
 // #define USE_BRUSHLESS_ACTUATOR
-// #define USE_SERVO_ACTUATOR
 
 #define USE_SIMULATION_IMU
 // #define USE_BNO0809DOF_IMU
@@ -27,6 +27,25 @@
     DynamixelAX12A::Plugin rhh_actuator(Serial1, 9, 6, 0, 0, false);
     DynamixelAX12A::Plugin rhu_actuator(Serial1, 10, 5, 0, 0, true);
     DynamixelAX12A::Plugin rhl_actuator(Serial1, 11, 8, 0, 0, false);
+#endif 
+
+#ifdef USE_SERVO_ACTUATOR
+    #define ACTUATOR DigitalServo
+    DigitalServo::Plugin lfh_actuator(1, 0, 0, false);
+    DigitalServo::Plugin lfu_actuator(2, 0, 0, false);
+    DigitalServo::Plugin lfl_actuator(3, 0, 0, false);
+
+    DigitalServo::Plugin rfh_actuator(4, 0, 0, false);
+    DigitalServo::Plugin rfu_actuator(5, 0, 0, false);
+    DigitalServo::Plugin rfl_actuator(6, 0, 0, false);
+
+    DigitalServo::Plugin lhh_actuator(7, 0, 0, false);
+    DigitalServo::Plugin lhu_actuator(8, 0, 0, false);
+    DigitalServo::Plugin lhl_actuator(9, 0, 0, false);
+
+    DigitalServo::Plugin rhh_actuator(10, 0, 0, false);
+    DigitalServo::Plugin rhu_actuator(11, 0, 0, false);
+    DigitalServo::Plugin rhl_actuator(12, 0, 0, false);
 #endif 
 
 #ifdef USE_SIMULATION_ACTUATOR
