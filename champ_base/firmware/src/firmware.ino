@@ -47,7 +47,7 @@ ros::Publisher vel_pub("/champ/velocities/raw", &vel_msg);
 ros::Subscriber<geometry_msgs::Twist> vel_cmd_sub("champ/cmd_vel", velocityCommandCallback);
 ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCallback);
 
-QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg, KNEE_ORIENTATION);
+QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg, KNEE_ORIENTATION, PANTOGRAPH_LEG);
 QuadrupedBalancer balancer(base);
 QuadrupedGait gait(base, MAX_LINEAR_VELOCITY_X, MAX_LINEAR_VELOCITY_Y, MAX_ANGULAR_VELOCITY_Z, 
                          STANCE_DURATION, SWING_HEIGHT, STANCE_DEPTH);
@@ -100,23 +100,23 @@ void loop() {
         Transformation target_foot_positions[4];
         float target_joint_positions[12]; 
      
-        actuators.getJointPositions(current_joint_positions);
-        odometry.getVelocities(velocities);
-
-        base.updateJointPositions(current_joint_positions);
-        base.updateSpeed(velocities);
-
         balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, g_req_height);
         gait.generate(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(target_foot_positions, target_joint_positions);
         
         actuators.moveJoints(target_joint_positions);
-        base.getFootPositions(current_foot_positions);
     }
 
     if ((micros() - prev_publish_time) >= 20000)
     {
         prev_publish_time = micros();
+
+        actuators.getJointPositions(current_joint_positions);
+        odometry.getVelocities(velocities);
+
+        base.updateJointPositions(current_joint_positions);
+        base.updateSpeed(velocities);
+        base.getFootPositions(current_foot_positions);
 
         publishPoints(current_foot_positions);
         publishJointStates(current_joint_positions);
