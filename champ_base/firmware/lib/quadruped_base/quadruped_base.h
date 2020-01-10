@@ -23,13 +23,11 @@ class QuadrupedBase
 {   
     Velocities speed_;
     Attitude attitude_;
-
-    const char * knee_orientation_;
     
     int getKneeDirection(char direction);
     
     public:
-        QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, const char *knee_orientation);
+        QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, const char *knee_orientation, bool is_pantograph);
         void getJointPositions(float *joint_positions);
         void getFootPositions(Transformation *foot_positions);
         void updateJointPositions(float joints_states[12]);
@@ -59,7 +57,6 @@ class QuadrupedBase
         void updateSpeed(Velocities speed);
         void updateSpeed(float linear_velocity_x,  float linear_velocity_y, float angular_velocity_z);
         Velocities speed();
-
 
         QuadrupedLeg *legs[4];
 

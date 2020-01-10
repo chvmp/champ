@@ -1,7 +1,6 @@
 #include<quadruped_base.h>
 
-QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, const char *knee_orientation):        
-    knee_orientation_(knee_orientation),
+QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, const char *knee_orientation, bool pantograph_leg):        
     lf(&lf_leg),
     rf(&rf_leg),
     lh(&lh_leg),
@@ -20,13 +19,13 @@ QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, Quadrup
         legs[i]->leg_id(i);
         if(i < 2)
         {
-            dir = getKneeDirection(knee_orientation_[0]);
+            dir = getKneeDirection(knee_orientation[0]);
         }
         else
         {
-            dir = getKneeDirection(knee_orientation_[1]);
+            dir = getKneeDirection(knee_orientation[1]);
         }
-        
+        legs[i]->is_pantograph(pantograph_leg);
         legs[i]->knee_direction(dir);
     }
 }

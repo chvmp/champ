@@ -49,6 +49,9 @@ void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float
     
     lower_leg_joint += ik_beta_;
     upper_leg_joint += ik_alpha_;
+
+    if(leg_->is_pantograph())
+        lower_leg_joint += upper_leg_joint;
 }        
 
 float *IKLegInstance::joints()

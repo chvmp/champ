@@ -21,6 +21,7 @@ class QuadrupedLeg
     bool in_contact_;
 
     int knee_direction_;
+    bool is_pantograph_;
 
     bool gait_phase_;
     
@@ -50,6 +51,10 @@ class QuadrupedLeg
 
         int knee_direction();
         void knee_direction(int direction);
+
+        bool is_pantograph();
+        void is_pantograph(bool config);
+
         void gait_phase(bool phase);
         bool gait_phase();
 

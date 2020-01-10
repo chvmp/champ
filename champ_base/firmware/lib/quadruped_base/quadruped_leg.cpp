@@ -7,6 +7,7 @@ QuadrupedLeg::QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lowe
     last_touchdown_(0),
     in_contact_(0),
     knee_direction_(0),
+    is_pantograph_(false),
     gait_phase_(1),
     hip(&hip_joint),
     upper_leg(&upper_leg_joint),
@@ -158,4 +159,14 @@ int QuadrupedLeg::knee_direction()
 void QuadrupedLeg::knee_direction(int direction)
 {
     knee_direction_ = direction;
+}
+
+void QuadrupedLeg::is_pantograph(bool config)
+{
+    is_pantograph_ = config;
+}
+
+bool QuadrupedLeg::is_pantograph()
+{
+    return is_pantograph_;
 }
