@@ -14,7 +14,7 @@
     #define ACTUATOR DynamixelAX12A
     DynamixelAX12A::Plugin lfh_actuator(Serial1, 0, 16, 0, 0, false);
     DynamixelAX12A::Plugin lfu_actuator(Serial1, 1, 17, 0, 0, false);
-    DynamixelAX12A::Plugin lfl_actuator(Serial1, 2, 18, 0, 0, true);
+    DynamixelAX12A::Plugin lfl_actuator(Serial1, 2, 18, 0, 0, false);
 
     DynamixelAX12A::Plugin rfh_actuator(Serial1, 3, 14, 0, 0, false);
     DynamixelAX12A::Plugin rfu_actuator(Serial1, 4, 13, 0, 0, true);
@@ -31,21 +31,21 @@
 
 #ifdef USE_SERVO_ACTUATOR
     #define ACTUATOR DigitalServo
-    DigitalServo::Plugin lfh_actuator(1, 0, 0, false);
-    DigitalServo::Plugin lfu_actuator(2, 0, 0, false);
-    DigitalServo::Plugin lfl_actuator(3, 0, 0, false);
+    DigitalServo::Plugin lfh_actuator(2, 180, 0, false);
+    DigitalServo::Plugin lfu_actuator(3, 270, 10, false);
+    DigitalServo::Plugin lfl_actuator(4, 180, -6, true);
 
-    DigitalServo::Plugin rfh_actuator(4, 0, 0, false);
-    DigitalServo::Plugin rfu_actuator(5, 0, 0, false);
-    DigitalServo::Plugin rfl_actuator(6, 0, 0, false);
+    DigitalServo::Plugin rfh_actuator(23, 180, 0, false);
+    DigitalServo::Plugin rfu_actuator(22, 180, 0, false);
+    DigitalServo::Plugin rfl_actuator(21, 180, 0, false);
 
-    DigitalServo::Plugin lhh_actuator(7, 0, 0, false);
-    DigitalServo::Plugin lhu_actuator(8, 0, 0, false);
-    DigitalServo::Plugin lhl_actuator(9, 0, 0, false);
+    DigitalServo::Plugin lhh_actuator(6, 180, 0, false);
+    DigitalServo::Plugin lhu_actuator(7, 180, 0, false);
+    DigitalServo::Plugin lhl_actuator(8, 180, 0, false);
 
-    DigitalServo::Plugin rhh_actuator(10, 0, 0, false);
-    DigitalServo::Plugin rhu_actuator(11, 0, 0, false);
-    DigitalServo::Plugin rhl_actuator(12, 0, 0, false);
+    DigitalServo::Plugin rhh_actuator(17, 180, 0, false);
+    DigitalServo::Plugin rhu_actuator(16, 180, 0, false);
+    DigitalServo::Plugin rhl_actuator(14, 180, 0, false);
 #endif 
 
 #ifdef USE_SIMULATION_ACTUATOR
@@ -69,6 +69,7 @@
 
 Actuator<ACTUATOR::Plugin> actuators
 (
+    PANTOGRAPH_LEG,
     lfh_actuator, lfu_actuator, lfl_actuator,
     rfh_actuator,rfu_actuator,rfl_actuator,
     lhh_actuator,lhu_actuator,lhl_actuator,
