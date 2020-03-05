@@ -33,7 +33,6 @@ class JointsRelay:
         joint_states.position = joints.position
         self.joint_states_pub.publish(joint_states)
 
-
     def joint_states_gui_callback(self, joints):
         joint_states_calibrate = Joints()
         
