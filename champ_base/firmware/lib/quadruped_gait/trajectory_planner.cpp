@@ -53,27 +53,21 @@ void TrajectoryPlanner::updateControlPointsLength(float step_length)
 
 void TrajectoryPlanner::generate(Transformation &foot_position, float step_length, float rotation, float swing_phase_signal, float stance_phase_signal)
 {    
-    Transformation new_foot_position = foot_position;
     updateControlPointsLength(step_length);
+    leg_->gait_phase(1);
 
     int n = total_control_points_ - 1;
-    leg_->gait_phase(1);
+    float x = 0.0;
+    float y = 0.0;
 
     if(stance_phase_signal > swing_phase_signal)
     {
-        float x = (step_length / 2) * (1 - (2 * stance_phase_signal));
-        float y = -stance_depth_ * cosf((3.1416 * x) / step_length);
-
-        new_foot_position.X() = foot_position.X() + (x * cosf(rotation));
-        new_foot_position.Y() = foot_position.Y() + (x * sinf(rotation));
-        new_foot_position.Z() = foot_position.Z() + y;
+        x = (step_length / 2) * (1 - (2 * stance_phase_signal));
+        y = -stance_depth_ * cosf((3.1416 * x) / step_length);
     }
     else
     {
         leg_->gait_phase(0);
-
-        float x = 0;
-        float y = 0;
 
         for(unsigned int i = 0; i < total_control_points_ ; i++)
         {
@@ -82,21 +76,16 @@ void TrajectoryPlanner::generate(Transformation &foot_position, float step_lengt
             x += coeff * pow(swing_phase_signal, i) * pow((1 - swing_phase_signal), (n - i)) * control_points_x_[i];
             y -= coeff * pow(swing_phase_signal, i) * pow((1 - swing_phase_signal), (n - i)) * control_points_y_[i];
         }
-
-        new_foot_position.X() = foot_position.X() + (x * cosf(rotation));
-        new_foot_position.Y() = foot_position.Y() + (x * sinf(rotation));
-        new_foot_position.Z() = foot_position.Z() + y;
     }
     
+    foot_position.X() = foot_position.X() + (x * cosf(rotation));
+    foot_position.Y() = foot_position.Y() + (x * sinf(rotation));
+    foot_position.Z() = foot_position.Z() + y;
+
     if((!swing_phase_signal && !stance_phase_signal) && step_length > 0)
     {
-        new_foot_position = prev_foot_position_;
-    }
-    else if(step_length == 0)
-    {
-        new_foot_position = foot_position;
+        foot_position = prev_foot_position_;
     }
 
-    foot_position = new_foot_position;
     prev_foot_position_ = foot_position;
 }
