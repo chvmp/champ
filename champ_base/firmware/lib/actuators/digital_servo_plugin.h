@@ -11,21 +11,20 @@ namespace DigitalServo
         float current_angle_;
         float min_angle_;
         float max_angle_;
-        float min_actuator_angle_;
-        float max_actuator_angle_;
+        float min_actuator_offset_;
+        float max_actuator_offset_;
         bool inverted_;
         int inverter_;
-        int offset_;
         public:
             unsigned int leg_id;
-            Plugin(int hardware_pin, int max_actuator_angle, int offset, bool inverted):
+            Plugin(int hardware_pin, float min_angle, float max_angle, int min_actuator_offset, int max_actuator_offset, bool inverted):
             current_angle_(0),    
-            // min_angle_(min_angle),
-            // max_angle_(max_angle),
-            max_actuator_angle_(max_actuator_angle),
+            min_angle_(min_angle),
+            max_angle_(max_angle),
+            min_actuator_offset_(min_actuator_offset),
+            max_actuator_offset_(max_actuator_offset),
             inverted_(inverted),
             inverter_(1),
-            offset_(offset),
             leg_id(0)
             {
                 delay(100);
@@ -49,37 +48,30 @@ namespace DigitalServo
 
             int toActuatorAngle(float angle)
             {
+                
                 float actuator_angle = 0;
 
-                if(max_actuator_angle_ == 180)
+                if(max_angle_ == 0)
+                {   
+                    actuator_angle =  mapFloat(angle, min_angle_, max_angle_, 180, 0);
+                }
+                else
                 {
-                    actuator_angle = mapFloat(angle, -1.134464, 2.007124, 0.0, 180.0);
-                    actuator_angle =  round(actuator_angle) + offset_;
+                    actuator_angle =  mapFloat(angle, min_angle_, max_angle_, 0, 180);
+                }
 
-                    // if(angle > 0.0)
-                    // {
-                    //     actuator_angle = mapFloat(angle, -0.785398, 2.35619, 0.0, 180.0);
-                    // }
-                    // else if(angle < 0.0)
-                    // {
-                    //     actuator_angle = mapFloat(angle, -2.35619, 0.785398, 0.0, 180.0);
-                    // }
-                    // else
-                    // {
-                        
-                    // }
-                    
-                }
-                else if(max_actuator_angle_ == 270)
+                int offset = 0;
+                
+                if(min_actuator_offset_ == max_actuator_offset_)
                 {
-                    actuator_angle = mapFloat(angle, -(PI / 2.0) , PI, 0.0, 180.0);
-                                    int offset = map(actuator_angle, 0, 270, 3, 17.5);
-                    actuator_angle =  round(actuator_angle) + offset;
+                    offset = min_actuator_offset_;
                 }
-                else if(max_actuator_angle_ == 360)
+                else
                 {
-                    actuator_angle = mapFloat(angle, -PI, PI, 0.0, 180.0);
+                    offset = mapFloat(actuator_angle, 0, 180, min_actuator_offset_, max_actuator_offset_);
                 }
+
+                actuator_angle =  round(actuator_angle) + offset;
 
                 return actuator_angle;
             }
