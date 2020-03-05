@@ -36,10 +36,11 @@ class JointsRelay:
 
     def joint_states_gui_callback(self, joints):
         joint_states_calibrate = Joints()
-        joint_states_calibrate.position = joints.position
+        
+        for i in range(12):
+            joint_states_calibrate.position.append(joints.position[i])
 
         self.joint_states_calibrate_pub.publish(joint_states_calibrate)
-
 
 if __name__ == "__main__":
     rospy.init_node('champ_joints_relay', anonymous=True)
