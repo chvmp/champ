@@ -128,18 +128,18 @@ void QuadrupedLeg::leg_id(unsigned int id)
     leg_id_ = id;
 }
 
-void QuadrupedLeg::in_contact(bool in_contact)
-{
-    if(!in_contact_ && in_contact){
-        last_touchdown_ = micros();
-    }
-    in_contact_ = in_contact;
-}
+// void QuadrupedLeg::in_contact(bool in_contact)
+// {
+//     if(!in_contact_ && in_contact){
+//         last_touchdown_ = micros();
+//     }
+//     in_contact_ = in_contact;
+// }
 
-bool QuadrupedLeg::in_contact()
-{
-    return in_contact_;
-}
+// bool QuadrupedLeg::in_contact()
+// {
+//     return in_contact_;
+// }
 
 void QuadrupedLeg::gait_phase(bool phase)
 {

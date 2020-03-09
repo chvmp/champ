@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <odometry.h>
 
 Odometry::Odometry(QuadrupedBase &quadruped_base):

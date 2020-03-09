@@ -23,6 +23,8 @@ class QuadrupedGait
         float getStepLength(float linear_velocity_x, float linear_velocity_y, float angular_velocity_z);
         float mapFloat(float x, float in_min, float in_max, float out_min, float out_max);
         float raibertsHeuristic(float stance_duration, float target_velocity);
+        float capVelocities(float velocity, float min_velocity, float max_velocity);
+
     public:
         QuadrupedGait(QuadrupedBase &quadruped_base, float max_linear_velocity_x,float max_linear_velocity_y, float max_angular_velocity, float stance_duration, float swing_height, float stance_depth);
         TrajectoryPlanner lf;

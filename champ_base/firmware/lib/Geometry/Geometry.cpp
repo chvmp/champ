@@ -229,39 +229,39 @@ Transformation &Transformation::Translate(float x, float y, float z)
     return (*this);
 }
 
-Print &operator<<(Print &strm, const Point &obj)
-{
-    strm << (const Matrix<3,1>&)obj;
-    return strm;
-}
+// Print &operator<<(Print &strm, const Point &obj)
+// {
+//     strm << (const Matrix<3,1>&)obj;
+//     return strm;
+// }
 
-Print &operator<<(Print &strm, const Rotation &obj)
-{
-    strm << (const Matrix<3,3>&)obj;
-    return strm;
-}
+// Print &operator<<(Print &strm, const Rotation &obj)
+// {
+//     strm << (const Matrix<3,3>&)obj;
+//     return strm;
+// }
 
-// Stream inserter operator for printing to strings or the serial port
-Print &operator<<(Print &strm, const Transformation &obj)
-{
-    strm << '{';
+// // Stream inserter operator for printing to strings or the serial port
+// Print &operator<<(Print &strm, const Transformation &obj)
+// {
+//     strm << '{';
 
-    for(int i = 0; i < 4; i++)
-    {
-        strm << '{';
+//     for(int i = 0; i < 4; i++)
+//     {
+//         strm << '{';
 
-        for(int j = 0; j < 4; j++)
-        {
-            if(j == 3)
-                strm << ((i == 3)? 1 : obj.p(i,j));
-            else
-                strm << ((i == 3)? 0 : obj.R(i,j));
+//         for(int j = 0; j < 4; j++)
+//         {
+//             if(j == 3)
+//                 strm << ((i == 3)? 1 : obj.p(i,j));
+//             else
+//                 strm << ((i == 3)? 0 : obj.R(i,j));
 
-            strm << ((j == 4 - 1)? '}' : ',');
-        }
+//             strm << ((j == 4 - 1)? '}' : ',');
+//         }
 
-        strm << (i == 4 - 1? '}' : ',');
-    }
-    return strm;
-}
+//         strm << (i == 4 - 1? '}' : ',');
+//     }
+//     return strm;
+// }
 

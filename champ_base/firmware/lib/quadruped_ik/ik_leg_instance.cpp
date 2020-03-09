@@ -1,3 +1,4 @@
+#include <math.h>
 #include <ik_leg_instance.h>
 
 IKLegInstance::IKLegInstance(QuadrupedLeg *leg):
@@ -13,10 +14,10 @@ IKLegInstance::IKLegInstance(QuadrupedLeg *leg):
     float lower_leg_to_foot_z = leg_->joint_chain[3]->z();
 
     ik_alpha_h_ = -sqrtf(pow(upper_to_lower_leg_x, 2) + pow(upper_to_lower_leg_z, 2));
-    ik_alpha_ = acosf(upper_to_lower_leg_x / ik_alpha_h_) - (PI/2); 
+    ik_alpha_ = acosf(upper_to_lower_leg_x / ik_alpha_h_) - (M_PI/2); 
 
     ik_beta_h_ = -sqrtf(pow(lower_leg_to_foot_x, 2) + pow(lower_leg_to_foot_z, 2));
-    ik_beta_ = acosf(lower_leg_to_foot_x / ik_beta_h_) - (PI/2); 
+    ik_beta_ = acosf(lower_leg_to_foot_x / ik_beta_h_) - (M_PI/2); 
 }
 
 void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float &upper_leg_joint, float &lower_leg_joint)
@@ -35,7 +36,7 @@ void IKLegInstance::solve(Transformation &foot_position, float &hip_joint, float
         l0 += leg_->joint_chain[i]->y();
     }
 
-    hip_joint = -(atanf(z / y) - ((PI/2) - acosf(-l0 / sqrtf(pow(z, 2) + pow(y, 2)))));
+    hip_joint = -(atanf(z / y) - ((M_PI/2) - acosf(-l0 / sqrtf(pow(z, 2) + pow(y, 2)))));
 
     temp_foot_pos.RotateX(-hip_joint);
     temp_foot_pos.Translate(-leg_->upper_leg->x(), 0, -leg_->upper_leg->z());

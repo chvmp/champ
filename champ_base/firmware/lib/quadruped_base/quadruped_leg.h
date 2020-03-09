@@ -45,8 +45,8 @@ class QuadrupedLeg
         void transformToBase(Transformation &foot);
 
         void leg_id(unsigned int id);
-        void in_contact(bool in_contact);
-        bool in_contact();
+        // void in_contact(bool in_contact);
+        // bool in_contact();
 
         int knee_direction();
         void knee_direction(int direction);

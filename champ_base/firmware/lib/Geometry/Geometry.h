@@ -1,7 +1,7 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
-#include "Arduino.h"
+// #include "Arduino.h"
 #include "BasicLinearAlgebra.h"
 
 #include <math.h>
@@ -93,9 +93,9 @@ public:
 };
 
 // Stream inserters operator for printing to strings or the serial port
-Print &operator<<(Print &strm, const Point &obj);
-Print &operator<<(Print &strm, const Rotation &obj);
-Print &operator<<(Print &strm, const Transformation &obj);
+// Print &operator<<(Print &strm, const Point &obj);
+// Print &operator<<(Print &strm, const Rotation &obj);
+// Print &operator<<(Print &strm, const Transformation &obj);
 
 #endif // GEOMETRY_H
 

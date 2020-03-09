@@ -55,9 +55,9 @@ void QuadrupedGait::transformTrajectory(QuadrupedLeg *leg, float linear_velocity
 
 void QuadrupedGait::generate(Transformation (&foot_positions)[4], float linear_velocity_x, float linear_velocity_y, float angular_velocity_z)
 {
-    linear_velocity_x = constrain(linear_velocity_x, -max_linear_velocity_x_, max_linear_velocity_x_);
-    linear_velocity_y = constrain(linear_velocity_y, -max_linear_velocity_y_, max_linear_velocity_y_);
-    angular_velocity_z = constrain(angular_velocity_z, -max_angular_velocity_, max_angular_velocity_);
+    linear_velocity_x = capVelocities(linear_velocity_x, -max_linear_velocity_x_, max_linear_velocity_x_);
+    linear_velocity_y = capVelocities(linear_velocity_y, -max_linear_velocity_y_, max_linear_velocity_y_);
+    angular_velocity_z = capVelocities(angular_velocity_z, -max_angular_velocity_, max_angular_velocity_);
     
     float tangential_velocity = angular_velocity_z * base_->lf->center_to_nominal();
     float velocity =  sqrtf(pow(linear_velocity_x, 2) + pow(linear_velocity_y + abs(tangential_velocity), 2));
@@ -87,3 +87,9 @@ float QuadrupedGait::mapFloat(float x, float in_min, float in_max, float out_min
 {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
+float QuadrupedGait::capVelocities(float velocity, float min_velocity, float max_velocity)
+{
+    return ((val)<(min)?(min):((val)>(max)?(max):(val)));
+}
+

@@ -7,10 +7,10 @@
 #include <champ_msgs/Pose.h>
 #include <champ_msgs/Imu.h>
 #include <champ_msgs/Velocities.h>
+#include <quadruped_description.h>
 #include <quadruped_balancer.h>
 #include <quadruped_gait.h>
 #include <quadruped_ik.h>
-#include <quadruped_description.h>
 #include <gait_config.h>
 #include <actuator_plugins.h>
 #include <imu_plugins.h>

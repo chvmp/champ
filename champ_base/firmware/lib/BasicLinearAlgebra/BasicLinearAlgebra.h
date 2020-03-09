@@ -5,7 +5,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "Arduino.h"
+// #include "Arduino.h"
 #include "MemoryDelegate.hpp"
 
 namespace BLA {
@@ -597,43 +597,43 @@ Matrix<dim,dim,MemT> &Invert(Matrix<dim,dim,MemT> &A, int *res = NULL)
 
 ////////////////////////////////////////////////////////////////// Insertion ///////////////////////////////////////////////////////////////////
 
-inline Print &operator <<(Print &strm, const int obj)
-{
-    strm.print(obj); return strm;
-}
+// inline Print &operator <<(Print &strm, const int obj)
+// {
+//     strm.print(obj); return strm;
+// }
 
-inline Print &operator <<(Print &strm, const float obj)
-{
-    strm.print(obj); return strm;
-}
+// inline Print &operator <<(Print &strm, const float obj)
+// {
+//     strm.print(obj); return strm;
+// }
 
-inline Print &operator <<(Print &strm, const char *obj)
-{
-    strm.print(obj); return strm;
-}
+// inline Print &operator <<(Print &strm, const char *obj)
+// {
+//     strm.print(obj); return strm;
+// }
 
-inline Print &operator <<(Print &strm, const char obj)
-{
-    strm.print(obj); return strm;
-}
+// inline Print &operator <<(Print &strm, const char obj)
+// {
+//     strm.print(obj); return strm;
+// }
 
-// Stream inserter operator for printing to strings or the serial port
-template<int rows, int cols, class MemT>
-Print &operator<<(Print &strm, const Matrix<rows,cols,MemT> &obj)
-{
-    strm << '{';
+// // Stream inserter operator for printing to strings or the serial port
+// template<int rows, int cols, class MemT>
+// Print &operator<<(Print &strm, const Matrix<rows,cols,MemT> &obj)
+// {
+//     strm << '{';
 
-    for(int i = 0; i < rows; i++)
-    {
-        strm << '{';
+//     for(int i = 0; i < rows; i++)
+//     {
+//         strm << '{';
 
-        for(int j = 0; j < cols; j++)
-            strm << obj(i,j) << ((j == cols - 1)? '}' : ',');
+//         for(int j = 0; j < cols; j++)
+//             strm << obj(i,j) << ((j == cols - 1)? '}' : ',');
 
-        strm << (i == rows - 1? '}' : ',');
-    }
-    return strm;
-}
+//         strm << (i == rows - 1? '}' : ',');
+//     }
+//     return strm;
+// }
 
 } // namespace BLA
 
