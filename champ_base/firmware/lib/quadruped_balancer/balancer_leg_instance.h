@@ -1,8 +1,8 @@
 #ifndef _BALANCER_LEG_INSTANCE_
 #define _BALANCER_LEG_INSTANCE_
 
-#include<balancer_leg_instance.h>
-#include<quadruped_base.h>
+#include <Geometry.h>
+#include <quadruped_leg.h>
 
 class BalancerLegInstance
 {

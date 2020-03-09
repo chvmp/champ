@@ -1,8 +1,8 @@
 #ifndef _IK_LEG_INSTNACE_H_
 #define _IK_LEG_INSTNACE_H_
 
-#include<quadruped_base.h>
-#include<Geometry.h>
+#include <Geometry.h>
+#include <quadruped_leg.h>
 
 class IKLegInstance
 {

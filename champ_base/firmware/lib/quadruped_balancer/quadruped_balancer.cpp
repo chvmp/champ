@@ -1,5 +1,4 @@
-#include<quadruped_balancer.h>
-#include<BasicLinearAlgebra.h>
+#include <quadruped_balancer.h>
 
 QuadrupedBalancer::QuadrupedBalancer(QuadrupedBase &quadruped_base):
     base_(&quadruped_base),

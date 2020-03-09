@@ -1,10 +1,6 @@
 #ifndef _PHASE_GENERATOR_H_
 #define _PHASE_GENERATOR_H_
 
-#include<Arduino.h>
-#include<Geometry.h>
-#include<quadruped_leg.h>
-
 #define SECONDS_TO_MICROS 1000000
 
 class PhaseGenerator

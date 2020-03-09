@@ -1,4 +1,4 @@
-#include<quadruped_joint.h>
+#include <quadruped_joint.h>
 
 Joint::Joint( float pos_x, float pos_y, float pos_z, float or_r, float or_p, float or_y):
     x_(pos_x), 

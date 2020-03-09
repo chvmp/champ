@@ -1,7 +1,9 @@
 #ifndef _QUADRUPPED_BASE_H_
 #define _QUADRUPPED_BASE_H_
 
-#include<quadruped_leg.h>
+#include <Geometry.h>
+#include <quadruped_base.h>
+#include <quadruped_leg.h>
 
 class Attitude
 {

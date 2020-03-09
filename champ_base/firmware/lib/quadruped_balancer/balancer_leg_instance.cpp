@@ -1,5 +1,4 @@
-#include<balancer_leg_instance.h>
-#include<BasicLinearAlgebra.h>
+#include <balancer_leg_instance.h>
 
 BalancerLegInstance::BalancerLegInstance(QuadrupedLeg *leg):
     leg_(leg)

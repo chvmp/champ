@@ -1,4 +1,4 @@
-#include<quadruped_base.h>
+#include <quadruped_base.h>
 
 QuadrupedBase::QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, const char *knee_orientation, bool pantograph_leg):        
     lf(&lf_leg),

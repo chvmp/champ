@@ -3,7 +3,6 @@
 
 #include <Geometry.h>
 #include <quadruped_joint.h>
-#include <Arduino.h>
 
 class QuadrupedLeg
 {

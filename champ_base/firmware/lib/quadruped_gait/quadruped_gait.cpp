@@ -1,4 +1,4 @@
-#include<quadruped_gait.h>
+#include <quadruped_gait.h>
 
 QuadrupedGait::QuadrupedGait(QuadrupedBase &quadruped_base, float max_linear_velocity_x, float max_linear_velocity_y, float max_angular_velocity, float stance_duration, float swing_height, float stance_depth):
     base_(&quadruped_base),

@@ -1,11 +1,10 @@
 #ifndef _QUADRUPED_GAIT_H_
 #define _QUADRUPED_GAIT_H_
 
-#include<Arduino.h>
-#include<Geometry.h>
-#include<quadruped_base.h>
-#include<trajectory_planner.h>
-#include<phase_generator.h>
+#include <Geometry.h>
+#include <quadruped_base.h>
+#include <trajectory_planner.h>
+#include <phase_generator.h>
 
 class QuadrupedGait
 {

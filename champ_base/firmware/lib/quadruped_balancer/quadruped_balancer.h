@@ -1,9 +1,9 @@
 #ifndef _QUADRUPED_BALANCER_H_
 #define _QUADRUPED_BALANCER_H_
 
-#include<balancer_leg_instance.h>
-#include<quadruped_balancer.h>
-#include<quadruped_base.h>
+#include <Geometry.h>
+#include <quadruped_base.h>
+#include <balancer_leg_instance.h>
 
 class QuadrupedBalancer
 {

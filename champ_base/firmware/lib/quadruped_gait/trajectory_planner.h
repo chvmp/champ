@@ -1,9 +1,8 @@
 #ifndef _TRAJECTORY_PLANNER_H_
 #define _TRAJECTORY_PLANNER_H_
 
-#include<Arduino.h>
-#include<Geometry.h>
-#include<quadruped_leg.h>
+#include <Geometry.h>
+#include <quadruped_leg.h>
 
 class TrajectoryPlanner
 {

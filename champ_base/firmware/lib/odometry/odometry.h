@@ -1,8 +1,8 @@
 #ifndef _QUADRUPPED_ODOMETRY_H_
 #define _QUADRUPPED_ODOMETRY_H_
 
-#include <Geometry.h>
 #include <quadruped_base.h>
+#include <Geometry.h>
 
 class Odometry
 {

@@ -1,4 +1,4 @@
-#include<trajectory_planner.h>
+#include <trajectory_planner.h>
 
 TrajectoryPlanner::TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float stance_depth):
     leg_(leg),

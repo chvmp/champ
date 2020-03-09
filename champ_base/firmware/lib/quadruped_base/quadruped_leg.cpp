@@ -1,4 +1,4 @@
-#include<quadruped_leg.h>
+#include <quadruped_leg.h>
 
 QuadrupedLeg::QuadrupedLeg(Joint &hip_joint, Joint &upper_leg_joint, Joint &lower_leg_joint,  Joint &foot_joint):
     no_of_links_(0),

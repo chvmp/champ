@@ -2,10 +2,9 @@
 #ifndef _QUADRUPED_IK_H_
 #define _QUADRUPED_IK_H_
 
-#include<quadruped_base.h>
-#include<ik_leg_instance.h>
-
-#include<Geometry.h>
+#include <Geometry.h>
+#include <quadruped_base.h>
+#include <ik_leg_instance.h>
 
 class QuadrupedIK
 {

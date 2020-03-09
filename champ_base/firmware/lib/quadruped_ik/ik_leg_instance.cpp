@@ -1,4 +1,4 @@
-#include<ik_leg_instance.h>
+#include <ik_leg_instance.h>
 
 IKLegInstance::IKLegInstance(QuadrupedLeg *leg):
     leg_(leg),

@@ -1,4 +1,4 @@
-#include<quadruped_ik.h>
+#include <quadruped_ik.h>
 
 QuadrupedIK::QuadrupedIK(QuadrupedBase &quadruped_base):
     base(&quadruped_base),

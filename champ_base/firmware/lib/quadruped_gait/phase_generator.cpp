@@ -1,4 +1,6 @@
-#include<phase_generator.h>
+#include <phase_generator.h>
+#include <Arduino.h>
+
 PhaseGenerator::PhaseGenerator(float stance_duration):
     last_touchdown_(micros()),
     leg_clocks_{0,0,0,0},
