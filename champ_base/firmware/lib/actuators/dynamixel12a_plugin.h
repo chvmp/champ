@@ -1,5 +1,5 @@
-#ifndef _DYNAMIXEL12A_PLUGIN_H_
-#define _DYNAMIXEL12A_PLUGIN_H_
+#ifndef DYNAMIXEL12A_PLUGIN_H
+#define DYNAMIXEL12A_PLUGIN_H
 
 #include <DynamixelAX12.h>
 

@@ -1,5 +1,5 @@
-#ifndef _IMU_PLUGINS_H_
-#define _IMU_PLUGINS_H_
+#ifndef IMU_PLUGINS_H
+#define IMU_PLUGINS_H
 
 #include <bno080_plugin.h>
 #include <simulation_imu_plugin.h>

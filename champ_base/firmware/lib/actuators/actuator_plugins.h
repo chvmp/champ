@@ -1,5 +1,5 @@
-#ifndef _ACTUATOR_PLUGINS_H_
-#define _ACTUATOR_PLUGINS_H_
+#ifndef ACTUATOR_PLUGINS_H
+#define ACTUATOR_PLUGINS_H
 
 #include <dynamixel12a_plugin.h>
 #include <digital_servo_plugin.h>

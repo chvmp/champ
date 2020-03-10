@@ -1,5 +1,5 @@
-#ifndef _IMU_H_
-#define _IMU_H_
+#ifndef IMU_H
+#define IMU_H
 
 #include <imu_plugins.h>
 

@@ -1,5 +1,5 @@
-#ifndef QUADRUPPED_ODOMETRY_H
-#define QUADRUPPED_ODOMETRY_H
+#ifndef ODOMETRY_H
+#define ODOMETRY_H
 
 #include <Arduino.h>
 #include <quadruped_base/quadruped_base.h>

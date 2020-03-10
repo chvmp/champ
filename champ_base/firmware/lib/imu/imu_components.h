@@ -1,5 +1,5 @@
-#ifndef _IMU_COMPONENTS_H_
-#define _IMU_COMPONENTS_H_
+#ifndef IMU_COMPONENTS_H
+#define IMU_COMPONENTS_H
 
 class Orientation
 {

@@ -1,5 +1,5 @@
-#ifndef _ACTUATOR_H_
-#define _ACTUATOR_H_
+#ifndef ACTUATOR_H
+#define ACTUATOR_H
 
 #include <actuator_plugins.h>
 

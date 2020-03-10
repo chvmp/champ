@@ -1,5 +1,5 @@
-#ifndef _SIMULATION_IMU_PLUGIN_H_
-#define _SIMULATION_IMU_PLUGIN_H_
+#ifndef SIMULATION_IMU_PLUGIN_H
+#define SIMULATION_IMU_PLUGIN_H
 
 namespace SimulationIMU
 {   

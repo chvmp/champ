@@ -1,5 +1,5 @@
-#ifndef _BNO080_PLUGIN_H_
-#define _BNO080_PLUGIN_H_
+#ifndef BNO080_PLUGIN_H
+#define BNO080_PLUGIN_H
 
 #include <Wire.h>
 #include "SparkFun_BNO080_Arduino_Library.h"

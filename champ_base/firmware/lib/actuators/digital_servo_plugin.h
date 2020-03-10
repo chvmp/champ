@@ -1,5 +1,5 @@
-#ifndef _PWM_SERVO_PLUGIN_H_
-#define _PWM_SERVO_PLUGIN_H_
+#ifndef PWM_SERVO_PLUGIN_H
+#define PWM_SERVO_PLUGIN_H
 
 #include <Servo.h>
 
