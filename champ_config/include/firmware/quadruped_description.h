@@ -1,4 +1,7 @@
-#include <quadruped_base.h>
+#ifndef QUADRUPED_DESCRIPTION_H
+#define QUADRUPED_DESCRIPTION_H
+
+#include <quadruped_base/quadruped_base.h>
 
 Joint lf_hip(0.175, 0.105, 0, 0, 0, 0);
 Joint lf_upper_leg(0, 0.06, 0, 0, 0, 0);
@@ -23,3 +26,5 @@ Joint rh_upper_leg(0, -0.06, 0, 0, 0, 0);
 Joint rh_lower_leg(0, 0, -0.141, 0, 0, 0);
 Joint rh_foot(0, 0, -0.141, 0, 0, 0);
 QuadrupedLeg rh_leg(rh_hip, rh_upper_leg, rh_lower_leg, rh_foot);
+
+#endif

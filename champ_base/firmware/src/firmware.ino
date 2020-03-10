@@ -8,14 +8,14 @@
 #include <champ_msgs/Imu.h>
 #include <champ_msgs/Velocities.h>
 #include <quadruped_description.h>
-#include <quadruped_balancer.h>
-#include <quadruped_gait.h>
-#include <quadruped_ik.h>
 #include <gait_config.h>
+#include <body_controller/quadruped_balancer.h>
+#include <leg_controller/quadruped_gait.h>
+#include <ik_engine/quadruped_ik.h>
 #include <actuator_plugins.h>
 #include <imu_plugins.h>
 #include <hardware_config.h>
-#include <odometry.h>
+#include <odometry/odometry.h>
 
 float g_req_linear_vel_x = 0;
 float g_req_linear_vel_y = 0;
@@ -103,7 +103,7 @@ void loop() {
         Transformation target_foot_positions[4];
         float target_joint_positions[12]; 
      
-        balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, 0.2);
+        balancer.setBodyPose(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);
         gait.generate(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(target_foot_positions, target_joint_positions);
         
@@ -122,8 +122,8 @@ void loop() {
         base.getFootPositions(current_foot_positions);
 
         publishPoints(current_foot_positions);
-        publishJointStates(current_joint_positions);
         publishVelocities(velocities);
+        publishJointStates(current_joint_positions);
     }
 
     if ((micros() - prev_imu_time) >= 50000)
