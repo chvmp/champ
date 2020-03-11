@@ -59,8 +59,8 @@ class TrajectoryPlanner
     }
 
     public:
-        TrajectoryPlanner(QuadrupedLeg *leg, float swing_height, float stance_depth):
-            leg_(leg),
+        TrajectoryPlanner(QuadrupedLeg &leg, float swing_height, float stance_depth):
+            leg_(&leg),
             swing_height_(swing_height),
             stance_depth_(stance_depth),
             total_control_points_(12),

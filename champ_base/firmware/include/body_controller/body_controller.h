@@ -1,18 +1,18 @@
-#ifndef QUADRUPED_BALANCER_H
-#define QUADRUPED_BALANCER_H
+#ifndef BODY_CONTROLLER_H
+#define BODY_CONTROLLER_H
 
 #include <geometry/geometry.h>
 #include <quadruped_base/quadruped_base.h>
 #include <body_controller/balancer_leg_instance.h>
 
-class QuadrupedBalancer
+class BodyController
 {
     QuadrupedBase *base_;
 
     BalancerLegInstance *legs_[4];
 
     public:
-        QuadrupedBalancer(QuadrupedBase &quadruped_base):
+        BodyController(QuadrupedBase &quadruped_base):
             base_(&quadruped_base),
             lf(base_->lf),
             rf(base_->rf),
@@ -27,12 +27,12 @@ class QuadrupedBalancer
             legs_[total_stances++] = &rh;
         }
 
-        void setBodyPose(Transformation (&foot_positions)[4], float target_roll, float target_pitch, 
+        void poseCommand(Transformation (&foot_positions)[4], float target_roll, float target_pitch, 
                                 float target_yaw, float target_z)
         {
             for(int i = 0; i < 4; i++)
             {
-                legs_[i]->setBodyPose(foot_positions[i], target_roll, target_pitch, target_yaw, target_z);
+                legs_[i]->poseCommand(foot_positions[i], target_roll, target_pitch, target_yaw, target_z);
             }
         }
         

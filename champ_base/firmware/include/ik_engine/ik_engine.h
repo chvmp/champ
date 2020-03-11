@@ -1,24 +1,24 @@
 
-#ifndef QUADRUPED_IK_H
-#define QUADRUPED_IK_H
+#ifndef IK_ENGINE_H
+#define IK_ENGINE_H
 
 #include <geometry/geometry.h>
 #include <quadruped_base/quadruped_base.h>
-#include <ik_engine/ik_leg_instance.h>
+#include <ik_engine/ik_leg_solver.h>
 
 class QuadrupedIK
 {
     QuadrupedBase *base;
 
-    IKLegInstance *ik_solvers_[4];
+    IKLegSolver *ik_solvers_[4];
 
     public:
         QuadrupedIK(QuadrupedBase &quadruped_base):
             base(&quadruped_base),
-            lf(base->lf),
-            rf(base->rf),
-            lh(base->lh),
-            rh(base->rh)
+            lf(*base->lf),
+            rf(*base->rf),
+            lh(*base->lh),
+            rh(*base->rh)
         {
             unsigned int total_legs = 0;
 
@@ -32,14 +32,14 @@ class QuadrupedIK
         {
             for(unsigned int i = 0; i < 4; i++)
             {
-                ik_solvers_[i]->solve(foot_positions[i], joint_positions[(i*3)], joint_positions[(i*3) + 1], joint_positions[(i*3) + 2]);
+                ik_solvers_[i]->solve(joint_positions[(i*3)], joint_positions[(i*3) + 1], joint_positions[(i*3) + 2], foot_positions[i]);
             }
         }
 
-        IKLegInstance lf;
-        IKLegInstance rf;
-        IKLegInstance lh;
-        IKLegInstance rh;
+        IKLegSolver lf;
+        IKLegSolver rf;
+        IKLegSolver lh;
+        IKLegSolver rh;
 };
 
 #endif

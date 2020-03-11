@@ -1,10 +1,10 @@
-#ifndef IK_LEG_INSTANCE_H
-#define IK_LEG_INSTANCE_H
+#ifndef IK_LEG_SOLVER_H
+#define IK_LEG_SOLVER_H
 
 #include <geometry/geometry.h>
 #include <quadruped_base/quadruped_leg.h>
 
-class IKLegInstance
+class IKLegSolver
 {
     QuadrupedLeg *leg_;
 
@@ -16,8 +16,8 @@ class IKLegInstance
     float ik_beta_h_;
 
     public:
-        IKLegInstance(QuadrupedLeg *leg):
-            leg_(leg),
+        IKLegSolver(QuadrupedLeg &leg):
+            leg_(&leg),
             ik_alpha_(0),
             ik_alpha_h_(0),
             ik_beta_(0),
@@ -34,8 +34,12 @@ class IKLegInstance
             ik_beta_h_ = -sqrtf(pow(lower_leg_to_foot_x, 2) + pow(lower_leg_to_foot_z, 2));
             ik_beta_ = acosf(lower_leg_to_foot_x / ik_beta_h_) - (M_PI/2); 
         }
+        void solve(float joints[3], Transformation &foot_position)
+        {
+            solve(joints[0], joints[1], joints[2], foot_position);
+        }
 
-        void solve(Transformation &foot_position, float &hip_joint, float &upper_leg_joint, float &lower_leg_joint)
+        void solve(float &hip_joint, float &upper_leg_joint, float &lower_leg_joint, Transformation &foot_position)
         {
             Transformation temp_foot_pos = foot_position;
 

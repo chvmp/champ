@@ -100,7 +100,7 @@ class BalancerLegInstance
             leg_->transformToHip(foot_position);
         }
 
-        void setBodyPose(Transformation &foot_position, float target_roll, float target_pitch, float target_yaw, float target_z)
+        void poseCommand(Transformation &foot_position, float target_roll, float target_pitch, float target_yaw, float target_z)
         {
             float delta_height = leg_->zero_stance().Z() + target_z;
 
