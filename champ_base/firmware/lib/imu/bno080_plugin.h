@@ -3,17 +3,17 @@
 
 #include <Wire.h>
 #include "SparkFun_BNO080_Arduino_Library.h"
-#include <imu_components.h>
+#include <quadruped_base/quadruped_components.h>
 
 namespace BNO0809DOF
 {   
     class Plugin
     {
         BNO080 imu_;
-        Orientation rotation_;
-        Gyroscope gyro_;
-        Accelerometer accel_;
-        Magnetometer mag_;
+        champ::Orientation rotation_;
+        champ::Gyroscope gyro_;
+        champ::Accelerometer accel_;
+        champ::Magnetometer mag_;
 
         public:
             Plugin()
@@ -35,7 +35,7 @@ namespace BNO0809DOF
                 imu_.enableMagnetometer(50);
             }
 
-            void readOrientation(Orientation &rotation)
+            void readchamp(champ::Orientation &rotation)
             {
                 if(imu_.dataAvailable())
                 {
@@ -52,7 +52,7 @@ namespace BNO0809DOF
                 }   
             }
 
-            void readGyroscope(Gyroscope &gyro)
+            void readGyroscope(champ::Gyroscope &gyro)
             {
                 if(imu_.dataAvailable())
                 {
@@ -62,7 +62,7 @@ namespace BNO0809DOF
                 } 
             }
 
-            void readAccelerometer(Accelerometer &accel)
+            void readAccelerometer(champ::Accelerometer &accel)
             {
                 if(imu_.dataAvailable())
                 {
@@ -72,7 +72,7 @@ namespace BNO0809DOF
                 }
             }
 
-            void readMagnetometer(Magnetometer &mag)
+            void readMagnetometer(champ::Magnetometer &mag)
             {
                 if(imu_.dataAvailable())
                 {
@@ -82,7 +82,7 @@ namespace BNO0809DOF
                 }
             }
 
-            void read(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
+            void read(champ::Orientation &rotation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
             {
                 rotation.w = rotation_.w;
                 rotation.x = rotation_.x;

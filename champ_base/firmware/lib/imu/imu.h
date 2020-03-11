@@ -15,27 +15,27 @@ class IMU
         {
         }
 
-        void readOrientation(Orientation &rotation)
+        void readOrientation(champ::Orientation &rotation)
         {
             imu_plugin_.readOrientation(rotation);
         }
 
-        void readGyroscope(Gyroscope &gyro)
+        void readGyroscope(champ::Gyroscope &gyro)
         {
             imu_plugin_.readGyroscope(gyro);
         }
 
-        void readAccelerometer(Accelerometer &accel)
+        void readAccelerometer(champ::Accelerometer &accel)
         {
             imu_plugin_.readAccelerometer(accel);
         }
 
-        void readMagnetometer(Magnetometer &mag)
+        void readMagnetometer(champ::Magnetometer &mag)
         {
             imu_plugin_.readMagnetometer(mag);
         }
         
-        void read(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
+        void read(champ::Orientation &rotation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
         {
             imu_plugin_.read(rotation, accel, gyro, mag);
         }
