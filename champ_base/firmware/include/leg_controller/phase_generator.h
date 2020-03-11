@@ -2,9 +2,7 @@
 #ifndef PHASE_GENERATOR_H
 #define PHASE_GENERATOR_H
 
-#include <Arduino.h>
-
-#define SECONDS_TO_MICROS 1000000
+#include <macros/macros.h>
 
 class PhaseGenerator
 {
@@ -18,7 +16,7 @@ class PhaseGenerator
 
     public:
         PhaseGenerator(float stance_duration):
-            last_touchdown_(micros()),
+            last_touchdown_(time_us()),
             leg_clocks_{0,0,0,0},
             has_swung_(false),
             stance_duration_(stance_duration),
@@ -53,18 +51,18 @@ class PhaseGenerator
             if(!has_started)
             {
                 has_started = true;
-                last_touchdown_ = micros();
+                last_touchdown_ = time_us();
             }
 
-            if((micros() - last_touchdown_) >= stride_period)
+            if((time_us() - last_touchdown_) >= stride_period)
             {
-                last_touchdown_ = micros();
+                last_touchdown_ = time_us();
             }
 
             if(elapsed_time_ref >= stride_period)
                 elapsed_time_ref = stride_period;
             else
-                elapsed_time_ref = micros() - last_touchdown_;
+                elapsed_time_ref = time_us() - last_touchdown_;
 
             leg_clocks[0] = elapsed_time_ref - (0 * stride_period);
             leg_clocks[1] = elapsed_time_ref - (0.5 * stride_period);

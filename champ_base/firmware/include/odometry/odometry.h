@@ -1,7 +1,6 @@
 #ifndef ODOMETRY_H
 #define ODOMETRY_H
 
-#include <Arduino.h>
 #include <quadruped_base/quadruped_base.h>
 #include <geometry/geometry.h>
 
@@ -68,7 +67,7 @@ class Odometry
                 theta_sum /= total_contact;
             }
 
-            unsigned long int now = micros();
+            unsigned long int now = time_us();
             double dt = (now - prev_time_) / 1000000.0;
             
             vel.linear_velocity_x = x_sum / dt;

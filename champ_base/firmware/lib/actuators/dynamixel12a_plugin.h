@@ -1,7 +1,9 @@
 #ifndef DYNAMIXEL12A_PLUGIN_H
 #define DYNAMIXEL12A_PLUGIN_H
 
+#include <Arduino.h>
 #include <DynamixelAX12.h>
+#include <macros/macros.h>
 
 namespace DynamixelAX12A
 {
@@ -75,10 +77,10 @@ namespace DynamixelAX12A
                 float actuator_angle = 0;
 
                 if(angle > 0)
-                    actuator_angle = mapFloat(angle, 0, PI, 180, 360);
+                    actuator_angle = map(angle, 0, PI, 180, 360);
 
                 else if(angle < 0)
-                    actuator_angle = mapFloat(angle, -PI, 0, 0, 180);
+                    actuator_angle = map(angle, -PI, 0, 0, 180);
 
                 else  
                     actuator_angle = 180;
@@ -91,20 +93,15 @@ namespace DynamixelAX12A
                 float actuator_angle = 0;
 
                 if(angle > 0)
-                    actuator_angle = mapFloat(angle, 180, 360, 0, PI);
+                    actuator_angle = map(angle, 180, 360, 0, PI);
 
                 else if(angle < 0)
-                    actuator_angle = mapFloat(angle, 0, 180, -PI, 0);
+                    actuator_angle = map(angle, 0, 180, -PI, 0);
 
                 else  
                     actuator_angle = 180;
                 
                 return actuator_angle;
-            }
-
-            float mapFloat(float x, float in_min, float in_max, float out_min, float out_max)
-            {
-                return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
             }
     };
 }

@@ -40,11 +40,6 @@ class QuadrupedGait
             step_length = sqrtf(pow(delta_x, 2) + pow(delta_y, 2)) * 2;
             rotation = atan2f(delta_y, delta_x);
         }
-
-        float mapFloat(float x, float in_min, float in_max, float out_min, float out_max)
-        {
-            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-        }        
         
         float raibertsHeuristic(float stance_duration, float target_velocity)
         {

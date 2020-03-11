@@ -1,7 +1,9 @@
 #ifndef PWM_SERVO_PLUGIN_H
 #define PWM_SERVO_PLUGIN_H
 
+#include <Arduino.h>
 #include <Servo.h>
+#include <macros/macros.h>
 
 namespace DigitalServo
 {
@@ -53,11 +55,11 @@ namespace DigitalServo
 
                 if(max_angle_ == 0)
                 {   
-                    actuator_angle =  mapFloat(angle, min_angle_, max_angle_, 180, 0);
+                    actuator_angle =  map(angle, min_angle_, max_angle_, 180, 0);
                 }
                 else
                 {
-                    actuator_angle =  mapFloat(angle, min_angle_, max_angle_, 0, 180);
+                    actuator_angle =  map(angle, min_angle_, max_angle_, 0, 180);
                 }
 
                 int offset = 0;
@@ -68,17 +70,12 @@ namespace DigitalServo
                 }
                 else
                 {
-                    offset = mapFloat(actuator_angle, 0, 180, min_actuator_offset_, max_actuator_offset_);
+                    offset = map(actuator_angle, 0, 180, min_actuator_offset_, max_actuator_offset_);
                 }
 
                 actuator_angle =  round(actuator_angle) + offset;
 
                 return actuator_angle;
-            }
-
-            float mapFloat(float x, float in_min, float in_max, float out_min, float out_max)
-            {
-                return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
             }
     };
 }
