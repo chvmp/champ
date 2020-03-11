@@ -83,12 +83,12 @@ class TrajectoryPlanner
             float x = 0.0;
             float y = 0.0;
 
-            if(stance_phase_signal > swing_phase_signal && step_length > 0)
+            if(stance_phase_signal > swing_phase_signal)
             {
                 x = (step_length / 2) * (1 - (2 * stance_phase_signal));
-                y = -stance_depth_ * cosf((3.1416 * x) / step_length);
+                y = -stance_depth_ * cosf((M_PI * x) / step_length);
             }
-            else if(stance_phase_signal < swing_phase_signal && step_length > 0)
+            else if(stance_phase_signal < swing_phase_signal)
             {
                 leg_->gait_phase(0);
 
@@ -100,17 +100,12 @@ class TrajectoryPlanner
                     y -= coeff * pow(swing_phase_signal, i) * pow((1 - swing_phase_signal), (n - i)) * control_points_y_[i];
                 }
             }
-            else
-            {
-                x = 0;
-                y = 0;
-            }
+ 
+            foot_position.X() += x * cosf(rotation);
+            foot_position.Y() += x * sinf(rotation);
+            foot_position.Z() += y;
 
-            foot_position.X() = foot_position.X() + (x * cosf(rotation));
-            foot_position.Y() = foot_position.Y() + (x * sinf(rotation));
-            foot_position.Z() = foot_position.Z() + y;
-
-            if((!swing_phase_signal && !stance_phase_signal) && step_length > 0)
+            if((swing_phase_signal > 0.0 && stance_phase_signal > 0.0) && step_length > 0.0)
             {
                 foot_position = prev_foot_position_;
             }
