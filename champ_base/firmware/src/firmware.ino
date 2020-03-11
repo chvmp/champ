@@ -32,6 +32,11 @@ void velocityCommandCallback(const geometry_msgs::Twist& vel_cmd_msg);
 void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg);
 void jointStatesCalibrateCallback(const champ_msgs::Joints& joint_states_msg);
 
+void publishVelocities(champ::Velocities vel);
+void publishPoints(Transformation foot_positions[4]);
+void publishJointStates(float joint_positions[12]);
+void publishIMU(champ::Orientation &rotation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag);
+
 ros::NodeHandle nh;
 champ_msgs::PointArray point_msg;
 ros::Publisher point_pub("/champ/foot/raw", &point_msg);
@@ -49,12 +54,12 @@ ros::Subscriber<geometry_msgs::Twist> vel_cmd_sub("champ/cmd_vel", velocityComma
 ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCallback);
 ros::Subscriber<champ_msgs::Joints> joints_calibrate_sub("champ/joint_states/calibrate", jointStatesCalibrateCallback);
 
-QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg, KNEE_ORIENTATION, PANTOGRAPH_LEG);
-BodyController body_controller(base);
-LegController leg_controller(base, MAX_LINEAR_VELOCITY_X, MAX_LINEAR_VELOCITY_Y, MAX_ANGULAR_VELOCITY_Z, 
+champ::QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg, KNEE_ORIENTATION, PANTOGRAPH_LEG);
+champ::BodyController body_controller(base);
+champ::LegController leg_controller(base, MAX_LINEAR_VELOCITY_X, MAX_LINEAR_VELOCITY_Y, MAX_ANGULAR_VELOCITY_Z, 
                          STANCE_DURATION, SWING_HEIGHT, STANCE_DEPTH);
-QuadrupedIK ik(base);
-Odometry odometry(base);
+champ::IKEngine ik(base);
+champ::Odometry odometry(base);
 
 void setup()
 {
@@ -88,13 +93,15 @@ void loop() {
     static unsigned long prev_imu_time = 0;
     static unsigned long prev_publish_time = 0;
 
-    static Accelerometer accel;
-    static Gyroscope gyro;
-    static Magnetometer mag;
-    static Orientation rotation;
     static Transformation current_foot_positions[4];
     static float current_joint_positions[12];
-    static Velocities velocities;
+    
+    static champ::Accelerometer accel;
+    static champ::Gyroscope gyro;
+    static champ::Magnetometer mag;
+    static champ::Orientation rotation;
+  
+    static champ::Velocities velocities;
 
     if ((micros() - prev_control_time) >= 2000)
     {
@@ -103,7 +110,7 @@ void loop() {
         Transformation target_foot_positions[4];
         float target_joint_positions[12]; 
      
-        body_controller.poseCommand(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, NOMINAL_HEIGHT);
+        body_controller.poseCommand(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, g_req_height);
         leg_controller.velocityCommand(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
         ik.solve(target_foot_positions, target_joint_positions);
         
@@ -172,12 +179,6 @@ void jointStatesCalibrateCallback(const champ_msgs::Joints& joint_states_msg)
     actuators.moveJoints(joint_states_msg.position);
 }
 
-void publishJointStates(float joint_positions[12])
-{
-    joints_msg.position = joint_positions;
-    jointstates_pub.publish(&joints_msg);  
-}
-
 void publishPoints(Transformation foot_positions[4])
 {
     point_msg.lf.x = foot_positions[0].X();
@@ -199,7 +200,23 @@ void publishPoints(Transformation foot_positions[4])
     point_pub.publish(&point_msg);
 }
 
-void publishIMU(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Magnetometer &mag)
+void publishVelocities(champ::Velocities vel)
+{
+    vel_msg.linear_x = vel.linear_velocity_x;
+    vel_msg.linear_y = vel.linear_velocity_y;
+    vel_msg.angular_z = vel.angular_velocity_z;
+
+    //publish raw_vel_msg
+    vel_pub.publish(&vel_msg);
+}
+
+void publishJointStates(float joint_positions[12])
+{
+    joints_msg.position = joint_positions;
+    jointstates_pub.publish(&joints_msg);  
+}
+
+void publishIMU(champ::Orientation &rotation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
 {
     imu_msg.orientation.w = rotation.w;
     imu_msg.orientation.x = rotation.x;
@@ -219,16 +236,6 @@ void publishIMU(Orientation &rotation, Accelerometer &accel, Gyroscope &gyro, Ma
     imu_msg.magnetic_field.z = mag.z;
 
     imu_pub.publish(&imu_msg);
-}
-
-void publishVelocities(Velocities vel)
-{
-    vel_msg.linear_x = vel.linear_velocity_x;
-    vel_msg.linear_y = vel.linear_velocity_y;
-    vel_msg.angular_z = vel.angular_velocity_z;
-
-    //publish raw_vel_msg
-    vel_pub.publish(&vel_msg);
 }
 
 void standUp()
