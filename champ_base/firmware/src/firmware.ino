@@ -30,7 +30,7 @@ unsigned long g_prev_command_time = 0;
 
 void velocityCommandCallback(const geometry_msgs::Twist& vel_cmd_msg);
 void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg);
-void jointStatesCalibrateCallback(const champ_msgs::Joints& joint_states_msg);
+void jointsCommanCallback(const champ_msgs::Joints& joint_states_msg);
 
 void publishVelocities(champ::Velocities vel);
 void publishPoints(Transformation foot_positions[4]);
@@ -52,7 +52,7 @@ ros::Publisher vel_pub("/champ/velocities/raw", &vel_msg);
 
 ros::Subscriber<geometry_msgs::Twist> vel_cmd_sub("champ/cmd_vel", velocityCommandCallback);
 ros::Subscriber<champ_msgs::Pose> pose_cmd_sub("champ/cmd_pose", poseCommandCallback);
-ros::Subscriber<champ_msgs::Joints> joints_calibrate_sub("champ/joint_states/calibrate", jointStatesCalibrateCallback);
+ros::Subscriber<champ_msgs::Joints> joints_calibrate_sub("champ/cmd_joints", jointsCommanCallback);
 
 champ::QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg, KNEE_ORIENTATION, PANTOGRAPH_LEG);
 champ::BodyController body_controller(base);
@@ -112,7 +112,7 @@ void loop() {
      
         body_controller.poseCommand(target_foot_positions, g_req_roll, g_req_pitch, g_req_yaw, g_req_height);
         leg_controller.velocityCommand(target_foot_positions, g_req_linear_vel_x,  g_req_linear_vel_y, g_req_angular_vel_z);
-        ik.solve(target_foot_positions, target_joint_positions);
+        ik.solve(target_joint_positions, target_foot_positions);
         
         actuators.moveJoints(target_joint_positions);
     }
@@ -174,7 +174,7 @@ void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg)
     g_req_height = pose_cmd_msg.z;
 }
 
-void jointStatesCalibrateCallback(const champ_msgs::Joints& joint_states_msg)
+void jointsCommanCallback(const champ_msgs::Joints& joint_states_msg)
 {
     actuators.moveJoints(joint_states_msg.position);
 }
@@ -256,7 +256,7 @@ void standUp()
     if(abs(sum_of_hip_angles) > 0.349066)
     {
         body_controller.poseCommand(target_foot_positions, 0, 0, 0, initial_height);
-        ik.solve(target_foot_positions, target_joint_positions);
+        ik.solve(target_joint_positions, target_foot_positions);
         target_joint_positions[0] = hip_angle;
         target_joint_positions[3] = -hip_angle;
         target_joint_positions[6] = hip_angle;
@@ -287,7 +287,7 @@ void standUp()
         {
             current_height += (NOMINAL_HEIGHT - initial_height) / 100.0;
             body_controller.poseCommand(target_foot_positions, 0, 0, 0, current_height);
-            ik.solve(target_foot_positions, target_joint_positions);
+            ik.solve(target_joint_positions, target_foot_positions);
             actuators.moveJoints(target_joint_positions);
             delay(2);
         }

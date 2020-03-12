@@ -8,10 +8,10 @@ import os, sys
 class JointsRelay:
     def __init__(self):
         rospy.Subscriber("/champ/joint_states/raw", Joints, self.joint_states_callback)
-        rospy.Subscriber("/champ/joint_states/gui", JointState, self.joint_states_gui_callback)
+        rospy.Subscriber("/champ/cmd_joints/relay", JointState, self.joints_cmd_callback)
 
         self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 100)
-        self.joint_states_calibrate_pub = rospy.Publisher('/champ/joint_states/calibrate', Joints, queue_size = 100)
+        self.joint_cmd_pub = rospy.Publisher('/champ/cmd_joints', Joints, queue_size = 100)
 
         self.joint_names = []
         
@@ -33,13 +33,13 @@ class JointsRelay:
         joint_states.position = joints.position
         self.joint_states_pub.publish(joint_states)
 
-    def joint_states_gui_callback(self, joints):
+    def joints_cmd_callback(self, joints):
         joint_states_calibrate = Joints()
         
         for i in range(12):
             joint_states_calibrate.position.append(joints.position[i])
 
-        self.joint_states_calibrate_pub.publish(joint_states_calibrate)
+        self.joint_cmd_pub.publish(joint_states_calibrate)
 
 if __name__ == "__main__":
     rospy.init_node('champ_joints_relay', anonymous=True)
