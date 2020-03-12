@@ -4,7 +4,7 @@
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
     <arg name="base_frame"       default="base_link"/>
     <arg name="rviz"             default="false"/>
-    <arg name="laser"            default="d435"/>
+    <arg name="laser"            default="sim"/>
     <arg name="has_odom"         default="false" />
     <arg name="gazebo"           default="false" />
 
