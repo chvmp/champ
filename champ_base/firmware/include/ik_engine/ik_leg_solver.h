@@ -36,6 +36,7 @@ namespace champ
                 ik_beta_h_ = -sqrtf(pow(lower_leg_to_foot_x, 2) + pow(lower_leg_to_foot_z, 2));
                 ik_beta_ = acosf(lower_leg_to_foot_x / ik_beta_h_) - (M_PI/2); 
             }
+            
             void solve(float joints[3], Transformation &foot_position)
             {
                 solve(joints[0], joints[1], joints[2], foot_position);
