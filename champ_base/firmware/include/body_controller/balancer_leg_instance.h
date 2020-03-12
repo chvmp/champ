@@ -11,8 +11,8 @@ namespace champ
         QuadrupedLeg *leg_;
         
         public:
-            BalancerLegInstance(QuadrupedLeg *leg):
-                leg_(leg)
+            BalancerLegInstance(QuadrupedLeg &leg):
+                leg_(&leg)
             {
             }
 

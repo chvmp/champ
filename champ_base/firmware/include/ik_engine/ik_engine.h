@@ -30,7 +30,7 @@ namespace champ
                 ik_solvers_[total_legs++] = &rh;
             }
 
-            void solve(Transformation (&foot_positions)[4], float (&joint_positions)[12])
+            void solve(float (&joint_positions)[12], Transformation (&foot_positions)[4])
             {
                 for(unsigned int i = 0; i < 4; i++)
                 {

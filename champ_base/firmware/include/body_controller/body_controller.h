@@ -16,10 +16,10 @@ namespace champ
         public:
             BodyController(QuadrupedBase &quadruped_base):
                 base_(&quadruped_base),
-                lf(base_->lf),
-                rf(base_->rf),
-                lh(base_->lh),
-                rh(base_->rh)
+                lf(*base_->lf),
+                rf(*base_->rf),
+                lh(*base_->lh),
+                rh(*base_->rh)
             {
                 unsigned int total_stances = 0;
 
