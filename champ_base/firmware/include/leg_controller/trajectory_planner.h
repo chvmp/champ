@@ -78,6 +78,12 @@ namespace champ
 
             void generate(Transformation &foot_position, float step_length, float rotation, float swing_phase_signal, float stance_phase_signal)
             {    
+                //check if there's a need to hop otherwise nothing to do here
+                if(step_length == 0)
+                {
+                    return;
+                }
+                
                 updateControlPointsLength(step_length);
                 leg_->gait_phase(1);
 
