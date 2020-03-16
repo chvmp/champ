@@ -70,22 +70,21 @@ void loop() {
 
         command_interface.jointsInput(target_joint_positions);
         actuators.moveJoints(target_joint_positions);
-        status_interface.publishJointStates(current_joint_positions);
     }
 
     if ((micros() - prev_publish_time) >= 20000)
     {
         prev_publish_time = micros();
 
-        actuators.getJointPositions(current_joint_positions);
         odometry.getVelocities(velocities);
+        status_interface.publishVelocities(velocities);
 
+        actuators.getJointPositions(current_joint_positions);
         base.updateJointPositions(current_joint_positions);
-        base.updateSpeed(velocities);
         base.getFootPositions(current_foot_positions);
 
         status_interface.publishPoints(current_foot_positions);
-        status_interface.publishVelocities(velocities);
+        status_interface.publishJointStates(current_joint_positions);
     }
 
     if ((micros() - prev_imu_time) >= 50000)
