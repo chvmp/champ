@@ -53,9 +53,9 @@ namespace champ
                         //make sure no other control input is active before joints control 
                         //is activated
                         if(hardware_interface_->velInputIsActive()   ||
-                        software_interface_->velInputIsActive()   || 
-                        hardware_interface_->poseInputIsActive()  ||
-                        software_interface_->poseInputIsActive())
+                           software_interface_->velInputIsActive()   || 
+                           hardware_interface_->poseInputIsActive()  ||
+                           software_interface_->poseInputIsActive())
                         {
                             return;
                         }
