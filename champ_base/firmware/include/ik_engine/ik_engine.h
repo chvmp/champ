@@ -32,9 +32,22 @@ namespace champ
 
             void solve(float (&joint_positions)[12], Transformation (&foot_positions)[4])
             {
+                float calculated_joints[12];
+
                 for(unsigned int i = 0; i < 4; i++)
                 {
-                    ik_solvers_[i]->solve(joint_positions[(i*3)], joint_positions[(i*3) + 1], joint_positions[(i*3) + 2], foot_positions[i]);
+                    ik_solvers_[i]->solve(calculated_joints[(i*3)], calculated_joints[(i*3) + 1], calculated_joints[(i*3) + 2], foot_positions[i]);
+                    
+                    //check if any leg has invalid calculation, if so disregard the whole plan
+                    if(isnan(calculated_joints[(i*3)]) || isnan(calculated_joints[(i*3) + 1]) || isnan(calculated_joints[(i*3) + 2]))
+                    {
+                        return;
+                    }
+                }
+                
+                for(unsigned int i = 0; i < 12; i++)
+                {
+                    joint_positions[i] = calculated_joints[i];
                 }
             }
 
