@@ -106,14 +106,17 @@ namespace champ
             {
                 float delta_height = leg_->zero_stance().Z() + target_z;
 
+                //create a new foot position from position of legs when stretched out
                 foot_position = leg_->zero_stance();
 
+                //move the foot position to desired height of the robot
                 foot_position.Translate(0, 0, -delta_height);
 
+                //rotate the leg opposite the required orientation of the body
                 foot_position.RotateX(-target_roll);
                 foot_position.RotateY(-target_pitch);
                 foot_position.RotateZ(-target_yaw);
-
+    
                 leg_->transformToHip(foot_position);
             }
     };
