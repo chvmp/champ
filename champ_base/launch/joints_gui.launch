@@ -1,0 +1,7 @@
+<launch>
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <remap from="joint_states" to="champ/cmd_joints/relay" />
+        <param name="/use_gui" value="true"/>
+        <rosparam param="/source_list">[champ/joint_states]</rosparam>
+    </node>
+</launch>
