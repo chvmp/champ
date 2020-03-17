@@ -1,27 +1,17 @@
-#include <ros.h>
-#include <ros/time.h>
 
 #include <quadruped_description.h>
 #include <gait_config.h>
+#include <hardware_config.h>
+#include <constructors/constructors.h>
+
 #include <body_controller/body_controller.h>
 #include <leg_controller/leg_controller.h>
 #include <ik_engine/ik_engine.h>
-#include <actuator_plugins.h>
-#include <imu_plugins.h>
-#include <hardware_config.h>
 #include <odometry/odometry.h>
-#include <comms/input_interfaces/input_interface.h>
-#include <comms/status_interfaces/status_interface.h>
 
-champ::Interfaces::ROSSerial ros_interface;
-champ::Interfaces::RF rf_interface(16, 21,17,20,22,23);
-champ::Interfaces::Input<champ::Interfaces::ROSSerial, champ::Interfaces::RF> command_interface(ros_interface, rf_interface);
-champ::Interfaces::Status<champ::Interfaces::ROSSerial> status_interface(ros_interface);
-
-champ::QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg, KNEE_ORIENTATION, PANTOGRAPH_LEG);
+champ::QuadrupedBase base(lf_leg, rf_leg, lh_leg, rh_leg, gait_config);
 champ::BodyController body_controller(base);
-champ::LegController leg_controller(base, MAX_LINEAR_VELOCITY_X, MAX_LINEAR_VELOCITY_Y, MAX_ANGULAR_VELOCITY_Z, 
-                         STANCE_DURATION, SWING_HEIGHT, STANCE_DEPTH);
+champ::LegController leg_controller(base);
 champ::IKEngine ik(base);
 champ::Odometry odometry(base);
 
@@ -34,22 +24,12 @@ void loop() {
     static unsigned long prev_imu_time = 0;
     static unsigned long prev_publish_time = 0;
 
-    static Transformation current_foot_positions[4];
-    static float current_joint_positions[12];
+    Transformation target_foot_positions[4];
+    float target_joint_positions[12]; 
     
-    static champ::Accelerometer accel;
-    static champ::Gyroscope gyro;
-    static champ::Magnetometer mag;
-    static champ::Orientation rotation;
-  
-    static champ::Velocities velocities;
-
     if ((micros() - prev_control_time) >= 2000)
     {
         prev_control_time = micros();
-
-        Transformation target_foot_positions[4];
-        float target_joint_positions[12]; 
 
         champ::Pose req_pose;
         command_interface.poseInput(req_pose);
@@ -76,20 +56,28 @@ void loop() {
     {
         prev_publish_time = micros();
 
-        odometry.getVelocities(velocities);
-        status_interface.publishVelocities(velocities);
+        Transformation current_foot_positions[4];
+        float current_joint_positions[12];
+        champ::Velocities current_speed;
 
         actuators.getJointPositions(current_joint_positions);
         base.updateJointPositions(current_joint_positions);
         base.getFootPositions(current_foot_positions);
 
-        status_interface.publishPoints(current_foot_positions);
+        odometry.getVelocities(current_speed);
+        status_interface.publishVelocities(current_speed);
+        status_interface.publishPoints(target_foot_positions);
         status_interface.publishJointStates(current_joint_positions);
     }
 
     if ((micros() - prev_imu_time) >= 50000)
     {
         prev_imu_time = micros();
+
+        champ::Accelerometer accel;
+        champ::Gyroscope gyro;
+        champ::Magnetometer mag;
+        champ::Orientation rotation;
 
         imu.read(rotation, accel, gyro, mag);
         status_interface.publishIMU(rotation, accel, gyro, mag);
