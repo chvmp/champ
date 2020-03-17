@@ -28,11 +28,12 @@ namespace champ
         }    
 
         public:
-            QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, const char *knee_orientation, bool pantograph_leg):        
+            QuadrupedBase(QuadrupedLeg &lf_leg, QuadrupedLeg &rf_leg, QuadrupedLeg &lh_leg, QuadrupedLeg &rh_leg, GaitConfig &gait_conf):        
                 lf(&lf_leg),
                 rf(&rf_leg),
                 lh(&lh_leg),
-                rh(&rh_leg)
+                rh(&rh_leg),
+                gait_config(&gait_conf)
             {
                 unsigned int total_legs = 0;
 
@@ -47,13 +48,13 @@ namespace champ
                     legs[i]->leg_id(i);
                     if(i < 2)
                     {
-                        dir = getKneeDirection(knee_orientation[0]);
+                        dir = getKneeDirection(gait_config->knee_orientation[0]);
                     }
                     else
                     {
-                        dir = getKneeDirection(knee_orientation[1]);
+                        dir = getKneeDirection(gait_config->knee_orientation[1]);
                     }
-                    legs[i]->is_pantograph(pantograph_leg);
+                    legs[i]->is_pantograph(gait_config->pantograph_leg);
                     legs[i]->knee_direction(dir);
                 }
             }        
@@ -193,6 +194,8 @@ namespace champ
             QuadrupedLeg *rf;
             QuadrupedLeg *lh;
             QuadrupedLeg *rh;
+
+            GaitConfig *gait_config;
     };
 }
 

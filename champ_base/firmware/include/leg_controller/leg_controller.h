@@ -3,6 +3,7 @@
 
 #include <geometry/geometry.h>
 #include <quadruped_base/quadruped_base.h>
+#include <quadruped_base/quadruped_components.h>
 #include <leg_controller/trajectory_planner.h>
 #include <leg_controller/phase_generator.h>
 
@@ -14,30 +15,21 @@ namespace champ
 
             champ::TrajectoryPlanner *trajectory_planners_[4];
 
-            float max_linear_velocity_x_;
-            float max_linear_velocity_y_;
-            float max_angular_velocity_;
-            float stance_duration_;
-            float max_theta_;
-
             float capVelocities(float velocity, float min_velocity, float max_velocity)
             {
                 return ((velocity)<(min_velocity)?(min_velocity):((velocity)>(max_velocity)?(max_velocity):(velocity)));
             }
 
         public:
-            LegController(QuadrupedBase &quadruped_base, float max_linear_velocity_x, float max_linear_velocity_y, float max_angular_velocity, float stance_duration, float swing_height, float stance_depth):
+            LegController(QuadrupedBase &quadruped_base):
                 base_(&quadruped_base),
                 trajectory_planners_{0,0,0,0},
-                max_linear_velocity_x_(max_linear_velocity_x),
-                max_linear_velocity_y_(max_linear_velocity_y),
-                max_angular_velocity_(max_angular_velocity),
-                stance_duration_(stance_duration),
-                phase_generator(stance_duration),
-                lf(*base_->lf, swing_height, stance_depth),
-                rf(*base_->rf, swing_height, stance_depth),
-                lh(*base_->lh, swing_height, stance_depth),
-                rh(*base_->rh, swing_height, stance_depth)
+     
+                phase_generator(gait_config.stance_duration),
+                lf(*base_->lf, base_->gait_config->swing_height, base_->gait_config->stance_depth),
+                rf(*base_->rf, base_->gait_config->swing_height, base_->gait_config->stance_depth),
+                lh(*base_->lh, base_->gait_config->swing_height, base_->gait_config->stance_depth),
+                rh(*base_->rh, base_->gait_config->swing_height, base_->gait_config->stance_depth)
             {
                 unsigned int total_legs = 0;
                 
@@ -76,17 +68,17 @@ namespace champ
             void velocityCommand(Transformation (&foot_positions)[4], float linear_velocity_x, float linear_velocity_y, float angular_velocity_z)
             {
                 //limit all velocities to user input
-                linear_velocity_x = capVelocities(linear_velocity_x, -max_linear_velocity_x_, max_linear_velocity_x_);
-                linear_velocity_y = capVelocities(linear_velocity_y, -max_linear_velocity_y_, max_linear_velocity_y_);
-                angular_velocity_z = capVelocities(angular_velocity_z, -max_angular_velocity_, max_angular_velocity_);
+                linear_velocity_x = capVelocities(linear_velocity_x, -base_->gait_config->max_linear_velocity_x, base_->gait_config->max_linear_velocity_x);
+                linear_velocity_y = capVelocities(linear_velocity_y, -base_->gait_config->max_linear_velocity_y, base_->gait_config->max_linear_velocity_y);
+                angular_velocity_z = capVelocities(angular_velocity_z, -base_->gait_config->max_angular_velocity_z, base_->gait_config->max_angular_velocity_z);
                 
                 float tangential_velocity = angular_velocity_z * base_->lf->center_to_nominal();
                 float velocity =  sqrtf(pow(linear_velocity_x, 2) + pow(linear_velocity_y + abs(tangential_velocity), 2));
                 
                 //calculate optimal distance to hop based
-                float step_x = raibertHeuristic(stance_duration_, linear_velocity_x);
-                float step_y = raibertHeuristic(stance_duration_, linear_velocity_y);
-                float step_theta = raibertHeuristic(stance_duration_, tangential_velocity);
+                float step_x = raibertHeuristic(base_->gait_config->stance_duration, linear_velocity_x);
+                float step_y = raibertHeuristic(base_->gait_config->stance_duration, linear_velocity_y);
+                float step_theta = raibertHeuristic(base_->gait_config->stance_duration, tangential_velocity);
                 
                 //calculate the angle from leg when zero to optimal distance to hop
                 float theta = sinf(step_theta / base_->lf->center_to_nominal());
