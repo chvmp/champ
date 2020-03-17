@@ -4,6 +4,7 @@
 #include <ros.h>
 #include <ros/time.h>
 #include <Arduino.h>
+#include <geometry/geometry.h>
 #include <quadruped_base/quadruped_components.h>
 #include <geometry_msgs/Twist.h>
 #include <champ_msgs/Point.h>
