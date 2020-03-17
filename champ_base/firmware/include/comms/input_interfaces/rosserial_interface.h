@@ -168,6 +168,10 @@ namespace champ
                         else
                         {
                             vel_cmd_active_ = false;
+
+                            velocities_commands_->linear_velocity_x = 0.0;
+                            velocities_commands_->linear_velocity_y = 0.0;
+                            velocities_commands_->angular_velocity_z = 0.0;
                         }
 
                         if((now - *prev_pose_time_) < 500000)
@@ -177,6 +181,10 @@ namespace champ
                         else
                         {   
                             pose_cmd_active_ = false;
+
+                            pose_commands_->roll = 0.0;
+                            pose_commands_->pitch = 0.0;
+                            pose_commands_->yaw = 0.0;
                         }
 
                         if((now - *prev_joints_time_) < 500000)
