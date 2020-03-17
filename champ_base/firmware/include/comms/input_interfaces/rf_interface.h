@@ -11,7 +11,7 @@ namespace champ
         class RF
         {
             int ele_, rud_, ail_, thr_, aux1_, aux2_;
-            int ele_inv_, rud_inv_, ail_inv_, thr_inv_, aux1_inv_, aux2_inv_;
+            int lin_x_inv_, lin_y_inv_, ang_z_inv_, roll_inv_, pitch_inv_, yaw_inv_;
             int inverters_[6];
 
             champ::Velocities velocities_commands_;
@@ -36,8 +36,14 @@ namespace champ
                 {
                 }
 
-                void setInverters(bool ele, bool rud, bool ail, bool thr, bool aux1, bool aux2)
+                void invertAxes(bool linear_x, bool linear_y, bool angular_z, bool roll, bool pitch, bool yaw)
                 {
+                    lin_x_inv_ = (linear_x) ? -1 : 1;
+                    lin_y_inv_ = (linear_y) ? -1 : 1;
+                    ang_z_inv_ = (angular_z) ? -1 : 1;
+                    roll_inv_ = (roll) ? -1 : 1;
+                    pitch_inv_ = (pitch) ? -1 : 1;
+                    yaw_inv_ = (yaw) ? -1 : 1;
                 }
 
                 void velocityInput(champ::Velocities &velocities)
@@ -75,7 +81,7 @@ namespace champ
                 void run()
                 {
                     unsigned long now = micros();
-                    if((now - prev_poll_time_) > 200000)
+                    if((now - prev_poll_time_) > 500000)
                     {
                         prev_poll_time_ = now;
 
@@ -88,47 +94,24 @@ namespace champ
                         int rec_ail = pulseIn(ail_, HIGH, 20000);
                         // float rec_thr = pulseIn(thr_, HIGH, 20000);
                         // float rec_aux2 = pulseIn(aux2_, HIGH, 20000);
-                        
-                        if(rec_aux < 1500)
+
+                        if((rec_ele > 1350 && rec_ele < 1650) &&
+                            (rec_rud > 1350 && rec_rud < 1650) && 
+                            (rec_ail > 1350 && rec_ail < 1650))
                         {
-                            velocities_commands_.linear_velocity_x = mapFloat(rec_ele, 1100, 1900, -0.5, 0.5);
-                            velocities_commands_.linear_velocity_y = mapFloat(rec_rud, 1100, 1900, -0.5, 0.5);
-                            velocities_commands_.angular_velocity_z = mapFloat(rec_ail, 1100, 1900, -1.0, 1.0);
-                            vel_cmd_active_ = true;
+                            velocities_commands_.linear_velocity_x = 0.0;
+                            velocities_commands_.linear_velocity_y = 0.0;
+                            velocities_commands_.angular_velocity_z = 0.0;
+                          
+                            pose_commands_.roll = 0.0;
+                            pose_commands_.pitch = 0.0;
+                            pose_commands_.yaw = 0.0;
 
-                            if((rec_ele > 1400 && rec_ele < 1600) &&
-                               (rec_rud > 1400 && rec_rud < 1600) && 
-                               (rec_ail > 1400 && rec_ail < 1600))
-                            {
-                                vel_cmd_active_ = false;
-                                velocities_commands_.linear_velocity_x = 0.0;
-                                velocities_commands_.linear_velocity_y = 0.0;
-                                velocities_commands_.angular_velocity_z = 0.0;
-                            }
-
-                        }
-                        else if(rec_aux > 1500)
-                        {
-                            pose_commands_.roll = mapFloat(rec_ail, 1100, 1900, -0.523599, 0.523599);
-                            pose_commands_.pitch = mapFloat(rec_ele, 1100, 1900, -0.349066, 0.349066);
-                            pose_commands_.yaw = mapFloat(rec_rud, 1100, 1900, -0.436332, 0.436332);
-                            pose_cmd_active_ = true;
-
-                            if((rec_ele > 1400 && rec_ele < 1600) &&
-                               (rec_rud > 1400 && rec_rud < 1600) && 
-                               (rec_ail > 1400 && rec_ail < 1600))
-                            {
-                                pose_cmd_active_ = false;
-                                pose_commands_.roll = 0.0;
-                                pose_commands_.pitch = 0.0;
-                                pose_commands_.yaw = 0.0;
-                            }
+                            vel_cmd_active_ = false;
+                            pose_cmd_active_ = false;
                         }
                         else if(rec_aux == 0)
                         {
-                            vel_cmd_active_ = false;
-                            pose_cmd_active_ = false;
-
                             velocities_commands_.linear_velocity_x = 0.0;
                             velocities_commands_.linear_velocity_y = 0.0;
                             velocities_commands_.angular_velocity_z = 0.0;
@@ -136,6 +119,27 @@ namespace champ
                             pose_commands_.roll = 0.0;
                             pose_commands_.pitch = 0.0;
                             pose_commands_.yaw = 0.0;
+
+                            vel_cmd_active_ = false;
+                            pose_cmd_active_ = false;
+                        }
+                        else if(1000 < rec_aux && rec_aux < 1500)
+                        {
+                            velocities_commands_.linear_velocity_x = mapFloat(rec_ele, 1100, 1900, -0.5, 0.5) * lin_x_inv_;
+                            velocities_commands_.linear_velocity_y = mapFloat(rec_rud, 1100, 1900, -0.5, 0.5) * lin_y_inv_;
+                            velocities_commands_.angular_velocity_z = mapFloat(rec_ail, 1100, 1900, -1.0, 1.0) * ang_z_inv_;
+                            
+                            vel_cmd_active_ = true;
+                            pose_cmd_active_ = false;
+                        }
+                        else if(1500 < rec_aux && rec_aux < 2000)
+                        {
+                            pose_commands_.roll = mapFloat(rec_ail, 1100, 1900, -0.523599, 0.523599) * roll_inv_;
+                            pose_commands_.pitch = mapFloat(rec_ele, 1100, 1900, -0.314159, 0.314159) * pitch_inv_;
+                            pose_commands_.yaw = mapFloat(rec_rud, 1100, 1900, -0.436332, 0.436332) *yaw_inv_;
+                            
+                            vel_cmd_active_ = false;
+                            pose_cmd_active_ = true;
                         }
                     }
                 }
