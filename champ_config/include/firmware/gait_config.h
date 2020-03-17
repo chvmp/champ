@@ -1,3 +1,6 @@
+#ifndef GAIT_CONFIG_H
+#define GAIT_CONFIG_H
+
 #define KNEE_ORIENTATION        ">>"
 #define PANTOGRAPH_LEG          true
 #define MAX_LINEAR_VELOCITY_X   0.5
@@ -7,3 +10,5 @@
 #define STANCE_DEPTH            0.00
 #define STANCE_DURATION         0.25
 #define NOMINAL_HEIGHT          0.20
+
+#endif
