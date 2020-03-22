@@ -126,7 +126,17 @@ namespace champ
     class GaitConfig
     {
         public:
-            GaitConfig();
+            GaitConfig():
+                knee_orientation(">>"),
+                pantograph_leg(false),
+                max_linear_velocity_x(0.0f),
+                max_linear_velocity_y(0.0f),
+                max_angular_velocity_z(0.0f),
+                swing_height(0.0f),
+                stance_depth(0.0f),
+                stance_duration(0.0f),
+                nominal_height(0.0f)
+            {}
             GaitConfig(const char * knee_or,
                 bool panto_leg,
                 float max_l_x,
@@ -145,8 +155,7 @@ namespace champ
                     stance_depth(stan_dep),
                     stance_duration(stan_dur),
                     nominal_height(nom_height)
-            {
-            };
+            {}
             const char * knee_orientation;
             bool pantograph_leg;
             float max_linear_velocity_x;
