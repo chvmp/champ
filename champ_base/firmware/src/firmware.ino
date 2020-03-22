@@ -34,18 +34,11 @@ void loop() {
 
         champ::Pose req_pose;
         command_interface.poseInput(req_pose);
-        body_controller.poseCommand(target_foot_positions, 
-            req_pose.orientation.roll, 
-            req_pose.orientation.pitch, 
-            req_pose.orientation.yaw, 
-            req_pose.translation.z);
+        body_controller.poseCommand(target_foot_positions, req_pose);
 
         champ::Velocities req_vel;
         command_interface.velocityInput(req_vel);
-        leg_controller.velocityCommand(target_foot_positions, 
-            req_vel.linear.x, 
-            req_vel.linear.y, 
-            req_vel.angular.z);
+        leg_controller.velocityCommand(target_foot_positions, req_vel);
 
         ik.solve(target_joint_positions, target_foot_positions);
 
@@ -86,60 +79,4 @@ void loop() {
 
     command_interface.run();
     imu.run();
-}
-
-void standUp()
-{
-    geometry::Transformation target_foot_positions[4];
-    float target_joint_positions[12]; 
-    float current_joint_positions[12];
-
-    float initial_height = NOMINAL_HEIGHT * 0.75;
-    float hip_angle = 0.785398;
-    
-    actuators.getJointPositions(current_joint_positions);
-    base.updateJointPositions(current_joint_positions);
-
-    float sum_of_hip_angles = current_joint_positions[0] + current_joint_positions[3] +
-                              current_joint_positions[6] + current_joint_positions[9];
-
-    if(abs(sum_of_hip_angles) > 0.349066)
-    {
-        body_controller.poseCommand(target_foot_positions, 0, 0, 0, initial_height);
-        ik.solve(target_joint_positions, target_foot_positions);
-        target_joint_positions[0] = hip_angle;
-        target_joint_positions[3] = -hip_angle;
-        target_joint_positions[6] = hip_angle;
-        target_joint_positions[9] = -hip_angle;
-        actuators.moveJoints(target_joint_positions);
-        delay(1000);
-
-        for(int i = 100; i > -1; i--)
-        {
-            float current_angle = (i / 100.0) * hip_angle;
-            target_joint_positions[0] = current_angle;
-            target_joint_positions[3] = -current_angle;
-            target_joint_positions[6] = current_angle;
-            target_joint_positions[9] = -current_angle;
-            actuators.moveJoints(target_joint_positions);
-            delay(5);
-        }
-        delay(500);
-    }
-
-    float average_leg_height = (base.legs[0]->foot_from_hip().Z() + base.legs[1]->foot_from_hip().Z() +
-                                base.legs[2]->foot_from_hip().Z() + base.legs[3]->foot_from_hip().Z()) / 4.0;
-
-    if(abs(NOMINAL_HEIGHT + average_leg_height) > 0.01)
-    {
-        float current_height = initial_height;
-        for(unsigned int i = 0; i < 101; i++)
-        {
-            current_height += (NOMINAL_HEIGHT - initial_height) / 100.0;
-            body_controller.poseCommand(target_foot_positions, 0, 0, 0, current_height);
-            ik.solve(target_joint_positions, target_foot_positions);
-            actuators.moveJoints(target_joint_positions);
-            delay(2);
-        }
-    }
 }
