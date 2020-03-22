@@ -22,9 +22,7 @@ namespace champ
 
         public:
             LegController(QuadrupedBase &quadruped_base):
-                base_(&quadruped_base),
-                trajectory_planners_{0,0,0,0},
-     
+                base_(&quadruped_base),     
                 phase_generator(base_->gait_config->stance_duration),
                 lf(*base_->lf, base_->gait_config->swing_height, base_->gait_config->stance_depth),
                 rf(*base_->rf, base_->gait_config->swing_height, base_->gait_config->stance_depth),
@@ -45,7 +43,7 @@ namespace champ
                 //translate leg in x and y axis, and rotate in z axix
                 //this is to project the new location of the leg's tip           
                 geometry::Transformation transformed_stance = leg.zero_stance();    
-                transformed_stance.Translate(step_x, step_y, 0);
+                transformed_stance.Translate(step_x, step_y, 0.0f);
                 transformed_stance.RotateZ(theta);
 
                 //find the distance from prev location to new location of the leg's tip
@@ -54,7 +52,7 @@ namespace champ
 
                 //the distance from prev to new location of leg tip must be doubled
                 //as this is only half of the trajectory
-                step_length = sqrtf(pow(delta_x, 2) + pow(delta_y, 2)) * 2;
+                step_length = sqrtf(pow(delta_x, 2) + pow(delta_y, 2)) * 2.0f;
                 
                 //how much the foot trajectory must rotate in Z axis
                 rotation = atan2f(delta_y, delta_x);
@@ -62,30 +60,30 @@ namespace champ
             
             static float raibertHeuristic (float stance_duration, float target_velocity)
             {
-                return (stance_duration / 2) * target_velocity;
+                return (stance_duration / 2.0f) * target_velocity;
             }
 
-            void velocityCommand(geometry::Transformation (&foot_positions)[4], float linear_velocity_x, float linear_velocity_y, float angular_velocity_z)
+            void velocityCommand(geometry::Transformation (&foot_positions)[4], champ::Velocities &req_vel)
             {
                 //limit all velocities to user input
-                linear_velocity_x = capVelocities(linear_velocity_x, -base_->gait_config->max_linear_velocity_x, base_->gait_config->max_linear_velocity_x);
-                linear_velocity_y = capVelocities(linear_velocity_y, -base_->gait_config->max_linear_velocity_y, base_->gait_config->max_linear_velocity_y);
-                angular_velocity_z = capVelocities(angular_velocity_z, -base_->gait_config->max_angular_velocity_z, base_->gait_config->max_angular_velocity_z);
+                req_vel.linear.x = capVelocities(req_vel.linear.x, -base_->gait_config->max_linear_velocity_x, base_->gait_config->max_linear_velocity_x);
+                req_vel.linear.y = capVelocities(req_vel.linear.y, -base_->gait_config->max_linear_velocity_y, base_->gait_config->max_linear_velocity_y);
+                req_vel.angular.z = capVelocities(req_vel.angular.z, -base_->gait_config->max_angular_velocity_z, base_->gait_config->max_angular_velocity_z);
                 
-                float tangential_velocity = angular_velocity_z * base_->lf->center_to_nominal();
-                float velocity =  sqrtf(pow(linear_velocity_x, 2) + pow(linear_velocity_y + abs(tangential_velocity), 2));
+                float tangential_velocity = req_vel.angular.z * base_->lf->center_to_nominal();
+                float velocity =  sqrtf(pow(req_vel.linear.x, 2) + pow(req_vel.linear.y + abs(tangential_velocity), 2));
                 
                 //calculate optimal distance to hop based
-                float step_x = raibertHeuristic(base_->gait_config->stance_duration, linear_velocity_x);
-                float step_y = raibertHeuristic(base_->gait_config->stance_duration, linear_velocity_y);
+                float step_x = raibertHeuristic(base_->gait_config->stance_duration, req_vel.linear.x);
+                float step_y = raibertHeuristic(base_->gait_config->stance_duration, req_vel.linear.y);
                 float step_theta = raibertHeuristic(base_->gait_config->stance_duration, tangential_velocity);
                 
                 //calculate the angle from leg when zero to optimal distance to hop
                 float theta = sinf(step_theta / base_->lf->center_to_nominal());
 
-                float step_lengths[4] = {0,0,0,0};
-                float trajectory_rotations[4] = {0,0,0,0};    
-                float sum_of_steps = 0;
+                float step_lengths[4] = {0.0f,0.0f,0.0f,0.0f};
+                float trajectory_rotations[4] = {0.0f,0.0f,0.0f,0.0f};    
+                float sum_of_steps = 0.0f;
 
                 for(unsigned int i = 0; i < 4; i++)
                 {
@@ -96,7 +94,7 @@ namespace champ
                 }
 
                 //create a saw tooth signal gen so the trajectory planner knows whether it should swing or stride
-                phase_generator.run(velocity, sum_of_steps / 4.0);
+                phase_generator.run(velocity, sum_of_steps / 4.0f);
 
                 for(unsigned int i = 0; i < 4; i++)
                 {

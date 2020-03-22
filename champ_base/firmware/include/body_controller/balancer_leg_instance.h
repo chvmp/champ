@@ -30,17 +30,17 @@ namespace champ
                 float delta_height = leg_->zero_stance().Z() + target_z;
 
                 plane_p = leg_->zero_stance();
-                plane_p.Translate(0, 0, -delta_height);
+                plane_p.Translate(0.0f, 0.0f, -delta_height);
 
                 line_p0 = leg_->zero_stance();
                 line_p1 = leg_->zero_stance();
-                line_p0.Translate(0, 0, -delta_height);
-                line_p1.Translate(0, 0, leg_->lower_leg->x() + leg_->foot->x());
+                line_p0.Translate(0.0f, 0.0f, -delta_height);
+                line_p1.Translate(0.0f, 0.0f, leg_->lower_leg->x() + leg_->foot->x());
 
                 normal_vector_origin = leg_->zero_stance();
                 normal_vector_origin.Translate(-0.1, -0.1, -delta_height);
                 normal_vector.p = normal_vector_origin.p;
-                normal_vector.Translate(0, 0, 0.1);
+                normal_vector.Translate(0.0f, 0.0f, 0.1);
 
                 plane_p.RotateX(body_roll);
                 plane_p.RotateY(body_pitch);
@@ -102,20 +102,20 @@ namespace champ
                 leg_->transformToHip(foot_position);
             }
 
-            void poseCommand(geometry::Transformation &foot_position, float target_roll, float target_pitch, float target_yaw, float target_z)
+            void poseCommand(geometry::Transformation &foot_position, champ::Pose &req_pose)
             {
-                float delta_height = leg_->zero_stance().Z() + target_z;
+                float delta_height = leg_->zero_stance().Z() + req_pose.translation.z;
 
                 //create a new foot position from position of legs when stretched out
                 foot_position = leg_->zero_stance();
 
                 //move the foot position to desired height of the robot
-                foot_position.Translate(0, 0, -delta_height);
+                foot_position.Translate(0.0f, 0.0f, -delta_height);
 
                 //rotate the leg opposite the required orientation of the body
-                foot_position.RotateX(-target_roll);
-                foot_position.RotateY(-target_pitch);
-                foot_position.RotateZ(-target_yaw);
+                foot_position.RotateX(-req_pose.orientation.roll);
+                foot_position.RotateY(-req_pose.orientation.pitch);
+                foot_position.RotateZ(-req_pose.orientation.yaw);
     
                 leg_->transformToHip(foot_position);
             }
