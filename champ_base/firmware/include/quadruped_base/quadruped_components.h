@@ -78,49 +78,37 @@ namespace champ
             float w;
     };
 
-    // class Point
-    // {
-    //     public:
-    //         float x;
-    //         float y;
-    //         float z;
-    //         Point():
-    //             x(0.0f),
-    //             y(0.0f),
-    //             z(0.0f)
-    //         {}
-    // };
+    class Point
+    {
+        public:
+            float x;
+            float y;
+            float z;
+            Point():
+                x(0.0f),
+                y(0.0f),
+                z(0.0f)
+            {}
+    };
 
     class Euler
     {
         public:
             Euler():
-                x(0.0f), 
-                y(0.0f), 
-                z(0.0f)
+                roll(0.0f), 
+                pitch(0.0f), 
+                yaw(0.0f)
             {}
-            float x;
-            float y;
-            float z;
+            float roll;
+            float pitch;
+            float yaw;
     };
 
     class Pose
     {
         public:
-            Pose():
-                x(0.0f), 
-                y(0.0f), 
-                z(0.0f), 
-                roll(0.0f), 
-                pitch(0.0f), 
-                yaw(0.0f)
-            {}
-            float x;
-            float y;
-            float z;
-            float roll;
-            float pitch;
-            float yaw;
+            Point translation;
+            Euler orientation;
     };
 
     class Accelerometer

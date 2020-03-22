@@ -64,10 +64,10 @@ namespace champ
             {
                 *prev_pose_time_ = micros();
 
-                pose_commands_->roll = pose_cmd_msg.roll;
-                pose_commands_->pitch = pose_cmd_msg.pitch;
-                pose_commands_->yaw = pose_cmd_msg.yaw;
-                pose_commands_->z = pose_cmd_msg.z;
+                pose_commands_->orientation.roll = pose_cmd_msg.roll;
+                pose_commands_->orientation.pitch = pose_cmd_msg.pitch;
+                pose_commands_->orientation.yaw = pose_cmd_msg.yaw;
+                pose_commands_->translation.z = pose_cmd_msg.z;
             }
 
             void jointsCommandCallback(const champ_msgs::Joints& joints_cmd_msg)
@@ -183,9 +183,9 @@ namespace champ
                         {   
                             pose_cmd_active_ = false;
 
-                            pose_commands_->roll = 0.0f;
-                            pose_commands_->pitch = 0.0f;
-                            pose_commands_->yaw = 0.0f;
+                            pose_commands_->orientation.roll = 0.0f;
+                            pose_commands_->orientation.pitch = 0.0f;
+                            pose_commands_->orientation.yaw = 0.0f;
                         }
 
                         if((now - *prev_joints_time_) < 500000)

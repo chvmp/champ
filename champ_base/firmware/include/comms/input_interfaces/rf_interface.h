@@ -53,9 +53,9 @@ namespace champ
 
                 void poseInput(champ::Pose &pose)
                 {  
-                    pose.roll = pose_commands_.roll;
-                    pose.pitch = pose_commands_.pitch;
-                    pose.yaw = pose_commands_.yaw;                
+                    pose.orientation.roll = pose_commands_.orientation.roll;
+                    pose.orientation.pitch = pose_commands_.orientation.pitch;
+                    pose.orientation.yaw = pose_commands_.orientation.yaw;                
                 }
 
                 void jointsInput(float joints[12])
@@ -103,9 +103,9 @@ namespace champ
                             velocities_commands_.linear.y = 0.0;
                             velocities_commands_.angular.z = 0.0;
                           
-                            pose_commands_.roll = 0.0;
-                            pose_commands_.pitch = 0.0;
-                            pose_commands_.yaw = 0.0;
+                            pose_commands_.orientation.roll = 0.0;
+                            pose_commands_.orientation.pitch = 0.0;
+                            pose_commands_.orientation.yaw = 0.0;
 
                             vel_cmd_active_ = false;
                             pose_cmd_active_ = false;
@@ -116,9 +116,9 @@ namespace champ
                             velocities_commands_.linear.y = 0.0;
                             velocities_commands_.angular.z = 0.0;
 
-                            pose_commands_.roll = 0.0;
-                            pose_commands_.pitch = 0.0;
-                            pose_commands_.yaw = 0.0;
+                            pose_commands_.orientation.roll = 0.0;
+                            pose_commands_.orientation.pitch = 0.0;
+                            pose_commands_.orientation.yaw = 0.0;
 
                             vel_cmd_active_ = false;
                             pose_cmd_active_ = false;
@@ -134,9 +134,9 @@ namespace champ
                         }
                         else if(1500 < rec_aux && rec_aux < 2000)
                         {
-                            pose_commands_.roll = mapFloat(rec_ail, 1100, 1900, -0.523599, 0.523599) * roll_inv_;
-                            pose_commands_.pitch = mapFloat(rec_ele, 1100, 1900, -0.314159, 0.314159) * pitch_inv_;
-                            pose_commands_.yaw = mapFloat(rec_rud, 1100, 1900, -0.436332, 0.436332) *yaw_inv_;
+                            pose_commands_.orientation.roll = mapFloat(rec_ail, 1100, 1900, -0.523599, 0.523599) * roll_inv_;
+                            pose_commands_.orientation.pitch = mapFloat(rec_ele, 1100, 1900, -0.314159, 0.314159) * pitch_inv_;
+                            pose_commands_.orientation.yaw = mapFloat(rec_rud, 1100, 1900, -0.436332, 0.436332) *yaw_inv_;
                             
                             vel_cmd_active_ = false;
                             pose_cmd_active_ = true;

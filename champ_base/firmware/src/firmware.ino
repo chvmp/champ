@@ -35,10 +35,10 @@ void loop() {
         champ::Pose req_pose;
         command_interface.poseInput(req_pose);
         body_controller.poseCommand(target_foot_positions, 
-            req_pose.roll, 
-            req_pose.pitch, 
-            req_pose.yaw, 
-            NOMINAL_HEIGHT);
+            req_pose.orientation.roll, 
+            req_pose.orientation.pitch, 
+            req_pose.orientation.yaw, 
+            req_pose.translation.z);
 
         champ::Velocities req_vel;
         command_interface.velocityInput(req_vel);
