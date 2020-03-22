@@ -10,7 +10,7 @@ namespace BNO0809DOF
     class Plugin
     {
         BNO080 imu_;
-        champ::Orientation rotation_;
+        champ::Quaternion orientation_;
         champ::Gyroscope gyro_;
         champ::Accelerometer accel_;
         champ::Magnetometer mag_;
@@ -35,20 +35,20 @@ namespace BNO0809DOF
                 imu_.enableMagnetometer(50);
             }
 
-            void readchamp(champ::Orientation &rotation)
+            void readchamp(champ::Quaternion &orientation)
             {
                 if(imu_.dataAvailable())
                 {
-                    rotation.w = imu_.getQuatReal();
-                    rotation.x = imu_.getQuatI();
-                    rotation.y = imu_.getQuatJ();
-                    rotation.z = imu_.getQuatK();
+                    orientation.w = imu_.getQuatReal();
+                    orientation.x = imu_.getQuatI();
+                    orientation.y = imu_.getQuatJ();
+                    orientation.z = imu_.getQuatK();
 
                     // to euler
-                    //https://stackoverflow.com/questions/30279065/how-to-get-the-euler-angles-from-the-rotation-vector-sensor-type-rotation-vecto
-                    // rotation.x  = atan2f(-2.* (q[2] * q[3] - q[0] * q[1]) , q[0] * q[0] - q[1] * q[1]- q[2] * q[2] + q[3] * q[3]); 
-                    // rotation.y  = asinf(2. * (q[1] * q[3] + q[0] * q[2]));
-                    // rotation.z  = atan2f( 2. * (-q[1] * q[2] + q[0] * q[3]) , q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]); 
+                    //https://stackoverflow.com/questions/30279065/how-to-get-the-euler-angles-from-the-orientation-vector-sensor-type-orientation-vecto
+                    // orientation.x  = atan2f(-2.* (q[2] * q[3] - q[0] * q[1]) , q[0] * q[0] - q[1] * q[1]- q[2] * q[2] + q[3] * q[3]); 
+                    // orientation.y  = asinf(2. * (q[1] * q[3] + q[0] * q[2]));
+                    // orientation.z  = atan2f( 2. * (-q[1] * q[2] + q[0] * q[3]) , q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]); 
                 }   
             }
 
@@ -82,12 +82,12 @@ namespace BNO0809DOF
                 }
             }
 
-            void read(champ::Orientation &rotation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
+            void read(champ::Quaternion &orientation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
             {
-                rotation.w = rotation_.w;
-                rotation.x = rotation_.x;
-                rotation.y = rotation_.y;
-                rotation.z = rotation_.z;
+                orientation.w = orientation_.w;
+                orientation.x = orientation_.x;
+                orientation.y = orientation_.y;
+                orientation.z = orientation_.z;
 
                 gyro.x = gyro_.x;
                 gyro.y = gyro_.y;
@@ -106,10 +106,10 @@ namespace BNO0809DOF
             {
                 if(imu_.dataAvailable())
                 {
-                    rotation_.w = imu_.getQuatReal();
-                    rotation_.x = imu_.getQuatI();
-                    rotation_.y = imu_.getQuatJ();
-                    rotation_.z = imu_.getQuatK();
+                    orientation_.w = imu_.getQuatReal();
+                    orientation_.x = imu_.getQuatI();
+                    orientation_.y = imu_.getQuatJ();
+                    orientation_.z = imu_.getQuatK();
 
                     gyro_.x = imu_.getGyroX();
                     gyro_.y = imu_.getGyroY();

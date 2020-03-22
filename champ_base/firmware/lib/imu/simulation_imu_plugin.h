@@ -17,12 +17,12 @@ namespace SimulationIMU
             {
             }
 
-            void readOrientation(champ::Orientation &rotation)
+            void readOrientation(champ::Quaternion &orientation)
             {
-                rotation.w = 1.0;
-                rotation.x = 0.0;
-                rotation.y = 0.0;
-                rotation.z = 0.0;
+                orientation.w = 1.0;
+                orientation.x = 0.0;
+                orientation.y = 0.0;
+                orientation.z = 0.0;
             }
 
             void readGyroscope(champ::Gyroscope &gyro)
@@ -46,12 +46,12 @@ namespace SimulationIMU
                 mag.z = 0.0; 
             }
 
-            void read(champ::Orientation &rotation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
+            void read(champ::Quaternion &orientation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
             {
-                rotation.w = 0.0;
-                rotation.x = 0.0;
-                rotation.y = 0.0;
-                rotation.z = 0.0;
+                orientation.w = 0.0;
+                orientation.x = 0.0;
+                orientation.y = 0.0;
+                orientation.z = 0.0;
 
                 gyro.x = 0.0;
                 gyro.y = 0.0;

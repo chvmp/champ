@@ -236,12 +236,12 @@ namespace champ
                     jointstates_pub_.publish(&joints_msg_);  
                 }
 
-                void publishIMU(champ::Orientation &rotation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
+                void publishIMU(champ::Quaternion &orientation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
                 {
-                    imu_msg_.orientation.w = rotation.w;
-                    imu_msg_.orientation.x = rotation.x;
-                    imu_msg_.orientation.y = rotation.y;
-                    imu_msg_.orientation.z = rotation.z;
+                    imu_msg_.orientation.w = orientation.w;
+                    imu_msg_.orientation.x = orientation.x;
+                    imu_msg_.orientation.y = orientation.y;
+                    imu_msg_.orientation.z = orientation.z;
 
                     imu_msg_.linear_acceleration.x = accel.x;
                     imu_msg_.linear_acceleration.y = accel.y;

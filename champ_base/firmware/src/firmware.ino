@@ -78,10 +78,10 @@ void loop() {
         champ::Accelerometer accel;
         champ::Gyroscope gyro;
         champ::Magnetometer mag;
-        champ::Orientation rotation;
+        champ::Quaternion orientation;
 
-        imu.read(rotation, accel, gyro, mag);
-        status_interface.publishIMU(rotation, accel, gyro, mag);
+        imu.read(orientation, accel, gyro, mag);
+        status_interface.publishIMU(orientation, accel, gyro, mag);
     }
 
     command_interface.run();

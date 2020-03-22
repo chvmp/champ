@@ -39,10 +39,10 @@ namespace champ
                         status_interface_->publishJointStates(joint_positions);
                     }
 
-                    void publishIMU(champ::Orientation &rotation, champ::Accelerometer &accel, 
+                    void publishIMU(champ::Quaternion &orientation, champ::Accelerometer &accel, 
                                     champ::Gyroscope &gyro, champ::Magnetometer &mag)
                     {
-                        status_interface_->publishIMU(rotation, accel, gyro, mag);
+                        status_interface_->publishIMU(orientation, accel, gyro, mag);
                     }
         };
     }

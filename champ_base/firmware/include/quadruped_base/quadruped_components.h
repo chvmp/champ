@@ -36,26 +36,40 @@ namespace champ
             Angular angular;
     };
 
-    // class Velocities
+    // class Point
     // {
     //     public:
-    //         Velocities():
-    //             linear_velocity_x(0.0),
-    //             linear_velocity_y(0.0),
-    //             angular_velocity_z(0.0)
+    //         float x;
+    //         float y;
+    //         float z;
+    //         Point():
+    //             x(0.0f),
+    //             y(0.0f),
+    //             z(0.0f)
     //         {}
-    //         float linear_velocity_x;
-    //         float linear_velocity_y;
-    //         float angular_velocity_z;
     // };
 
-    class Orientation
+    // class Euler
+    // {
+    //     public:
+    //         float x;
+    //         float y;
+    //         float z;
+    //         Euler():
+    //             x(0.0f),
+    //             y(0.0f),
+    //             z(0.0f)
+    //         {}
+    // };
+
+
+    class Quaternion
     {
         public:
-            Orientation():
-                x(0.0), 
-                y(0.0), 
-                z(0.0)
+            Quaternion():
+                x(0.0f), 
+                y(0.0f), 
+                z(0.0f)
             {}
             float x;
             float y;
@@ -67,12 +81,12 @@ namespace champ
     {
         public:
             Pose():
-                x(0.0), 
-                y(0.0), 
-                z(0.0), 
-                roll(0.0), 
-                pitch(0.0), 
-                yaw(0.0)
+                x(0.0f), 
+                y(0.0f), 
+                z(0.0f), 
+                roll(0.0f), 
+                pitch(0.0f), 
+                yaw(0.0f)
             {}
             float x;
             float y;
@@ -86,9 +100,9 @@ namespace champ
     {
         public:
             Accelerometer():
-                x(0.0), 
-                y(0.0), 
-                z(0.0)
+                x(0.0f), 
+                y(0.0f), 
+                z(0.0f)
             {}
             float x;
             float y;
@@ -99,9 +113,9 @@ namespace champ
     {
         public:
             Gyroscope():
-                x(0.0), 
-                y(0.0), 
-                z(0.0)
+                x(0.0f), 
+                y(0.0f), 
+                z(0.0f)
             {}
             float x;
             float y;
@@ -112,9 +126,9 @@ namespace champ
     {
         public:
             Magnetometer():
-                x(0.0), 
-                y(0.0), 
-                z(0.0)
+                x(0.0f), 
+                y(0.0f), 
+                z(0.0f)
             {}
             float x;
             float y;
