@@ -15,7 +15,7 @@ namespace champ
         float stance_depth_;
         unsigned int total_control_points_;
 
-        Transformation prev_foot_position_;
+        geometry::Transformation prev_foot_position_;
 
         float factorial_[13];
         float ref_control_points_x_[12];
@@ -76,7 +76,7 @@ namespace champ
                 updateControlPointsLength(step_length_);
             }
 
-            void generate(Transformation &foot_position, float step_length, float rotation, float swing_phase_signal, float stance_phase_signal)
+            void generate(geometry::Transformation &foot_position, float step_length, float rotation, float swing_phase_signal, float stance_phase_signal)
             {    
                 //check if there's a need to hop otherwise nothing to do here
                 if(step_length == 0)

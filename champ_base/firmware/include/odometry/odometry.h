@@ -9,7 +9,7 @@ namespace champ
     class Odometry
     {
         QuadrupedBase *base_;
-        Transformation prev_foot_position_[4];
+        geometry::Transformation prev_foot_position_[4];
         bool prev_gait_phase_[4];
         float prev_theta_[4];
         unsigned long int prev_time_;
@@ -38,7 +38,7 @@ namespace champ
 
                 for(unsigned int i = 0; i < 4; i++)
                 {
-                    Transformation current_foot_position = base_->legs[i]->foot_from_base();
+                    geometry::Transformation current_foot_position = base_->legs[i]->foot_from_base();
                 
                     bool current_gait_phase = base_->legs[i]->gait_phase();
                     

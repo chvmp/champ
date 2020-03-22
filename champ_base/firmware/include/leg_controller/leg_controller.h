@@ -44,7 +44,7 @@ namespace champ
             {              
                 //translate leg in x and y axis, and rotate in z axix
                 //this is to project the new location of the leg's tip           
-                Transformation transformed_stance = leg.zero_stance();    
+                geometry::Transformation transformed_stance = leg.zero_stance();    
                 transformed_stance.Translate(step_x, step_y, 0);
                 transformed_stance.RotateZ(theta);
 
@@ -65,7 +65,7 @@ namespace champ
                 return (stance_duration / 2) * target_velocity;
             }
 
-            void velocityCommand(Transformation (&foot_positions)[4], float linear_velocity_x, float linear_velocity_y, float angular_velocity_z)
+            void velocityCommand(geometry::Transformation (&foot_positions)[4], float linear_velocity_x, float linear_velocity_y, float angular_velocity_z)
             {
                 //limit all velocities to user input
                 linear_velocity_x = capVelocities(linear_velocity_x, -base_->gait_config->max_linear_velocity_x, base_->gait_config->max_linear_velocity_x);

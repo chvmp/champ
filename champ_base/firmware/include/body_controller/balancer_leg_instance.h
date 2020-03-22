@@ -16,16 +16,16 @@ namespace champ
             {
             }
 
-            void balance(Transformation &foot_position, float body_roll, float body_pitch, 
+            void balance(geometry::Transformation &foot_position, float body_roll, float body_pitch, 
                                     float body_yaw, float target_z)
             {
-                Transformation normal_vector;
-                Transformation plane_p;
-                Transformation normal_vector_origin;
-                Transformation line_p0;
-                Transformation line_p1;
+                geometry::Transformation normal_vector;
+                geometry::Transformation plane_p;
+                geometry::Transformation normal_vector_origin;
+                geometry::Transformation line_p0;
+                geometry::Transformation line_p1;
 
-                Point line_vector;
+                geometry::Point line_vector;
                 float d;
                 float delta_height = leg_->zero_stance().Z() + target_z;
 
@@ -102,7 +102,7 @@ namespace champ
                 leg_->transformToHip(foot_position);
             }
 
-            void poseCommand(Transformation &foot_position, float target_roll, float target_pitch, float target_yaw, float target_z)
+            void poseCommand(geometry::Transformation &foot_position, float target_roll, float target_pitch, float target_yaw, float target_z)
             {
                 float delta_height = leg_->zero_stance().Z() + target_z;
 

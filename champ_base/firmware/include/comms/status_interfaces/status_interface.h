@@ -24,7 +24,7 @@ namespace champ
                         
                     }
 
-                    void publishPoints(Transformation foot_positions[4])
+                    void publishPoints(geometry::Transformation foot_positions[4])
                     {
                         status_interface_->publishPoints(foot_positions);
                     }

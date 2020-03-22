@@ -200,7 +200,7 @@ namespace champ
                     nh_.spinOnce();
                 }
                 
-                void publishPoints(Transformation foot_positions[4])
+                void publishPoints(geometry::Transformation foot_positions[4])
                 {
                     point_msg_.lf.x = foot_positions[0].X();
                     point_msg_.lf.y = foot_positions[0].Y();

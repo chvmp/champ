@@ -25,7 +25,7 @@ void loop() {
     static unsigned long prev_imu_time = 0;
     static unsigned long prev_publish_time = 0;
 
-    Transformation target_foot_positions[4];
+    geometry::Transformation target_foot_positions[4];
     float target_joint_positions[12]; 
     
     if ((micros() - prev_control_time) >= 2000)
@@ -57,7 +57,7 @@ void loop() {
     {
         prev_publish_time = micros();
 
-        Transformation current_foot_positions[4];
+        geometry::Transformation current_foot_positions[4];
         float current_joint_positions[12];
         champ::Velocities current_speed;
 
@@ -90,7 +90,7 @@ void loop() {
 
 void standUp()
 {
-    Transformation target_foot_positions[4];
+    geometry::Transformation target_foot_positions[4];
     float target_joint_positions[12]; 
     float current_joint_positions[12];
 

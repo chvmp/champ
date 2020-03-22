@@ -29,7 +29,7 @@ namespace champ
                 legs_[total_stances++] = &rh;
             }
 
-            void poseCommand(Transformation (&foot_positions)[4], float target_roll, float target_pitch, 
+            void poseCommand(geometry::Transformation (&foot_positions)[4], float target_roll, float target_pitch, 
                                     float target_yaw, float target_z)
             {
                 for(int i = 0; i < 4; i++)

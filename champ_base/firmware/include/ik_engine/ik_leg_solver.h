@@ -37,14 +37,14 @@ namespace champ
                 ik_beta_ = acosf(lower_leg_to_foot_x / ik_beta_h_) - (M_PI/2); 
             }
             
-            void solve(float joints[3], Transformation &foot_position)
+            void solve(float joints[3], geometry::Transformation &foot_position)
             {
                 solve(joints[0], joints[1], joints[2], foot_position);
             }
 
-            void solve(float &hip_joint, float &upper_leg_joint, float &lower_leg_joint, Transformation &foot_position)
+            void solve(float &hip_joint, float &upper_leg_joint, float &lower_leg_joint, geometry::Transformation &foot_position)
             {
-                Transformation temp_foot_pos = foot_position;
+                geometry::Transformation temp_foot_pos = foot_position;
 
                 float x = temp_foot_pos.X();
                 float y = temp_foot_pos.Z();

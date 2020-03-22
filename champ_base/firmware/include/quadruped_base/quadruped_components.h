@@ -69,12 +69,39 @@ namespace champ
             Quaternion():
                 x(0.0f), 
                 y(0.0f), 
-                z(0.0f)
+                z(0.0f),
+                w(0.0f)
             {}
             float x;
             float y;
             float z;
             float w;
+    };
+
+    // class Point
+    // {
+    //     public:
+    //         float x;
+    //         float y;
+    //         float z;
+    //         Point():
+    //             x(0.0f),
+    //             y(0.0f),
+    //             z(0.0f)
+    //         {}
+    // };
+
+    class Euler
+    {
+        public:
+            Euler():
+                x(0.0f), 
+                y(0.0f), 
+                z(0.0f)
+            {}
+            float x;
+            float y;
+            float z;
     };
 
     class Pose

@@ -30,7 +30,7 @@ namespace champ
                 ik_solvers_[total_legs++] = &rh;
             }
 
-            void solve(float (&joint_positions)[12], Transformation (&foot_positions)[4])
+            void solve(float (&joint_positions)[12], geometry::Transformation (&foot_positions)[4])
             {
                 float calculated_joints[12];
 

@@ -70,7 +70,7 @@ namespace champ
                 }
             }
 
-            void getFootPositions(Transformation *foot_positions)
+            void getFootPositions(geometry::Transformation *foot_positions)
             {
                 for(unsigned int i = 0; i < 4; i++)
                 {

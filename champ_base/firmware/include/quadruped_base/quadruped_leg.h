@@ -13,7 +13,7 @@ class QuadrupedLeg
 
     unsigned int no_of_links_;
     
-    Transformation zero_stance_;
+    geometry::Transformation zero_stance_;
     float center_to_nominal_;
 
     unsigned int leg_id_;
@@ -54,10 +54,10 @@ class QuadrupedLeg
             center_to_nominal_ = sqrtf(pow(zero_stance_.X(),2) + pow(zero_stance_.Y(),2));
         }
 
-        Transformation foot_from_hip()
+        geometry::Transformation foot_from_hip()
         {
             //forward kinematics
-            Transformation foot_position;
+            geometry::Transformation foot_position;
             foot_position = Identity<4,4>();
 
             for(unsigned int i = 3; i > 0; i--)
@@ -73,9 +73,9 @@ class QuadrupedLeg
             return foot_position;
         }
 
-        Transformation foot_from_base()
+        geometry::Transformation foot_from_base()
         {
-            Transformation foot_position;
+            geometry::Transformation foot_position;
 
             foot_position.p = foot_from_hip().p;
             foot_position.RotateX(hip->theta());
@@ -88,9 +88,9 @@ class QuadrupedLeg
             return foot_position;
         }
 
-        void transformToHip(Transformation &foot)
+        void transformToHip(geometry::Transformation &foot)
         {
-            Point temp_point;
+            geometry::Point temp_point;
 
             temp_point.X() = foot.X() - hip->x();
             temp_point.Y() = foot.Y() - hip->y();
@@ -98,7 +98,7 @@ class QuadrupedLeg
             foot.p = temp_point;
         }
 
-        void transformToBase(Transformation &foot)
+        void transformToBase(geometry::Transformation &foot)
         {
             foot.RotateX(hip->roll());
             foot.RotateY(hip->pitch());
@@ -121,7 +121,7 @@ class QuadrupedLeg
             }
         }
 
-        Transformation zero_stance()
+        geometry::Transformation zero_stance()
         {
             return zero_stance_;
         }
