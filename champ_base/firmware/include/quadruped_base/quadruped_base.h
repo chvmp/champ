@@ -12,7 +12,6 @@ namespace champ
     class QuadrupedBase
     {   
         Velocities speed_;
-        Attitude attitude_;
         
         int getKneeDirection(char direction)
         {
@@ -90,103 +89,54 @@ namespace champ
                 }
             }
             
-            float roll()
-            {
-                return attitude_.roll;
-            }
+            // float linear_velocity_x()
+            // {
+            //     return speed_.linear_velocity_x;
+            // }
 
-            void roll(float roll)
-            {
-                attitude_.roll = roll;
-            }
+            // void linear_velocity_x(float linear_velocity_x)
+            // {
+            //     speed_.linear_velocity_x = linear_velocity_x;
+            // }
 
-            float pitch()
-            {
-                return attitude_.pitch;
-            }
+            // float linear_velocity_y()
+            // {
+            //     return speed_.linear_velocity_y;
+            // }
 
-            void pitch(float pitch)
-            {
-                attitude_.pitch = pitch;
-            }
+            // void linear_velocity_y(float linear_velocity_y)
+            // {
+            //     speed_.linear_velocity_y = linear_velocity_y;
+            // }
 
-            float yaw()
-            {
-                return attitude_.yaw;
-            }
+            // float angular_velocity_z()
+            // {
+            //     return speed_.angular_velocity_z;
+            // }
 
-            void yaw(float yaw)
-            {
-                attitude_.yaw = yaw;
-            }
+            // void angular_velocity_z(float angular_velocity_z)
+            // {
+            //     speed_.angular_velocity_z = angular_velocity_z;
+            // }
 
-            void updateAttitude(Attitude attitude)
-            {
-                attitude_.roll = attitude.roll;
-                attitude_.pitch = attitude.pitch;
-                attitude_.yaw = attitude.yaw;
-            }
+            // void updateSpeed(Velocities speed)
+            // {
+            //     speed_.linear_velocity_x = speed.linear_velocity_x;
+            //     speed_.linear_velocity_y = speed.linear_velocity_y;
+            //     speed_.angular_velocity_z = speed.angular_velocity_z;
+            // }
 
-            void updateAttitude(float roll,  float pitch, float yaw)
-            {
-                attitude_.roll = roll;
-                attitude_.pitch = pitch;
-                attitude_.yaw = yaw;
-            }
+            // void updateSpeed(float linear_velocity_x,  float linear_velocity_y, float angular_velocity_z)
+            // {
+            //     speed_.linear_velocity_x = linear_velocity_x;
+            //     speed_.linear_velocity_y = linear_velocity_y;
+            //     speed_.angular_velocity_z = angular_velocity_z;
+            // }
 
-            Attitude attitude()
-            {
-                return attitude_;
-            }
-
-            float linear_velocity_x()
-            {
-                return speed_.linear_velocity_x;
-            }
-
-            void linear_velocity_x(float linear_velocity_x)
-            {
-                speed_.linear_velocity_x = linear_velocity_x;
-            }
-
-            float linear_velocity_y()
-            {
-                return speed_.linear_velocity_y;
-            }
-
-            void linear_velocity_y(float linear_velocity_y)
-            {
-                speed_.linear_velocity_y = linear_velocity_y;
-            }
-
-            float angular_velocity_z()
-            {
-                return speed_.angular_velocity_z;
-            }
-
-            void angular_velocity_z(float angular_velocity_z)
-            {
-                speed_.angular_velocity_z = angular_velocity_z;
-            }
-
-            void updateSpeed(Velocities speed)
-            {
-                speed_.linear_velocity_x = speed.linear_velocity_x;
-                speed_.linear_velocity_y = speed.linear_velocity_y;
-                speed_.angular_velocity_z = speed.angular_velocity_z;
-            }
-
-            void updateSpeed(float linear_velocity_x,  float linear_velocity_y, float angular_velocity_z)
-            {
-                speed_.linear_velocity_x = linear_velocity_x;
-                speed_.linear_velocity_y = linear_velocity_y;
-                speed_.angular_velocity_z = angular_velocity_z;
-            }
-
-            Velocities speed()
-            {
-                return speed_;
-            }
+            // Velocities speed()
+            // {
+            //     return speed_;
+            // }
 
             QuadrupedLeg *legs[4];
 

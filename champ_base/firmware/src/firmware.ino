@@ -1,8 +1,9 @@
 
-#include <quadruped_description.h>
-#include <gait_config.h>
 #include <hardware_config.h>
 #include <constructors/constructors.h>
+
+#include <quadruped_description.h>
+#include <gait_config.h>
 
 #include <body_controller/body_controller.h>
 #include <leg_controller/leg_controller.h>
@@ -42,9 +43,9 @@ void loop() {
         champ::Velocities req_vel;
         command_interface.velocityInput(req_vel);
         leg_controller.velocityCommand(target_foot_positions, 
-            req_vel.linear_velocity_x, 
-            req_vel.linear_velocity_y, 
-            req_vel.angular_velocity_z);
+            req_vel.linear.x, 
+            req_vel.linear.y, 
+            req_vel.angular.z);
 
         ik.solve(target_joint_positions, target_foot_positions);
 

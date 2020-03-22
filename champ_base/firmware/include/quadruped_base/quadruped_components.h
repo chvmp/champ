@@ -3,31 +3,51 @@
 
 namespace champ
 {
-    class Attitude
+    class Linear
     {
         public:
-            Attitude():
-                roll(0.0),
-                pitch(0.0),
-                yaw(0.0)
+            float x;
+            float y;
+            float z;
+            Linear():
+                x(0.0f),
+                y(0.0f),
+                z(0.0f)
             {}
-            float roll;
-            float pitch;
-            float yaw;
     };
 
-    class Velocities
+    class Angular
     {
         public:
-            Velocities():
-                linear_velocity_x(0.0),
-                linear_velocity_y(0.0),
-                angular_velocity_z(0.0)
+            float x;
+            float y;
+            float z;
+            Angular():
+                x(0.0f),
+                y(0.0f),
+                z(0.0f)
             {}
-            float linear_velocity_x;
-            float linear_velocity_y;
-            float angular_velocity_z;
     };
+
+    class Velocities: public Linear, public Angular
+    {
+        public:
+            Linear linear;
+            Angular angular;
+    };
+
+    // class Velocities
+    // {
+    //     public:
+    //         Velocities():
+    //             linear_velocity_x(0.0),
+    //             linear_velocity_y(0.0),
+    //             angular_velocity_z(0.0)
+    //         {}
+    //         float linear_velocity_x;
+    //         float linear_velocity_y;
+    //         float angular_velocity_z;
+    // };
 
     class Orientation
     {

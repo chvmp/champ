@@ -99,9 +99,9 @@ namespace champ
                             (rec_rud > 1350 && rec_rud < 1650) && 
                             (rec_ail > 1350 && rec_ail < 1650))
                         {
-                            velocities_commands_.linear_velocity_x = 0.0;
-                            velocities_commands_.linear_velocity_y = 0.0;
-                            velocities_commands_.angular_velocity_z = 0.0;
+                            velocities_commands_.linear.x = 0.0;
+                            velocities_commands_.linear.y = 0.0;
+                            velocities_commands_.angular.z = 0.0;
                           
                             pose_commands_.roll = 0.0;
                             pose_commands_.pitch = 0.0;
@@ -112,9 +112,9 @@ namespace champ
                         }
                         else if(rec_aux == 0)
                         {
-                            velocities_commands_.linear_velocity_x = 0.0;
-                            velocities_commands_.linear_velocity_y = 0.0;
-                            velocities_commands_.angular_velocity_z = 0.0;
+                            velocities_commands_.linear.x = 0.0;
+                            velocities_commands_.linear.y = 0.0;
+                            velocities_commands_.angular.z = 0.0;
 
                             pose_commands_.roll = 0.0;
                             pose_commands_.pitch = 0.0;
@@ -125,9 +125,9 @@ namespace champ
                         }
                         else if(1000 < rec_aux && rec_aux < 1500)
                         {
-                            velocities_commands_.linear_velocity_x = mapFloat(rec_ele, 1100, 1900, -0.5, 0.5) * lin_x_inv_;
-                            velocities_commands_.linear_velocity_y = mapFloat(rec_rud, 1100, 1900, -0.5, 0.5) * lin_y_inv_;
-                            velocities_commands_.angular_velocity_z = mapFloat(rec_ail, 1100, 1900, -1.0, 1.0) * ang_z_inv_;
+                            velocities_commands_.linear.x = mapFloat(rec_ele, 1100, 1900, -0.5, 0.5) * lin_x_inv_;
+                            velocities_commands_.linear.y = mapFloat(rec_rud, 1100, 1900, -0.5, 0.5) * lin_y_inv_;
+                            velocities_commands_.angular.z = mapFloat(rec_ail, 1100, 1900, -1.0, 1.0) * ang_z_inv_;
                             
                             vel_cmd_active_ = true;
                             pose_cmd_active_ = false;

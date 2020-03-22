@@ -55,9 +55,9 @@ namespace champ
             {
                 *prev_vel_time_ = micros();
       
-                velocities_commands_->linear_velocity_x = vel_cmd_msg.linear.x;
-                velocities_commands_->linear_velocity_y = vel_cmd_msg.linear.y;
-                velocities_commands_->angular_velocity_z = vel_cmd_msg.angular.z;
+                velocities_commands_->linear.x = vel_cmd_msg.linear.x;
+                velocities_commands_->linear.y = vel_cmd_msg.linear.y;
+                velocities_commands_->angular.z = vel_cmd_msg.angular.z;
             }
 
             void poseCommandCallback(const champ_msgs::Pose& pose_cmd_msg)
@@ -170,9 +170,9 @@ namespace champ
                         {
                             vel_cmd_active_ = false;
 
-                            velocities_commands_->linear_velocity_x = 0.0;
-                            velocities_commands_->linear_velocity_y = 0.0;
-                            velocities_commands_->angular_velocity_z = 0.0;
+                            velocities_commands_->linear.x = 0.0f;
+                            velocities_commands_->linear.y = 0.0f;
+                            velocities_commands_->angular.z = 0.0f;
                         }
 
                         if((now - *prev_pose_time_) < 500000)
@@ -183,9 +183,9 @@ namespace champ
                         {   
                             pose_cmd_active_ = false;
 
-                            pose_commands_->roll = 0.0;
-                            pose_commands_->pitch = 0.0;
-                            pose_commands_->yaw = 0.0;
+                            pose_commands_->roll = 0.0f;
+                            pose_commands_->pitch = 0.0f;
+                            pose_commands_->yaw = 0.0f;
                         }
 
                         if((now - *prev_joints_time_) < 500000)
@@ -223,9 +223,9 @@ namespace champ
 
                 void publishVelocities(champ::Velocities vel)
                 {
-                    vel_msg_.linear_x = vel.linear_velocity_x;
-                    vel_msg_.linear_y = vel.linear_velocity_y;
-                    vel_msg_.angular_z = vel.angular_velocity_z;
+                    vel_msg_.linear_x = vel.linear.x;
+                    vel_msg_.linear_y = vel.linear.y;
+                    vel_msg_.angular_z = vel.angular.z;
 
                     vel_pub_.publish(&vel_msg_);
                 }

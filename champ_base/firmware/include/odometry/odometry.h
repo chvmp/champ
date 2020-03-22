@@ -72,9 +72,9 @@ namespace champ
                 unsigned long int now = time_us();
                 double dt = (now - prev_time_) / 1000000.0;
                 
-                vel.linear_velocity_x = x_sum / dt;
-                vel.linear_velocity_y = y_sum / dt;
-                vel.angular_velocity_z = theta_sum / dt;
+                vel.linear.x = x_sum / dt;
+                vel.linear.y = y_sum / dt;
+                vel.angular.z = theta_sum / dt;
                 
                 prev_time_ = now;
             }
