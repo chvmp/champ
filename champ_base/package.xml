@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>champ_base</name>
-  <version>0.0.0</version>
+  <version>0.1.0</version>
   <description>CHAMP Control Package</description>
 
   <maintainer email="jimenojmm@gmail.com">Juan Miguel Jimeno</maintainer>
   <author>Juan Miguel Jimeno</author>
 
-  <license>TODO</license>
+  <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
   <exec_depend>roslaunch</exec_depend>
@@ -25,4 +25,5 @@
   <exec_depend>robot_localization</exec_depend>
   <exec_depend>rosserial</exec_depend>
   <exec_depend>yocs_velocity_smoother</exec_depend>
+  
 </package>

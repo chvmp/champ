@@ -1,9 +1,13 @@
-<package>
+<?xml version="1.0"?>
+<package format="2">
   <name>champ_navigation</name>
-  <version>0.0.0</version>
-  <description>champ_navigation</description>
-  <maintainer email="jimenojmm@gmail.com">Juan Jimeno</maintainer>
-  <license>TODO</license>
+  <version>0.1.0</version>
+  <description>Champ Navigation Files</description>
+
+  <maintainer email="jimenojmm@gmail.com">Juan Miguel Jimeno</maintainer>
+  <author>Juan Miguel Jimeno</author>
+
+  <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roslaunch</build_depend>
@@ -16,7 +20,7 @@
   <run_depend>dwa_local_planner</run_depend>
   <run_depend>base_local_planner</run_depend>
   <run_depend>amcl</run_depend>
-  
+
 </package>
 
 
