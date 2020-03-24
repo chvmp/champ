@@ -25,11 +25,10 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef ACTUATOR_PLUGINS_H
-#define ACTUATOR_PLUGINS_H
+#ifndef IMU_PLUGINS_H
+#define IMU_PLUGINS_H
 
-#include <dynamixel12a_plugin.h>
-#include <digital_servo_plugin.h>
-#include <simulation_actuator_plugin.h>
+#include <imu/bno080_plugin.h>
+#include <imu/simulation_imu_plugin.h>
 
 #endif

@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ACTUATOR_H
 #define ACTUATOR_H
 
-#include <actuator_plugins.h>
+#include <quadruped_base/quadruped_components.h>
 
 template<typename Plugin>
 class Actuator

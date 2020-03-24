@@ -25,10 +25,53 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef IMU_PLUGINS_H
-#define IMU_PLUGINS_H
+#ifndef IMU_H
+#define IMU_H
 
-#include <bno080_plugin.h>
-#include <simulation_imu_plugin.h>
+#include <quadruped_base/quadruped_components.h>
+
+template<typename Plugin>
+class IMU
+{
+    Plugin imu_plugin_;
+
+    public:
+        enum Sensor { SimulationIMU, BNO0809DOF};
+
+        IMU()
+        {
+        }
+
+        void readOrientation(champ::Quaternion &orientation)
+        {
+            imu_plugin_.readOrientation(orientation);
+        }
+
+        void readGyroscope(champ::Gyroscope &gyro)
+        {
+            imu_plugin_.readGyroscope(gyro);
+        }
+
+        void readAccelerometer(champ::Accelerometer &accel)
+        {
+            imu_plugin_.readAccelerometer(accel);
+        }
+
+        void readMagnetometer(champ::Magnetometer &mag)
+        {
+            imu_plugin_.readMagnetometer(mag);
+        }
+        
+        void read(champ::Quaternion &orientation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
+        {
+            imu_plugin_.read(orientation, accel, gyro, mag);
+        }
+
+        void run()
+        {
+            imu_plugin_.run();
+        }
+};
 
 #endif
+

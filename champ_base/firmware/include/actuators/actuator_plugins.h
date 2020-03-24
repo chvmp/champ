@@ -25,53 +25,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef IMU_H
-#define IMU_H
+#ifndef ACTUATOR_PLUGINS_H
+#define ACTUATOR_PLUGINS_H
 
-#include <imu_plugins.h>
-
-template<typename Plugin>
-class IMU
-{
-    Plugin imu_plugin_;
-
-    public:
-        enum Sensor { SimulationIMU, BNO0809DOF};
-
-        IMU()
-        {
-        }
-
-        void readOrientation(champ::Quaternion &orientation)
-        {
-            imu_plugin_.readOrientation(orientation);
-        }
-
-        void readGyroscope(champ::Gyroscope &gyro)
-        {
-            imu_plugin_.readGyroscope(gyro);
-        }
-
-        void readAccelerometer(champ::Accelerometer &accel)
-        {
-            imu_plugin_.readAccelerometer(accel);
-        }
-
-        void readMagnetometer(champ::Magnetometer &mag)
-        {
-            imu_plugin_.readMagnetometer(mag);
-        }
-        
-        void read(champ::Quaternion &orientation, champ::Accelerometer &accel, champ::Gyroscope &gyro, champ::Magnetometer &mag)
-        {
-            imu_plugin_.read(orientation, accel, gyro, mag);
-        }
-
-        void run()
-        {
-            imu_plugin_.run();
-        }
-};
+#include <actuators/dynamixel12a_plugin.h>
+#include <actuators/digital_servo_plugin.h>
+#include <actuators/simulation_actuator_plugin.h>
 
 #endif
-
