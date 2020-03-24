@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:include filename="$(find common_sensors)/urdf/sensors/hokuyo_utm30lx.urdf.xacro" />
-    <xacro:include filename="$(find common_sensors)/urdf/sensors/xtion.urdf.xacro" />
+    <xacro:include filename="$(find hector_sensors_description)/urdf/hokuyo_utm30lx.urdf.xacro" />
+    <xacro:include filename="$(find hector_sensors_description)/urdf/asus_camera.urdf.xacro" />
 
-    <!-- <xacro:hokuyo_utm30lx 
+    <xacro:hokuyo_utm30lx 
         name="hokuyo" 
         parent="base_link" 
         ros_topic="scan" 
@@ -16,13 +16,13 @@
     
     <gazebo reference="hokuyo_frame">
 		<material>Gazebo/FlatBlack</material>
-	</gazebo> -->
+	</gazebo>
 
-    <xacro:sensor_xtion 
+    <xacro:asus_camera_model 
         parent="base_link" 
-        camera_name="camera">
+        name="camera">
         <origin xyz="${base_x_length / 2} 0.0 ${base_z_length / 2 + 0.01}" rpy="0 0 0"/>
-    </xacro:sensor_xtion>
+    </xacro:asus_camera_model>
 
     <gazebo>
         <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">

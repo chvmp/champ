@@ -27,10 +27,7 @@
             <material name="black" />
         </visual>
     </link>
-    <!-- <joint name="base_champ_joint" type="fixed">
-        <parent link="champ" />
-        <child link="base_link" />
-    </joint> -->
+
     <gazebo reference="base_link">
         <material>Gazebo/FlatBlack</material>
     </gazebo>
