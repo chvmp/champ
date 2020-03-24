@@ -11,15 +11,15 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roslaunch</build_depend>
-  <run_depend>gmapping</run_depend>
-  <run_depend>hector_mapping</run_depend>
-  <run_depend>octomap</run_depend>
-  <run_depend>map_server</run_depend>
-  <run_depend>move_base</run_depend>
-  <run_depend>navfn</run_depend>
-  <run_depend>dwa_local_planner</run_depend>
-  <run_depend>base_local_planner</run_depend>
-  <run_depend>amcl</run_depend>
+  <exec_depend>gmapping</exec_depend>
+  <exec_depend>hector_mapping</exec_depend>
+  <exec_depend>octomap</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>navfn</exec_depend>
+  <exec_depend>dwa_local_planner</exec_depend>
+  <exec_depend>base_local_planner</exec_depend>
+  <exec_depend>amcl</exec_depend>
 
 </package>
 
