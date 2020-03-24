@@ -28,9 +28,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef SINGLE_INPUT_INTERFACE_H
 #define SINGLE_INPUT_INTERFACE_H
 
-#include <comms/input_interfaces/rosserial_interface.h>
-#include <comms/input_interfaces/rf_interface.h>
-
 namespace champ
 {
     namespace Interfaces

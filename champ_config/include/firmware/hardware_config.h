@@ -9,7 +9,8 @@
 #define USE_SIMULATION_IMU
 // #define USE_BNO0809DOF_IMU
 
-// #define USE_RF_CONTROLLER
+#define USE_ROS
+// #define USE_ROS_RF
 
 #ifdef USE_RF_CONTROLLER
     #define ELE_PIN 16

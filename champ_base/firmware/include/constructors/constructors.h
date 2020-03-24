@@ -28,18 +28,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef CONSTRUCTORS_H
 #define CONSTRUCTORS_H
 
-#include <actuator.h>
-#include <imu.h>
+#include <actuators/actuator.h>
+#include <imu/imu.h>
 #include <gait_config.h>
-#include <actuator_plugins.h>
-#include <imu_plugins.h>
 #include <quadruped_base/quadruped_components.h>
 #include <comms/input_interfaces/single_input_interface.h>
 #include <comms/input_interfaces/dual_input_interface.h>
 #include <comms/status_interfaces/status_interface.h>
+#include <comms/input_interfaces/rosserial_interface.h>
 
 #ifdef USE_SIMULATION_ACTUATOR
-    #define ACTUATOR SimulationActuator
+    #include <actuators/simulation_actuator_plugin.h>
+
     SimulationActuator::Plugin lfh_actuator;
     SimulationActuator::Plugin lfu_actuator;
     SimulationActuator::Plugin lfl_actuator;
@@ -55,10 +55,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     SimulationActuator::Plugin rhh_actuator;
     SimulationActuator::Plugin rhu_actuator;
     SimulationActuator::Plugin rhl_actuator;
+
+    Actuator<SimulationActuator::Plugin> actuators
+    (
+        PANTOGRAPH_LEG,
+        lfh_actuator, lfu_actuator, lfl_actuator,
+        rfh_actuator,rfu_actuator,rfl_actuator,
+        lhh_actuator,lhu_actuator,lhl_actuator,
+        rhh_actuator,rhu_actuator, rhl_actuator
+    );
 #endif 
 
 #ifdef USE_SERVO_ACTUATOR
-    #define ACTUATOR DigitalServo
+    #include <actuators/digital_servo_plugin.h>
+
     DigitalServo::Plugin lfh_actuator(LFH_PIN,-2.35619, 2.35619, 5, 15, false);
     DigitalServo::Plugin lfu_actuator(LFU_PIN,-1.5708, PI, 2, 12, false);
     DigitalServo::Plugin lfl_actuator(LFL_PIN,-0.785398, 2.35619, -6, -6, true);
@@ -74,12 +84,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     DigitalServo::Plugin rhh_actuator(RHH_PIN,-2.35619, 2.35619, 5, 15, false);
     DigitalServo::Plugin rhu_actuator(RHU_PIN,-1.5708, PI, 8, 18, true);
     DigitalServo::Plugin rhl_actuator(RHL_PIN, -2.35619, 0.785398, -4, -4, false);
+
+    Actuator<DigitalServo::Plugin> actuators
+    (
+        PANTOGRAPH_LEG,
+        lfh_actuator, lfu_actuator, lfl_actuator,
+        rfh_actuator,rfu_actuator,rfl_actuator,
+        lhh_actuator,lhu_actuator,lhl_actuator,
+        rhh_actuator,rhu_actuator, rhl_actuator
+    );
 #endif 
 
 #ifdef USE_DYNAMIXEL_ACTUATOR
-    // (serial_interface, actuator_leg_id, actuator_driver_id,  min_angle,max_angle, inverted)
-    #define ACTUATOR DynamixelAX12A
+    #include <actuators/dynamixel12a_plugin.h>
+
     OneWireMInterface ax12Interface(Serial1);
+    // (serial_interface, actuator_leg_id, actuator_driver_id,  min_angle,max_angle, inverted)
     DynamixelAX12A::Plugin lfh_actuator(ax12Interface, 0,  LFH_SERVO_ID, 0, 0, LFH_INV);
     DynamixelAX12A::Plugin lfu_actuator(ax12Interface, 1,  LFU_SERVO_ID, 0, 0, LFU_INV);
     DynamixelAX12A::Plugin lfl_actuator(ax12Interface, 2,  LFL_SERVO_ID, 0, 0, LFL_INV);
@@ -95,22 +115,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     DynamixelAX12A::Plugin rhh_actuator(ax12Interface, 9,  RHH_SERVO_ID, 0, 0, RHH_INV);
     DynamixelAX12A::Plugin rhu_actuator(ax12Interface, 10, RHU_SERVO_ID, 0, 0, RHU_INV);
     DynamixelAX12A::Plugin rhl_actuator(ax12Interface, 11, RHL_SERVO_ID, 0, 0, RHL_INV);
+
+    Actuator<DynamixelAX12A::Plugin> actuators
+    (
+        PANTOGRAPH_LEG,
+        lfh_actuator, lfu_actuator, lfl_actuator,
+        rfh_actuator,rfu_actuator,rfl_actuator,
+        lhh_actuator,lhu_actuator,lhl_actuator,
+        rhh_actuator,rhu_actuator, rhl_actuator
+    );
 #endif 
 
-Actuator<ACTUATOR::Plugin> actuators
-(
-    PANTOGRAPH_LEG,
-    lfh_actuator, lfu_actuator, lfl_actuator,
-    rfh_actuator,rfu_actuator,rfl_actuator,
-    lhh_actuator,lhu_actuator,lhl_actuator,
-    rhh_actuator,rhu_actuator, rhl_actuator
-);
-
 #ifdef USE_SIMULATION_IMU
+    #include <imu/simulation_imu_plugin.h>
+
     IMU<SimulationIMU::Plugin> imu;
 #endif
 
 #ifdef USE_BNO0809DOF_IMU
+    #include <imu/bno080_plugin.h>
+
     IMU<BNO0809DOF::Plugin> imu;
 #endif
 
@@ -126,15 +150,23 @@ champ::GaitConfig gait_config(
     NOMINAL_HEIGHT
 );
 
-champ::Interfaces::ROSSerial ros_interface;
-champ::Interfaces::Status<champ::Interfaces::ROSSerial> status_interface(ros_interface);
+#ifdef USE_ROS
+    #include <comms/input_interfaces/rosserial_interface.h>
 
-#ifdef USE_RF_CONTROLLER
-    champ::Interfaces::RF rf_interface(ELE_PIN, RUD_PIN, AIL_PIN, THR_PIN, AUX1_PIN, AUX2_PIN);
-    champ::Interfaces::DualInput<champ::Interfaces::ROSSerial, champ::Interfaces::RF> command_interface(ros_interface, rf_interface);
-#else 
+    champ::Interfaces::ROSSerial ros_interface;
+    champ::Interfaces::Status<champ::Interfaces::ROSSerial> status_interface(ros_interface);
     champ::Interfaces::SingleInput<champ::Interfaces::ROSSerial> command_interface(ros_interface);
-// champ::Interfaces::SingleInput<champ::Interfaces::RF> command_interface(rf_interface);
+#endif
+
+#ifdef USE_ROS_RF
+    #include <comms/input_interfaces/rosserial_interface.h>
+    #include <comms/input_interfaces/rf_interface.h>
+
+    champ::Interfaces::ROSSerial ros_interface;
+    champ::Interfaces::RF rf_interface(ELE_PIN, RUD_PIN, AIL_PIN, THR_PIN, AUX1_PIN, AUX2_PIN);
+
+    champ::Interfaces::Status<champ::Interfaces::ROSSerial> status_interface(ros_interface);
+    champ::Interfaces::DualInput<champ::Interfaces::ROSSerial, champ::Interfaces::RF> command_interface(ros_interface, rf_interface);
 #endif
 
 #endif
