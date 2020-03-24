@@ -1,21 +1,16 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>champ_msgs</name>
   <version>0.0.1</version>
   <description>The champ_msgs package</description>
   <maintainer email="jimenojmm@gmail.com">Juan Jimeno</maintainer>
+
   <license>BSD</license>
+
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>message_generation</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>geometry_msgs</build_depend>
+  <depend>message_runtime</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
 
-
-  <run_depend>message_runtime</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>geometry_msgs</run_depend>
-
-  <export>
-
-  </export>
 </package>

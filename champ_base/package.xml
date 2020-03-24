@@ -10,11 +10,19 @@
   <license>TODO</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>rospy</build_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <build_export_depend>rospy</build_export_depend>
-  <exec_depend>roscpp</exec_depend>
-  <exec_depend>rospy</exec_depend>
+  <exec_depend>roslaunch</exec_depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>champ_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>tf</depend>
+  <depend>tf2_ros</depend>
+  <exec_depend>rosserial_python</exec_depend>
+  <exec_depend>champ_description</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>rosserial</exec_depend>
 
 </package>

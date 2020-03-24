@@ -5,9 +5,29 @@ find_package(catkin REQUIRED COMPONENTS
     roslaunch
     roscpp
     rospy
+    champ_msgs
+    visualization_msgs
+    geometry_msgs
+    sensor_msgs
+    nav_msgs
+    tf
+    tf2_ros
 )
 
-find_package(catkin REQUIRED COMPONENTS roslaunch)
+find_package(catkin 
+    REQUIRED 
+    COMPONENTS 
+    roslaunch
+    roscpp
+    rospy
+    champ_msgs
+    visualization_msgs
+    geometry_msgs
+    sensor_msgs
+    nav_msgs
+    tf
+    tf2_ros
+)
 
 catkin_package()
 
