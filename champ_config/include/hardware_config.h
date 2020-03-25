@@ -12,7 +12,7 @@
 #define USE_ROS
 // #define USE_ROS_RF
 
-#ifdef USE_RF_CONTROLLER
+#ifdef USE_ROS_RF
     #define ELE_PIN 16
     #define AIL_PIN 21
     #define RUD_PIN 17
