@@ -17,5 +17,3 @@ find_package(catkin
 )
 
 catkin_package()
-
-roslaunch_add_file_check(launch/bringup.launch)

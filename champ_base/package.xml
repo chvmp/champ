@@ -2,7 +2,7 @@
 <package format="2">
   <name>champ_base</name>
   <version>0.1.0</version>
-  <description>CHAMP Control Package</description>
+  <description>CHAMP ROS Hardware and Software Drivers</description>
 
   <maintainer email="jimenojmm@gmail.com">Juan Miguel Jimeno</maintainer>
   <author>Juan Miguel Jimeno</author>
@@ -20,10 +20,5 @@
   <depend>nav_msgs</depend>
   <depend>tf</depend>
   <depend>tf2_ros</depend>
-  <exec_depend>rosserial_python</exec_depend>
-  <exec_depend>champ_description</exec_depend>
-  <exec_depend>robot_localization</exec_depend>
-  <exec_depend>rosserial</exec_depend>
-  <exec_depend>yocs_velocity_smoother</exec_depend>
   
 </package>
