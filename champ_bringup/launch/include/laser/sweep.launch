@@ -1,0 +1,8 @@
+<launch>
+    <node name="sweep_node"	pkg="sweep_ros"  type="sweep_node" output="screen">
+        <param name="serial_port" type="string" value="/dev/linolidar"/>
+        <param name="serial_baudrate" type="int" value="115200"/>
+        <param name="frame_id" type="string" value="laser"/>
+        <param name="rotation_speed" type="int" value="5"/>
+    </node>
+</launch>

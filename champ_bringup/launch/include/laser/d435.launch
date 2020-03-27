@@ -1,0 +1,35 @@
+<launch>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="laser_to_realsense" args="0 0 0 0 0 0 /laser /camera_link" />
+	
+    <include file="$(find realsense2_camera)/launch/rs_rgbd.launch" />
+    <!-- <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" output="screen">
+        <remap from="image" to="/camera/aligned_depth_to_color/image_raw"/>
+        <remap from="camera_info" to="/camera/aligned_depth_to_color/camera_info"/>
+        <param name="output_frame_id" value="/laser" />
+    </node> -->
+
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+        <remap from="cloud_in" to="/camera/depth_registered/points" />
+        <rosparam>
+            target_frame: laser
+            transform_tolerance: 0.01
+            min_height: 0.0
+            max_height: 0.5
+
+            angle_min: -1.5708 # -M_PI/2
+            angle_max: 1.5708 # M_PI/2
+            angle_increment: 0.0087 # M_PI/360.0
+            scan_time: 0.3333
+            range_min: 0.15
+            range_max: 15
+            use_inf: true
+            inf_epsilon: 1.0
+
+            # Concurrency level, affects number of pointclouds queued for processing, thread number governed by nodelet manager
+            # 0 : Detect number of cores
+            # 1 : Single threaded
+            # 2 : Parallelism level
+            concurrency_level: 0
+        </rosparam>
+    </node>
+</launch>

@@ -1,0 +1,9 @@
+<launch>
+    <arg name="host" default="$(env LIDARIP)" />
+    <arg name="publish_min_range_as_inf" default="false" />
+    <node pkg="lms1xx" name="lms1xx" type="LMS1xx_node">
+        <param name="host" value="$(arg host)" />
+        <param name="publish_min_range_as_inf" value="$(arg publish_min_range_as_inf)" />
+        <param name="frame_id" type="string" value="laser"/>
+    </node>
+</launch>

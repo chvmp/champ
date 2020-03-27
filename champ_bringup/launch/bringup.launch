@@ -1,0 +1,36 @@
+<launch>
+    <arg name="sim"              default="false" />
+    <arg name="gazebo"           default="false" />
+    <arg name="has_odom"         default="false" />
+    <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
+    <arg name="links_map_file"   default="$(find champ_config)/config/links/links.yaml"/>
+    <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
+    <arg name="laser"            default="sim" />
+
+    <node pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
+        <param if="$(arg sim)" name="port" value="/tmp/simavr-uart0" />
+        <param unless="$(arg sim)" name="port" value="/dev/ttyACM0" />
+        <param if="$(arg sim)" name="fix_pyserial_for_test" value="true" />
+        <param unless="$(arg sim)" name="fix_pyserial_for_test" value="false" />
+        <param name="baud" value="500000" />
+    </node>
+
+    <include file="$(find champ_base)/launch/message_relays.launch">
+        <arg name="joints_map_file" value="$(arg joints_map_file)"/>
+        <arg name="links_map_file"  value="$(arg links_map_file)"/>
+        <arg name="gazebo"  value="$(arg gazebo)"/>
+    </include>
+
+    <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" />
+    
+    <include file="$(find champ_description)/launch/description.launch">
+        <arg name="description_file" value="$(arg description_file)"/>
+    </include>
+    
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
+        <remap from="odometry/filtered" to="odom" />
+        <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
+    </node>
+    
+    <include file="$(find champ_bringup)/launch/include/laser/$(arg laser).launch" />
+</launch>

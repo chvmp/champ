@@ -1,0 +1,7 @@
+<launch>
+    <node pkg="xv_11_laser_driver" type="neato_laser_publisher" name="xv_11_laser_driver">
+      <param name="port" value="/dev/linolidar"/>
+      <param name="firmware_version" value="2"/>
+      <param name="frame_id" value="laser"/>
+    </node>
+</launch>

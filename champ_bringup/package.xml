@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>champ_bringup</name>
+  <version>0.1.0</version>
+  <description>CHAMP base launch files</description>
+
+  <maintainer email="jimenojmm@gmail.com">Juan Miguel Jimeno</maintainer>
+  <author>Juan Miguel Jimeno</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>champ_description</exec_depend>
+  <exec_depend>champ_base</exec_depend>
+  <exec_depend>roslaunch</exec_depend>
+  <exec_depend>rosserial_python</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>rosserial</exec_depend>
+  <exec_depend>yocs_velocity_smoother</exec_depend>
+  
+</package>

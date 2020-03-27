@@ -1,0 +1,11 @@
+<launch>
+    <include file="$(find freenect_launch)/launch/freenect.launch"/>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="laser_to_kinect" args="0 0 0 0 0 0 /laser /camera_link 100" />
+
+    <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" output="screen">
+        <remap from="image" to="/camera/depth/image_raw"/>
+        <remap from="camera_info" to="/camera/depth/camera_info"/>
+        <param name="output_frame_id" value="laser" />
+    </node>
+</launch>
