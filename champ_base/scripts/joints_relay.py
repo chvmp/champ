@@ -72,6 +72,3 @@ if __name__ == "__main__":
     rospy.init_node('champ_joints_relay', anonymous=True)
     j = JointsRelay()
     rospy.spin()
-
-
-    

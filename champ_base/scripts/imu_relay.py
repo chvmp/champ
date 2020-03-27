@@ -87,6 +87,3 @@ if __name__ == "__main__":
     rospy.init_node('champ_imu_relay', anonymous=True)
     i = IMURelay()
     rospy.spin()
-
-
-    

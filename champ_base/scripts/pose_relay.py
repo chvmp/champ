@@ -69,6 +69,3 @@ if __name__ == "__main__":
     rospy.init_node('champ_pose_relay', anonymous=True)
     p = PoseRelay()
     rospy.spin()
-
-
-    
