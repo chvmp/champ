@@ -43,10 +43,10 @@ class JointsRelay:
         self.joint_names = []
         
         leg_map = [None,None,None,None]
-        leg_map[3] = rospy.get_param('/joints_relay/left_front')
-        leg_map[2] = rospy.get_param('/joints_relay/right_front')
-        leg_map[1] = rospy.get_param('/joints_relay/left_hind')
-        leg_map[0] = rospy.get_param('/joints_relay/right_hind')
+        leg_map[3] = rospy.get_param('/champ/joints_map/left_front')
+        leg_map[2] = rospy.get_param('/champ/joints_map/right_front')
+        leg_map[1] = rospy.get_param('/champ/joints_map/left_hind')
+        leg_map[0] = rospy.get_param('/champ/joints_map/right_hind')
 
         for leg in reversed(leg_map):
             for joint in leg:

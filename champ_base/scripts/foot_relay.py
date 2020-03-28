@@ -38,7 +38,7 @@ class FootRelay:
         rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
         self.marker_array_pub = rospy.Publisher('/champ/foot', MarkerArray, queue_size = 100)
 
-        self.base = rospy.get_param('/foot_relay/base')
+        self.base = rospy.get_param('/champ/links_map/base')
 
     def foot_callback(self, points):
         marker_array = MarkerArray()
