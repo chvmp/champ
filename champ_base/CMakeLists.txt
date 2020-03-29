@@ -41,5 +41,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(base_controller src/base_controller.cpp)
-target_link_libraries(base_controller ${catkin_LIBRARIES})
+add_library(quadruped_controller src/quadruped_controller.cpp)
+
+add_executable(quadruped_controller_node src/quadruped_controller_node.cpp)
+target_link_libraries(quadruped_controller_node quadruped_controller ${catkin_LIBRARIES})
