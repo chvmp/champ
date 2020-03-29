@@ -49,8 +49,8 @@ class JointsRelay:
         leg_map[0] = rospy.get_param('/champ/joints_map/right_hind')
 
         for leg in reversed(leg_map):
-            for joint in leg:
-                self.joint_names.append(joint) 
+            for i in range(3):
+                self.joint_names.append(leg[i]) 
 
     def joint_states_callback(self, joints):
         joint_states = JointState()
