@@ -13,8 +13,14 @@ class QuadrupedController
     ros::Subscriber cmd_vel_subscriber_; 
     ros::Publisher joints_publisher_;   
 
-    champ::GaitConfig gait_config;
+    champ::GaitConfig gait_config_;
         
+    champ::QuadrupedBase base_;
+    champ::BodyController body_controller_;
+    champ::LegController leg_controller_;
+    champ::Kinematics kinematics_;
+    champ::Odometry odometry_;
+
     void publishJoints_(float joints[12]);
 
     public:
