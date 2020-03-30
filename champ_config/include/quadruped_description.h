@@ -28,7 +28,6 @@ namespace champ
             base.rh.upper_leg.setOrigin(0, -0.06, 0, 0, 0, 0);
             base.rh.lower_leg.setOrigin(0, 0, -0.141, 0, 0, 0);
             base.rh.foot.setOrigin(0, 0, -0.141, 0, 0, 0);
-            base.init();
         }
     }
 }
