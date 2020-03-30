@@ -5,12 +5,15 @@
     <arg name="links_map_file"   default="$(find champ_config)/config/links/links.yaml"/>
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
     <arg name="laser"            default="sim" />
+    <arg name="lite"            default="false" />
 
-    <node pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
+
+    <node if="$(arg lite)" pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
         <param name="port" value="/dev/ttyACM0" />
         <param name="baud" value="500000" />
     </node>
-
+    <node unless="$(arg lite)" pkg="champ_base" name="champ_controller" type="quadruped_controller_node" output="screen"/>
+   
     <include file="$(find champ_base)/launch/message_relays.launch">
         <arg name="joints_map_file" value="$(arg joints_map_file)"/>
         <arg name="links_map_file"  value="$(arg links_map_file)"/>

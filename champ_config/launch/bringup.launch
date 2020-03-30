@@ -1,20 +1,22 @@
 <launch>
     <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
-    <arg name="links_map_file"  default="$(find champ_config)/config/links/links.yaml"/>
+    <arg name="links_map_file"   default="$(find champ_config)/config/links/links.yaml"/>
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
     <arg name="base_frame"       default="base_link"/>
-    <arg name="rviz"             default="false"/>
-    <arg name="laser"            default="sim"/>
     <arg name="has_odom"         default="false" />
+    <arg name="rviz"             default="false"/>
     <arg name="gazebo"           default="false" />
+    <arg name="lite"             default="false" />
+    <arg name="laser"            default="sim"/>
 
     <include file="$(find champ_bringup)/launch/bringup.launch">
-        <arg name="joints_map_file" value="$(arg joints_map_file)"/>
-        <arg name="links_map_file" value="$(arg links_map_file)"/>
+        <arg name="joints_map_file"  value="$(arg joints_map_file)"/>
+        <arg name="links_map_file"   value="$(arg links_map_file)"/>
         <arg name="description_file" value="$(arg description_file)"/>
-        <arg name="gazebo" value="$(arg gazebo)"/>
-        <arg name="has_odom" value="$(arg has_odom)"/>
-        <arg name="laser" value="$(arg laser)"/>
+        <arg name="has_odom"         value="$(arg has_odom)"/>
+        <arg name="gazebo"           value="$(arg gazebo)"/>
+        <arg name="lite"             value="$(arg lite)"/>
+        <arg name="laser"            value="$(arg laser)"/>
     </include>
 
     <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"

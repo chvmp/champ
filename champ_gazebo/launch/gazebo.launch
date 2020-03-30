@@ -3,6 +3,7 @@
     <arg name="gui" default="true"/>
     <arg name="headless" default="false"/>
     <arg name="paused" default="false"/>
+    <arg name="lite"  default="false" />
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(find champ_gazebo)/worlds/outdoor.world"/>
@@ -26,6 +27,7 @@
 
     <include file="$(find champ_bringup)/launch/bringup.launch">
         <arg name="gazebo" value="true"/>
+        <arg name="lite" value="$(arg lite)"/>
     </include>
 </launch>
 
