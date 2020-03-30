@@ -17,29 +17,21 @@ QuadrupedController::QuadrupedController():
     joints_publisher_ = nh_.advertise<champ_msgs::Joints>("/champ/joint_states/raw", 10);
     cmd_vel_sub_ = nh_.subscribe( "/champ/cmd_vel", 1, &QuadrupedController::cmdVelCallback_, this);
     
-    gait_config_.knee_orientation = ">>";
-    gait_config_.pantograph_leg = false;
-    gait_config_.max_linear_velocity_x = 0.5;
-    gait_config_.max_linear_velocity_y = 0.25;
-    gait_config_.max_angular_velocity_z = 1.0;
-    gait_config_.swing_height = 0.04;
-    gait_config_.stance_depth = 0.0;
-    gait_config_.stance_duration = 0.250;
-    gait_config_.nominal_height = 0.20;
+    std::string knee_orientation;
+    nh_.getParam("/champ/gait/pantograph_leg",         gait_config_.pantograph_leg);
+    nh_.getParam("/champ/gait/max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
+    nh_.getParam("/champ/gait/max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
+    nh_.getParam("/champ/gait/max_angular_velocity_z", gait_config_.max_angular_velocity_z);
+    nh_.getParam("/champ/gait/swing_height",           gait_config_.swing_height);
+    nh_.getParam("/champ/gait/stance_depth",           gait_config_.stance_depth);
+    nh_.getParam("/champ/gait/stance_duration",        gait_config_.stance_duration);
+    nh_.getParam("/champ/gait/nominal_height",         gait_config_.nominal_height);
+    nh_.getParam("/champ/gait/knee_orientation",       knee_orientation);
+    gait_config_.knee_orientation = knee_orientation.c_str();
 
+        
     base_.setGaitConfig(gait_config_);
     champ::URDF::loadFromServer(base_, nh_);
-
-    for(int i = 0; i < 4; i++)
-    {
-         for(int j = 0; j < 4; j++)
-        {
-            float x = base_.legs[i]->joint_chain[j]->x();
-            float y = base_.legs[i]->joint_chain[j]->y();
-            float z = base_.legs[i]->joint_chain[j]->z();
-            std::cout << "x: " << x << " y: " << y << " z: " << z << std::endl;
-        }
-    }
 
     champ::Pose req_pose;
     req_pose.position.z = gait_config_.nominal_height;
