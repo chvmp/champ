@@ -6,7 +6,7 @@
     <arg name="gait_config_file" default="$(find champ_config)/config/gait/gait.yaml"/>
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
     <arg name="laser"            default="sim" />
-    <arg name="lite"            default="false" />
+    <arg name="lite"             default="false" />
 
     <node if="$(arg lite)" pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
         <param name="port" value="/dev/ttyACM0" />
@@ -18,7 +18,8 @@
     <include file="$(find champ_base)/launch/message_relays.launch">
         <arg name="joints_map_file" value="$(arg joints_map_file)"/>
         <arg name="links_map_file"  value="$(arg links_map_file)"/>
-        <arg name="gazebo"  value="$(arg gazebo)"/>
+        <arg name="gazebo"          value="$(arg gazebo)"/>
+        <arg name="lite"            value="$(arg lite)" />
     </include>
 
     <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" />
