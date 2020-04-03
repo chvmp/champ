@@ -33,13 +33,13 @@ import tf
 
 class Odom:
     def __init__(self):
-        rospy.Subscriber("odom/ground_truth", Odometry, self.odometry_callback) 
+        rospy.Subscriber("odom/raw", Odometry, self.odometry_callback) 
         self.odom_broadcaster = tf.TransformBroadcaster()
 
     def odometry_callback(self, data):
         self.current_linear_speed_x = data.twist.twist.linear.x
         self.current_angular_speed_z = data.twist.twist.angular.z
-
+        
         current_time = rospy.Time.now()
 
         odom_quat = (
