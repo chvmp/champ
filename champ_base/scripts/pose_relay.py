@@ -39,15 +39,14 @@ class PoseRelay:
         rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
     
         self.robot_height = 0
+        self.imu_data = Imu()
 
     def foot_callback(self, points):
         self.robot_height = (points.lf.z + points.rf.z + points.lh.z + points.rh.z) / 4
-
-    def imu_callback(self, imu):
         base_broadcaster = tf2_ros.TransformBroadcaster()
         transform_stamped = TransformStamped()
 
-        quaternion = (imu.orientation.x, imu.orientation.y, imu.orientation.z, imu.orientation.w)
+        quaternion = (self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w)
 
         pose_euler = euler_from_quaternion(quaternion)
         pose_quat = quaternion_from_euler(pose_euler[0], pose_euler[1], 0)
@@ -64,6 +63,9 @@ class PoseRelay:
         transform_stamped.transform.rotation.w = pose_quat[3]
 
         base_broadcaster.sendTransform(transform_stamped)
+
+    def imu_callback(self, imu):
+        self.imu_data = imu
 
 if __name__ == "__main__":
     rospy.init_node('champ_pose_relay', anonymous=True)
