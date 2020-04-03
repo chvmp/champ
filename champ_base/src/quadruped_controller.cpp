@@ -45,7 +45,7 @@ QuadrupedController::QuadrupedController():
 
     champ::Velocities req_vel;
 
-    ros::Rate r(50);
+    ros::Rate r(200);
     while (ros::ok())
     {
         geometry::Transformation target_foot_positions[4];
