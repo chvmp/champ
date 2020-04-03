@@ -7,7 +7,7 @@
     <!-- <link name="champ"/> -->
     <link name="base_link">
         <inertial>
-            <origin xyz="0.02 0 0" />
+            <origin xyz="0 0 0" />
             <mass value="${base_mass}" />
             <inertia ixx="${(1/12) * base_mass * (base_y_length * base_y_length + base_z_length * base_z_length)}" ixy="0.0" ixz="0.0"
                      iyy="${(1/12) * base_mass * (base_x_length * base_x_length + base_z_length * base_z_length)}" iyz="0.0"
