@@ -93,7 +93,9 @@ void QuadrupedController::publishVelocities_(const ros::TimerEvent& event)
     double vel_dt = (current_time - last_vel_time_).toSec();
     last_vel_time_ = current_time;
 
-    double delta_heading = current_velocities_.angular.z * vel_dt; //radians
+    //rotate in the z axis
+    //https://en.wikipedia.org/wiki/Rotation_matrix
+    double delta_heading = current_velocities_.angular.z * vel_dt; 
     double delta_x = (current_velocities_.linear.x * cos(heading_) - current_velocities_.linear.y * sin(heading_)) * vel_dt; //m
     double delta_y = (current_velocities_.linear.x * sin(heading_) + current_velocities_.linear.y * cos(heading_)) * vel_dt; //m
 
@@ -103,7 +105,6 @@ void QuadrupedController::publishVelocities_(const ros::TimerEvent& event)
     heading_ += delta_heading;
 
     //calculate robot's heading_ in quaternion angle
-    //ROS has a function to calculate yaw in quaternion angle
     tf2::Quaternion odom_quat;
     odom_quat.setRPY(0, 0, heading_);
 
@@ -125,7 +126,6 @@ void QuadrupedController::publishVelocities_(const ros::TimerEvent& event)
     odom.pose.covariance[7] = 0.001;
     odom.pose.covariance[35] = 0.001;
 
-    //linear speed from encoders
     odom.twist.twist.linear.x = current_velocities_.linear.x;
     odom.twist.twist.linear.y = current_velocities_.linear.y;
     odom.twist.twist.linear.z = 0.0;
