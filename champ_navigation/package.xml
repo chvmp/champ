@@ -10,7 +10,7 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>roslaunch</build_depend>
+  <exec_depend>roslaunch</exec_depend>
   <exec_depend>gmapping</exec_depend>
   <exec_depend>hector_mapping</exec_depend>
   <exec_depend>octomap</exec_depend>

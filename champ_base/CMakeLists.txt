@@ -6,7 +6,6 @@ add_compile_options(-std=c++11)
 find_package(catkin 
     REQUIRED 
     COMPONENTS 
-    roslaunch
     roscpp
     rospy
     champ_msgs
