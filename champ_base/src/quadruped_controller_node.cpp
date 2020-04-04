@@ -4,6 +4,12 @@
 int main(int argc, char** argv )
 {
     ros::init(argc, argv, "champ_controller_node");
-    QuadrupedController champ;
+
+    ros::NodeHandle nh("");
+    ros::NodeHandle nh_private("~");
+    
+    QuadrupedController champ(nh, nh_private);
+    
+    ros::spin();
     return 0;
 }
