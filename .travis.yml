@@ -1,0 +1,29 @@
+sudo: required
+dist: xenial
+language: generic
+
+compiler:
+  - gcc
+
+install:
+  - export ROSDISTRO=kinetic
+  - sudo apt update
+  - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+  - sudo apt update
+  - sudo apt install -y dpkg
+  - sudo apt install -y ros-$ROSDISTRO-ros-base
+  - sudo apt install -y python-rosdep
+  - sudo `which rosdep` init
+  - rosdep update
+  - source /opt/ros/$ROSDISTRO/setup.bash
+  - export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages
+  - mkdir -p catkin_ws/src && cd catkin_ws/src
+  - git clone https://github.com/chvmp/champ
+  - cd ../
+  - rosdep install --from-paths src --ignore-src -r -y
+  - catkin_make
+
+notifications:
+  email:
+    - jimenojmm@gmail.com
