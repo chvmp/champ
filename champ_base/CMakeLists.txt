@@ -35,11 +35,25 @@ catkin_package(
     urdf
 )
 
+#Download libchamp
+set(LIBCHAMP_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/libchamp/include")
+set(HEADER_URL "https://github.com/chvmp/libchamp")
+
+if (NOT EXISTS "${LIBCHAMP_HEADERS}")
+  message(STATUS "Downloading libchamp...")
+  message(STATUS ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  execute_process(
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
+    COMMAND git clone ${HEADER_URL}
+  )
+endif()
+
 include_directories(
   include
-  include/libchamp/include
+  ${LIBCHAMP_HEADERS}
   ${catkin_INCLUDE_DIRS}
 )
+##end of auto download
 
 add_library(quadruped_controller src/quadruped_controller.cpp)
 
