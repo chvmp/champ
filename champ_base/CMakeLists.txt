@@ -18,6 +18,10 @@ find_package(catkin
     urdf
 )
 
+generate_messages(DEPENDENCIES
+  champ_msgs
+)
+
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES champ_base
@@ -33,6 +37,7 @@ catkin_package(
     tf2_ros
     urdf
 )
+
 
 install(DIRECTORY include/libchamp/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
@@ -61,7 +66,7 @@ add_library(quadruped_controller src/quadruped_controller.cpp)
 
 add_executable(quadruped_controller_node src/quadruped_controller_node.cpp)
 target_link_libraries(quadruped_controller_node quadruped_controller ${catkin_LIBRARIES})
-add_dependencies(quadruped_controller_node ${catkin_EXPORTED_TARGETS})
+add_dependencies(quadruped_controller_node champ_msgs_generate_messages_cpp)
 
 install(PROGRAMS
   scripts/foot_relay.py
@@ -79,10 +84,4 @@ install(TARGETS
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY include/libchamp/include
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
-  PATTERN ".git" EXCLUDE
 )
