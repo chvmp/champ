@@ -6,8 +6,6 @@ find_package(catkin REQUIRED COMPONENTS)
 
 catkin_package()
 
-roslaunch_add_file_check(launch/gazebo.launch)
-
 install(PROGRAMS
   scripts/imu_sensor.py
   scripts/joints_controller.py
