@@ -59,3 +59,5 @@ add_library(quadruped_controller src/quadruped_controller.cpp)
 
 add_executable(quadruped_controller_node src/quadruped_controller_node.cpp)
 target_link_libraries(quadruped_controller_node quadruped_controller ${catkin_LIBRARIES})
+
+add_dependencies(quadruped_controller_node champ_msgs_generate_messages_cpp)
