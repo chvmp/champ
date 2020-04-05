@@ -53,7 +53,7 @@ endif()
 
 #Download velocity smoother
 set(YOCS_URL "https://github.com/chvmp/yocs_velocity_smoother")
-set(YOCS_DOWNLOAD_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../)
+set(YOCS_DOWNLOAD_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 set(YOCS_DEPENDENCY_PATH ${YOCS_DOWNLOAD_PATH}/yocs_velocity_smoother)
 
 if (NOT EXISTS "${YOCS_DEPENDENCY_PATH}")
@@ -61,11 +61,11 @@ if (NOT EXISTS "${YOCS_DEPENDENCY_PATH}")
   message(STATUS "${YOCS_DOWNLOAD_PATH}")
 
   execute_process(
-    COMMAND git clone ${YOCS_URL} ${YOCS_DOWNLOAD_PATH}/yocs_velocity_smoother
+    COMMAND git clone ${YOCS_URL} ${YOCS_DEPENDENCY_PATH}
   )
 
   execute_process(
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../../
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../..
     COMMAND catkin_make --pkg yocs_velocity_smoother
   )
 endif()
