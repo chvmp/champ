@@ -1,17 +1,22 @@
 sudo: required
-dist: bionic
 language: generic
 
 matrix:
   include:
-   - os: linux
-     arch: amd64
-   - os: linux
-     arch: arm64
    - dist: xenial
-     env: ROSDISTRO=kinetic
+      env: ROSDISTRO=kinetic
+      os: linux
+       arch: amd64
+      os: linux
+       arch: arm64
+
    - dist: bionic
      env: ROSDISTRO=melodic
+      env: ROSDISTRO=kinetic
+      os: linux
+       arch: amd64
+      os: linux
+       arch: arm64
 
 branches:
   only:
@@ -21,7 +26,6 @@ compiler:
   - gcc
 
 install:
-  - export ROSDISTRO=melodic
   - sudo apt-get update
   - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
