@@ -4,18 +4,24 @@ language: generic
 matrix:
   include:
    - dist: xenial
-      env: ROSDISTRO=kinetic
-      os: linux
-      arch: amd64
-      os: linux
-      arch: arm64
+     env: ROSDISTRO=kinetic
+     os: linux
+     arch: amd64
+
+   - dist: xenial
+     env: ROSDISTRO=kinetic
+     os: linux
+     arch: arm64
 
    - dist: bionic
-      env: ROSDISTRO=melodic
-      os: linux
-      arch: amd64
-      os: linux
-      arch: arm64
+     env: ROSDISTRO=melodic
+     os: linux
+     arch: amd64
+
+   - dist: bionic
+     env: ROSDISTRO=melodic
+     os: linux
+     arch: arm64
 
 branches:
   only:
