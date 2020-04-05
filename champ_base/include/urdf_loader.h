@@ -15,16 +15,16 @@ namespace champ
     {
         void getPose(urdf::Pose *pose, std::string ref_link, std::string end_link, urdf::Model &model)
         {
-            boost::shared_ptr<const urdf::Link> ref_link_ptr = model.getLink(ref_link);
+            urdf::LinkConstSharedPtr ref_link_ptr = model.getLink(ref_link);
 
             std::string current_parent_name = end_link;
-            boost::shared_ptr<const urdf::Link> prev_link = model.getLink(current_parent_name);
+            urdf::LinkConstSharedPtr prev_link = model.getLink(current_parent_name);
 
             double roll, pitch, yaw;           
 
             while(ref_link_ptr->name != current_parent_name)
             {   
-                boost::shared_ptr<const urdf::Link> current_link = model.getLink(current_parent_name);
+                urdf::LinkConstSharedPtr current_link = model.getLink(current_parent_name);
                 urdf::Pose current_pose = current_link->parent_joint->parent_to_joint_origin_transform;
               
                 current_parent_name = current_link->getParent()->name;
