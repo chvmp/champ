@@ -8,8 +8,10 @@ matrix:
      arch: amd64
    - os: linux
      arch: arm64
-  - dist: xenial
-  - dist: bionic
+   - dist: xenial
+     env: ROSDISTRO=kinetic
+   - dist: bionic
+     env: ROSDISTRO=melodic
 
 branches:
   only:
