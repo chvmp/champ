@@ -38,6 +38,7 @@ class PoseRelay:
         rospy.Subscriber("/champ/imu/data", Imu, self.imu_callback)
         rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
     
+        self.robot_base = rospy.get_param('/champ/links_map/base')
         self.robot_height = 0
         self.imu_data = Imu()
 
@@ -53,7 +54,7 @@ class PoseRelay:
 
         transform_stamped.header.stamp = rospy.Time.now()
         transform_stamped.header.frame_id = "base_footprint"
-        transform_stamped.child_frame_id = "base_link"
+        transform_stamped.child_frame_id = self.robot_base
         transform_stamped.transform.translation.x = 0.0
         transform_stamped.transform.translation.y = 0.0 
         transform_stamped.transform.translation.z = -self.robot_height
