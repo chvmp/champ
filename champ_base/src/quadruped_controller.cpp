@@ -10,7 +10,8 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     kinematics_(base_),
     odometry_(base_)
 {
-    cmd_vel_sub_ = pnh_.subscribe( "/champ/cmd_vel", 1, &QuadrupedController::cmdVelCallback_, this);
+    cmd_vel_subscriber_ = pnh_.subscribe( "/champ/cmd_vel", 1, &QuadrupedController::cmdVelCallback_, this);
+    cmd_pose_subscriber_ = pnh_.subscribe( "/champ/cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
 
     joints_publisher_ = pnh_.advertise<champ_msgs::Joints>("/champ/joint_states/raw", 50);
     velocities_publisher_   = pnh_.advertise<nav_msgs::Odometry>("/odom/raw", 50);
@@ -46,17 +47,16 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     foot_position_timer_ = pnh_.createTimer(ros::Duration(0.005),
                                             &QuadrupedController::publishFootPositions_, 
                                             this);
+
+    req_pose_.position.z = gait_config_.nominal_height;
 }
 
 void QuadrupedController::controlLoop_(const ros::TimerEvent& event)
 {
-    champ::Pose req_pose;
-    req_pose.position.z = gait_config_.nominal_height;
-
     geometry::Transformation target_foot_positions[4];
     float target_joint_positions[12];
     
-    body_controller_.poseCommand(target_foot_positions, req_pose);
+    body_controller_.poseCommand(target_foot_positions, req_pose_);
     leg_controller_.velocityCommand(target_foot_positions, req_vel_);
     kinematics_.inverse(target_joint_positions, target_foot_positions);
     actuators_.moveJoints(target_joint_positions);
@@ -72,6 +72,17 @@ void QuadrupedController::cmdVelCallback_(const geometry_msgs::Twist::ConstPtr& 
     req_vel_.linear.x = msg->linear.x;
     req_vel_.linear.y = msg->linear.y;
     req_vel_.angular.z = msg->angular.z;
+}
+
+void QuadrupedController::cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg)
+{
+    req_pose_.orientation.roll = msg->roll;
+    req_pose_.orientation.pitch = msg->pitch;
+    req_pose_.orientation.yaw = msg->yaw;
+
+    req_pose_.position.z = msg->z * gait_config_.nominal_height;
+    if(req_pose_.position.z < (gait_config_.nominal_height * 0.5))
+        req_pose_.position.z = gait_config_.nominal_height * 0.5;
 }
 
 void QuadrupedController::publishJoints_(const ros::TimerEvent& event)

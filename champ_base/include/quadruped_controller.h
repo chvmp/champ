@@ -31,7 +31,7 @@ class QuadrupedController
     ros::NodeHandle pnh_;
 
     ros::Subscriber cmd_vel_subscriber_;
-    ros::Subscriber cmd_vel_sub_;
+    ros::Subscriber cmd_pose_subscriber_;
     
     ros::Publisher joints_publisher_;   
     ros::Publisher velocities_publisher_;
@@ -43,6 +43,8 @@ class QuadrupedController
     ros::Timer foot_position_timer_;
 
     champ::Velocities req_vel_;
+    champ::Pose req_pose_;
+
     champ::Velocities current_velocities_;
     float current_joint_positions_[12];
     geometry::Transformation current_foot_positions_[4];
@@ -67,7 +69,8 @@ class QuadrupedController
     void publishFootPositions_(const ros::TimerEvent& event);
 
     void cmdVelCallback_(const geometry_msgs::Twist::ConstPtr& msg);
-    
+    void cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg);
+
     public:
         QuadrupedController(const ros::NodeHandle &node_handle,
                             const ros::NodeHandle &private_node_handle);
