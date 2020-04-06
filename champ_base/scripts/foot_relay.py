@@ -38,15 +38,15 @@ class FootRelay:
         rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
         self.marker_array_pub = rospy.Publisher('/champ/foot', MarkerArray, queue_size = 100)
 
-        self.base = rospy.get_param('/champ/links_map/base')
+        self.robot_base = rospy.get_param('/champ/links_map/base')
 
     def foot_callback(self, points):
         marker_array = MarkerArray()
 
-        marker_array.markers.append(self.create_marker(points.lf.x, points.lf.y, points.lf.z, 0, self.base))
-        marker_array.markers.append(self.create_marker(points.rf.x, points.rf.y, points.rf.z, 1, self.base))
-        marker_array.markers.append(self.create_marker(points.lh.x, points.lh.y, points.lh.z, 2, self.base))
-        marker_array.markers.append(self.create_marker(points.rh.x, points.rh.y, points.rh.z, 3, self.base))
+        marker_array.markers.append(self.create_marker(points.lf.x, points.lf.y, points.lf.z, 0, self.robot_base))
+        marker_array.markers.append(self.create_marker(points.rf.x, points.rf.y, points.rf.z, 1, self.robot_base))
+        marker_array.markers.append(self.create_marker(points.lh.x, points.lh.y, points.lh.z, 2, self.robot_base))
+        marker_array.markers.append(self.create_marker(points.rh.x, points.rh.y, points.rh.z, 3, self.robot_base))
 
         self.marker_array_pub.publish(marker_array)
 
