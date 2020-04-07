@@ -28,7 +28,7 @@ DWAPlannerROS:
   stop_time_buffer: 0.5
   oscillation_reset_dist: 0.05
   oscillation_reset_angle: 0.2
-  forward_point_distance: 0.3
+  forward_point_distance: 0.2
   scaling_speed: 0.25
   max_scaling_factor: 0.2
   vx_samples: 20
