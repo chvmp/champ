@@ -16,6 +16,7 @@
   <exec_depend>octomap</exec_depend>
   <exec_depend>map_server</exec_depend>
   <exec_depend>move_base</exec_depend>
+  <exec_depend>global_planner</exec_depend>
   <exec_depend>navfn</exec_depend>
   <exec_depend>dwa_local_planner</exec_depend>
   <exec_depend>base_local_planner</exec_depend>
