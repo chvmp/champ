@@ -17,5 +17,6 @@
   <exec_depend>robot_localization</exec_depend>
   <exec_depend>rosserial</exec_depend>
   <exec_depend>yocs_velocity_smoother</exec_depend>
-  
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+
 </package>
