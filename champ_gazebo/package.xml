@@ -14,5 +14,6 @@
   <exec_depend>gazebo_ros</exec_depend>
   <exec_depend>gazebo_ros_control</exec_depend>
   <exec_depend>gazebo_plugins</exec_depend>
-  
+  <exec_depend>ros_controllers</exec_depend>
+
 </package>
