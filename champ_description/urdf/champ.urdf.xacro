@@ -4,15 +4,7 @@
 
     <material name="black"><color rgba="0.15 0.15 0.15 1.0" /></material>
     
-    <!-- <link name="champ"/> -->
     <link name="base_link">
-        <inertial>
-            <origin xyz="0 0 0" />
-            <mass value="${base_mass}" />
-            <inertia ixx="${(1/12) * base_mass * (base_y_length * base_y_length + base_z_length * base_z_length)}" ixy="0.0" ixz="0.0"
-                     iyy="${(1/12) * base_mass * (base_x_length * base_x_length + base_z_length * base_z_length)}" iyz="0.0"
-                     izz="${(1/12) * base_mass * (base_x_length * base_x_length + base_y_length * base_y_length)}" />
-        </inertial>
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
@@ -27,6 +19,20 @@
             <material name="black" />
         </visual>
     </link>
+    <link name="base_inertia">    
+        <inertial>
+            <origin xyz="0 0 0" />
+            <mass value="${base_mass}" />
+            <inertia ixx="${(1/12) * base_mass * (base_y_length * base_y_length + base_z_length * base_z_length)}" ixy="0.0" ixz="0.0"
+                     iyy="${(1/12) * base_mass * (base_x_length * base_x_length + base_z_length * base_z_length)}" iyz="0.0"
+                     izz="${(1/12) * base_mass * (base_x_length * base_x_length + base_y_length * base_y_length)}" />
+        </inertial>
+    </link>  
+    <joint name="base_link_to_base_inertia" type="fixed">    
+        <parent link="base_link"/>    
+        <child link="base_inertia"/>    
+        <origin rpy="0 0 0" xyz="0 0 0"/>  
+    </joint>  
 
     <gazebo reference="base_link">
         <material>Gazebo/FlatBlack</material>
