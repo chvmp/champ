@@ -50,4 +50,9 @@
         <parent link="base_link" />
         <child link="imu_link" />
     </joint>
+
+    <!-- <xacro:include filename="$(find champ_arm_description)/urdf/champ_arm.urdf.xacro" />
+    <xacro:champ_arm parent="base_link">
+        <origin xyz="0.07 0.0 ${base_z_length / 2}" rpy="0 0 0"/>
+    </xacro:champ_arm> -->
 </robot>
