@@ -2,7 +2,7 @@
     <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
     <arg name="links_map_file"   default="$(find champ_config)/config/links/links.yaml"/>
     <arg name="gait_config_file" default="$(find champ_config)/config/gait/gait.yaml"/>
-    <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
+    <arg name="description_file" default="$(find champ_description)/urdf/champ_arm.urdf"/>
     <arg name="base_frame"       default="base_link"/>
     <arg name="has_odom"         default="false" />
     <arg name="rviz"             default="false"/>
