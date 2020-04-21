@@ -7,6 +7,14 @@
   <material name="black">
     <color rgba="0.15 0.15 0.15 1.0"/>
   </material>
+
+  <link name="upper_arm_debug_link"/>
+  <joint name="upper_arm_debug_joint" type="fixed">
+    <parent link="base"/>
+    <child link="upper_arm_debug_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.035"/>
+  </joint>
+
   <link name="base_link">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
