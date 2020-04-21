@@ -11,7 +11,6 @@
     </node>
 
     <node name="champ_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
-        <param name="publish_frequency" value="100"/>
         <param name="use_tf_static"     value="true"/>
         <remap from="robot_description" to="$(arg description_name)"/>
         <!-- <remap from="/joint_states" to="/champ/joint_states" /> -->

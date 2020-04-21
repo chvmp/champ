@@ -2,9 +2,9 @@
     <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
     <arg name="links_map_file"   default="$(find champ_config)/config/links/links.yaml"/>
     <arg name="gait_config_file" default="$(find champ_config)/config/gait/gait.yaml"/>
-    <arg name="description_file" default="$(find champ_description)/urdf/champ_arm.urdf"/>
+    <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
     <arg name="base_frame"       default="base_link"/>
-    <arg name="has_odom"         default="false" />
+    <arg name="has_imu"          default="true" />
     <arg name="rviz"             default="false"/>
     <arg name="gazebo"           default="false" />
     <arg name="lite"             default="false" />
@@ -15,7 +15,7 @@
         <arg name="links_map_file"   value="$(arg links_map_file)"/>
         <arg name="gait_config_file" value="$(arg gait_config_file)"/>
         <arg name="description_file" value="$(arg description_file)"/>
-        <arg name="has_odom"         value="$(arg has_odom)"/>
+        <arg name="has_imu"         value="$(arg has_imu)"/>
         <arg name="gazebo"           value="$(arg gazebo)"/>
         <arg name="lite"             value="$(arg lite)"/>
         <arg name="laser"            value="$(arg laser)"/>

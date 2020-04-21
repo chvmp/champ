@@ -1,6 +1,6 @@
 <launch>
     <arg name="gazebo"           default="false" />
-    <arg name="has_odom"         default="false" />
+    <arg name="has_imu"          default="true" />
     <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
     <arg name="links_map_file"   default="$(find champ_config)/config/links/links.yaml"/>
     <arg name="gait_config_file" default="$(find champ_config)/config/gait/gait.yaml"/>
@@ -20,6 +20,7 @@
         <arg name="links_map_file"  value="$(arg links_map_file)"/>
         <arg name="gazebo"          value="$(arg gazebo)"/>
         <arg name="lite"            value="$(arg lite)" />
+        <arg name="has_imu"         value="$(arg has_imu)" />
     </include>
 
     <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" />

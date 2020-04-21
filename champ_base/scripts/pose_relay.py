@@ -27,18 +27,35 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 import rospy
+from champ_msgs.msg import Pose
+
 from champ_msgs.msg import PointArray
 from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Quaternion, TransformStamped
 from tf.transformations import quaternion_from_euler, euler_from_quaternion
 import tf2_ros
 
+class PoseCmd:
+    def __init__(self):
+        self.pose_subscriber = rospy.Subscriber('champ/cmd_pose', Pose, self.pose_callback)
+        self.roll = 0
+        self.pitch = 0
+        self.yaw = 0
+
+    def pose_callback(self, data):
+        self.roll = data.roll
+        self.pitch = data.pitch
+        self.yaw = data.yaw
+
 class PoseRelay:
     def __init__(self):
         rospy.Subscriber("/champ/imu/data", Imu, self.imu_callback)
         rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
-    
+        self.pose_cmd = PoseCmd()
+
         self.robot_base = rospy.get_param('/champ/links_map/base')
+        self.has_imu = rospy.get_param("/pose_relay/has_imu", True)
+        print self.has_imu
         self.robot_height = 0
         self.imu_data = Imu()
 
@@ -47,10 +64,12 @@ class PoseRelay:
         base_broadcaster = tf2_ros.TransformBroadcaster()
         transform_stamped = TransformStamped()
 
-        quaternion = (self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w)
-
-        pose_euler = euler_from_quaternion(quaternion)
-        pose_quat = quaternion_from_euler(pose_euler[0], pose_euler[1], 0)
+        if self.has_imu:
+            quaternion = (self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w)
+            pose_euler = euler_from_quaternion(quaternion)
+            pose_quat = quaternion_from_euler(pose_euler[0], pose_euler[1], 0)
+        else:
+            pose_quat = quaternion_from_euler(self.pose_cmd.roll, self.pose_cmd.pitch, self.pose_cmd.yaw)
 
         transform_stamped.header.stamp = rospy.Time.now()
         transform_stamped.header.frame_id = "base_footprint"
