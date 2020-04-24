@@ -55,7 +55,6 @@ class PoseRelay:
 
         self.robot_base = rospy.get_param('/champ/links_map/base')
         self.has_imu = rospy.get_param("/pose_relay/has_imu", True)
-        print self.has_imu
         self.robot_height = 0
         self.imu_data = Imu()
 
