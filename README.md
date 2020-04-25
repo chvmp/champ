@@ -1,5 +1,5 @@
 
-# champ
+# champ [![Build Status](https://travis-ci.org/chvmp/champ.svg?branch=master)](https://travis-ci.org/chvmp/champ) 
 ROS Packages for CHAMP Quadruped Controller.
 
 CHAMP is an open source development framework for building new quadrupedal robots and developing new control algorithms. The control framework is based on [*"Hierarchical controller for highly dynamic locomotion utilizing pattern modulation and impedance control : implementation on the MIT Cheetah robot"*](https://dspace.mit.edu/handle/1721.1/85490).
@@ -40,10 +40,6 @@ TESTED ON:
 - Ubuntu 16.04 (ROS Kinetic)
 - Ubuntu 18.04 (ROS Melodic)
 
-
-
-
-
 ## 1. Installation
 
 1.1. Clone and install all dependencies:
@@ -62,6 +58,8 @@ TESTED ON:
     source <your_ws/>/devel/setup.bash
 
 ## 2. Quick Start
+
+You don't need a physical robot to run the following demos. If you're building a physical robot, proceed to step 3.
 
 ### 2.1. Walking demo in RVIZ:
 
@@ -117,6 +115,10 @@ To navigate:
 
 ## 3. Running your own robot:
 
+TODO: 
+- Hardware Documentation
+- Micro-controller based configuration
+
 ### 3.1. Generate roobot configuration
 
    - First generate a configuration package using [champ_setup_assistant](https://github.com/chvmp/champ_setup_assistant). Follow the instructions in the README to configure your own robot. The generated package contains:
@@ -137,7 +139,7 @@ To navigate:
 
 ### 3.2.Base Driver:
 
-The base driver contains the quadruped controller and all sensor/hardware drivers for your robot:
+This will run the quadruped controller and all sensor/hardware drivers:
 
     roslaunch <myrobot_config> bringup.launch
 
