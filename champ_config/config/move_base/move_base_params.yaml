@@ -1,0 +1,19 @@
+base_global_planner: global_planner/GlobalPlanner
+base_local_planner: dwa_local_planner/DWAPlannerROS
+
+shutdown_costmaps: false
+
+controller_frequency: 5.0 #before 5.0
+controller_patience: 3.0
+
+planner_frequency: 0.5
+planner_patience: 5.0
+
+oscillation_timeout: 10.0
+oscillation_distance: 0.2
+
+conservative_reset_dist: 0.1 #distance from an obstacle at which it will unstuck itself
+
+cost_factor: 1.0
+neutral_cost: 55
+lethal_cost: 253

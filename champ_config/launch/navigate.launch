@@ -1,0 +1,17 @@
+<launch>
+    <arg name="rviz" default="false" />
+
+    <!-- Map server -->
+    <arg name="map_file" default="$(find champ_config)/maps/map.yaml"/>
+    <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" />
+
+    <!-- AMCL used for localization -->
+    <include file="$(find champ_config)/launch/include/amcl.launch" />
+    
+    <!-- Calls navigation stack packages for compatible Linorobot base -->
+    <include file="$(find champ_config)/launch/include/move_base.launch" />
+
+    <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find champ_navigation)/rviz/navigate.rviz -f map"
+        output="screen"/>
+</launch>

@@ -1,0 +1,11 @@
+<launch>
+    <arg name="rviz" default="false" />
+
+    <include file="$(find champ_config)/launch/include/gmapping.launch" />
+
+    <include file="$(find champ_config)/launch/include/move_base.launch" />
+
+    <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find champ_navigation)/rviz/navigate.rviz -f map"
+        output="screen"/>
+</launch>
