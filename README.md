@@ -74,7 +74,7 @@ To navigate:
 
    ![champ](https://raw.githubusercontent.com/chvmp/champ/master/docs/images/navigation.gif)
 
-## 3 Running your own robot:
+## 3. Running your own robot:
 
 ### 3.1. Generate roobot configuration
 
@@ -133,7 +133,7 @@ To start mapping:
       roscd <myrobot_config>/maps
       rosrun map_server map_saver
 
-### 2.3. Autonomous Navigation:
+### 3.4. Autonomous Navigation:
 
 The base driver described in 3.2 must be running to run amcl and move_base.
 
