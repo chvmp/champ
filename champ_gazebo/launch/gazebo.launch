@@ -25,7 +25,7 @@
 
     <node pkg="champ_gazebo" name="champ_joints_controller" type="joints_controller.py" output="screen"/>
 
-    <include file="$(find champ_bringup)/launch/bringup.launch">
+    <include file="$(find champ_config)/launch/bringup.launch">
         <arg name="gazebo" value="true"/>
         <arg name="lite" value="$(arg lite)"/>
     </include>
