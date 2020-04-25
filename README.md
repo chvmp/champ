@@ -1,6 +1,47 @@
 
 # champ
-ROS Packages for CHAMP Quadruped Controller
+ROS Packages for CHAMP Quadruped Controller.
+
+CHAMP is an open source development framework for building new quadrupedal robots and developing new control algorithms. The control framework is based on [*"Hierarchical controller for highly dynamic locomotion utilizing pattern modulation and impedance control : implementation on the MIT Cheetah robot"*](https://dspace.mit.edu/handle/1721.1/85490).
+
+Some of the features include:
+
+- Fully Autonomous (using ROS navigation Stack).
+- [Setup-assistant](https://github.com/chvmp/champ_setup_assistant) to configure newly built robots.
+- Collection of pre-configured [URDFs](https://github.com/chvmp/robots) like Anymal, MIT Mini Cheetah, Boston Dynamic's LittleDog, and SpotMicroAi. 
+- Gazebo simulation environment.
+- Demo robot built using accessible components so you can build it from home.
+- Demo Applications like [TOWR](https://github.com/ethz-adrl/towr) and [chicken head](https://github.com/chvmp/chicken_head) stabilization.
+- Lightweight C++ header-only [library](https://github.com/chvmp/libchamp) that can run on both SBC and micro-controllers.
+
+Supported hardware:
+
+LIDAR:
+- XV11 Lidar
+- RPLidar
+- YDLIDAR X4
+- Hokuyo (SCIP 2.2 Compliant)
+
+IMU:
+- BNO080
+
+SBC:
+- Nvidia Jetson Nano
+
+    This should also work on Single Board Computers that support Ubuntu 16/18 capable of running ROS Navigation Stack.
+
+ACTUATORS:
+- Digital Servos
+- Dynamixel AX12
+- Odrive Driven Brushless Motors - WIP
+
+TESTED ON:
+
+- Ubuntu 16.04 (ROS Kinetic)
+- Ubuntu 18.04 (ROS Melodic)
+
+
+
 
 
 ## 1. Installation
@@ -10,9 +51,9 @@ ROS Packages for CHAMP Quadruped Controller
     sudo apt install -y python-rosdep
     cd <your_ws>/src
     git clone https://github.com/chvmp/champ
-    git clone https://github.com/chvmp/champ
+    git clone https://github.com/chvmp/champ_teleop
     cd ..
-   rosdep install --from-paths src --ignore-src -r -y
+    rosdep install --from-paths src --ignore-src -r -y
 
 1.2.  Build your workspace:
 
@@ -37,7 +78,7 @@ If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepad
 
 ### 2.2. SLAM demo:
 
-2.2.1. Run the gazebo environment:
+2.2.1. Run the Gazebo environment:
 
     roslaunch champ_gazebo gazebo.launch 
 
@@ -59,7 +100,7 @@ To start mapping:
 
 ### 2.3. Autonomous Navigation:
 
-2.3.1. Run the gazebo environment: 
+2.3.1. Run the Gazebo environment: 
 
     roslaunch champ_gazebo gazebo.launch 
 
@@ -78,7 +119,16 @@ To navigate:
 
 ### 3.1. Generate roobot configuration
 
-   - First generate a configuration package using [champ_setup_assistant](https://github.com/chvmp/champ_setup_assistant). Follow the instructions in the README to configure your own robot.
+   - First generate a configuration package using [champ_setup_assistant](https://github.com/chvmp/champ_setup_assistant). Follow the instructions in the README to configure your own robot. The generated package contains:
+
+        - URDF path to your robot.
+        - Joints and Links map to help the controller know the semantics of the robot.
+        - Gait parameters.
+        - Hardware Drivers.
+        - Navigation parameters (move_base, amcl and gmapping).
+        - Micro-controller header files for gait and lightweight robot description. This is only applies to robot builds that use micro-controller to run the quadruped controller.
+
+     As a reference, you can check out the collection of robots that have been pre-configured [here](https://github.com/chvmp/robots). In the list are some of the popular quadruped robots like Anymal, MIT Mini Cheetah, Boston Dynamic's LittleDog, and SpotMicroAI. Feel free to download the configuration packages in your catkin workspaces 'src' directory to try.
 
    - Next, build your workspace so your newly generated package can be found:
 
@@ -93,11 +143,11 @@ The base driver contains the quadruped controller and all sensor/hardware driver
 
 Available Parameters:
 
-rviz - Launch together with RVIZ. Default: false
+**rviz** - Launch together with RVIZ. Default: false
 
-has_imu - Set this to true if the robot has no IMU. This is useful when you want to view your newly configured robot. Basically, this tells the robot to use the pose commands from [champ_teleop](https://github.com/chvmp/champ_teleop) as the current pose of the robot. Take note that this is only useful for debugging the robot. It is recommended to place an IMU on a physical robot. Default: true.
+**has_imu**- Set this to true if the robot has no IMU. This is useful when you want to view your newly configured robot. Basically, this tells the robot to use the pose commands from [champ_teleop](https://github.com/chvmp/champ_teleop) as the current pose of the robot. Take note that this is only useful for debugging the robot. It is recommended to place an IMU on a physical robot. Default: true.
 
-lite - Set this to true if you're using a micro-controller to run the algorithms. Default false.
+**lite** - Set this to true if you're using a micro-controller to run the algorithms. Default false.
 
 Example Usage:
 
