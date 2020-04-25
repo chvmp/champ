@@ -4,7 +4,7 @@ ROS Packages for CHAMP Quadruped Controller.
 
 CHAMP is an open source development framework for building new quadrupedal robots and developing new control algorithms. The control framework is based on [*"Hierarchical controller for highly dynamic locomotion utilizing pattern modulation and impedance control : implementation on the MIT Cheetah robot"*](https://dspace.mit.edu/handle/1721.1/85490).
 
-Some of the features include:
+Core Features:
 
 - Fully Autonomous (using ROS navigation Stack).
 - [Setup-assistant](https://github.com/chvmp/champ_setup_assistant) to configure newly built robots.
@@ -14,7 +14,7 @@ Some of the features include:
 - Demo Applications like [TOWR](https://github.com/ethz-adrl/towr) and [chicken head](https://github.com/chvmp/chicken_head) stabilization.
 - Lightweight C++ header-only [library](https://github.com/chvmp/libchamp) that can run on both SBC and micro-controllers.
 
-Supported hardware:
+Supported Hardware:
 
 LIDAR:
 - XV11 Lidar
@@ -51,7 +51,7 @@ TESTED ON:
     cd ..
     rosdep install --from-paths src --ignore-src -r -y
 
-1.2.  Build your workspace:
+1.2. Build your workspace:
 
     cd <your_ws>
     catkin_make
@@ -59,7 +59,7 @@ TESTED ON:
 
 ## 2. Quick Start
 
-You don't need a physical robot to run the following demos. If you're building a physical robot, proceed to step 3.
+You don't need a physical robot to run the following demos. If you're building a physical robot, you can find out more how to configure and run a new robot in step 3.
 
 ### 2.1. Walking demo in RVIZ:
 
@@ -128,7 +128,7 @@ TODO:
         - Gait parameters.
         - Hardware Drivers.
         - Navigation parameters (move_base, amcl and gmapping).
-        - Micro-controller header files for gait and lightweight robot description. This is only applies to robot builds that use micro-controller to run the quadruped controller.
+        - Micro-controller header files for gait and lightweight robot description. This only applies to robot builds that use micro-controller to run the quadruped controller.
 
      As a reference, you can check out the collection of robots that have been pre-configured [here](https://github.com/chvmp/robots). In the list are some of the popular quadruped robots like Anymal, MIT Mini Cheetah, Boston Dynamic's LittleDog, and SpotMicroAI. Feel free to download the configuration packages in your catkin workspaces 'src' directory to try.
 
@@ -145,11 +145,11 @@ This will run the quadruped controller and all sensor/hardware drivers:
 
 Available Parameters:
 
-**rviz** - Launch together with RVIZ. Default: false
+  - **rviz** - Launch together with RVIZ. Default: false
 
-**has_imu**- Set this to true if the robot has no IMU. This is useful when you want to view your newly configured robot. Basically, this tells the robot to use the pose commands from [champ_teleop](https://github.com/chvmp/champ_teleop) as the current pose of the robot. Take note that this is only useful for debugging the robot. It is recommended to place an IMU on a physical robot. Default: true.
+  - **has_imu**- Set this to true if the robot has no IMU. This is useful when you want to view your newly configured robot. Basically, this tells the robot to use the pose commands from [champ_teleop](https://github.com/chvmp/champ_teleop) as the current pose of the robot. Take note that this is only useful for debugging the robot. It is recommended to place an IMU on a physical robot. Default: true.
 
-**lite** - Set this to true if you're using a micro-controller to run the algorithms. Default false.
+  - **lite** - Set this to true if you're using a micro-controller to run the algorithms. Default false.
 
 Example Usage:
 
