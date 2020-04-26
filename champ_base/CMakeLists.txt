@@ -12,6 +12,7 @@ find_package(catkin
     visualization_msgs
     geometry_msgs
     sensor_msgs
+    trajectory_msgs
     nav_msgs
     tf
     tf2_ros
@@ -28,6 +29,7 @@ catkin_package(
     visualization_msgs
     geometry_msgs
     sensor_msgs
+    trajectory_msgs
     nav_msgs
     tf
     tf2_ros
