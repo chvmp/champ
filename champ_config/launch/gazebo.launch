@@ -6,5 +6,7 @@
         <arg name="lite" value="$(arg lite)"/>
     </include>
 
-    <include file="$(find champ_gazebo)/launch/gazebo.launch"/>
+    <include file="$(find champ_gazebo)/launch/gazebo.launch">
+        <arg name="lite" value="$(arg lite)"/>
+    </include>
 </launch>
