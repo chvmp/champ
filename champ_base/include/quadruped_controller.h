@@ -50,6 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <actuator.h>
 
 #include <geometry_msgs/Twist.h>
+#include <sensor_msgs/JointState.h>
 #include <boost/thread.hpp>
 
 class QuadrupedController
@@ -89,6 +90,8 @@ class QuadrupedController
     champ::Kinematics kinematics_;
     champ::Odometry odometry_;
     champ::Actuator actuators_;
+
+    std::vector<std::string> joint_names_;
 
     void controlLoop_(const ros::TimerEvent& event);
     void publishJoints_(const ros::TimerEvent& event);

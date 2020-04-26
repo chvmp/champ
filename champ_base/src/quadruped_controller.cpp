@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
- 
+
 #include <quadruped_controller.h>
 
 QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
@@ -39,9 +39,9 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     cmd_vel_subscriber_ = pnh_.subscribe( "/champ/cmd_vel", 1, &QuadrupedController::cmdVelCallback_, this);
     cmd_pose_subscriber_ = pnh_.subscribe( "/champ/cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
 
-    joints_publisher_ = pnh_.advertise<champ_msgs::Joints>("/champ/joint_states/raw", 50);
-    velocities_publisher_   = pnh_.advertise<nav_msgs::Odometry>("/odom/raw", 50);
-    foot_publisher_   = pnh_.advertise<champ_msgs::PointArray>("/champ/foot/raw", 50);
+    joints_publisher_ = pnh_.advertise<sensor_msgs::JointState>("/champ/joint_states", 100);
+    velocities_publisher_   = pnh_.advertise<nav_msgs::Odometry>("/odom/raw", 100);
+    foot_publisher_   = pnh_.advertise<champ_msgs::PointArray>("/champ/foot/raw", 100);
 
     std::string knee_orientation;
     pnh_.getParam("/champ/gait/pantograph_leg",         gait_config_.pantograph_leg);
@@ -57,6 +57,7 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
 
     base_.setGaitConfig(gait_config_);
     champ::URDF::loadFromServer(base_, pnh_);
+    joint_names_ = champ::URDF::getJointNames(pnh_);
 
     loop_timer_ = pnh_.createTimer(ros::Duration(0.005),
                                    &QuadrupedController::controlLoop_,
@@ -75,6 +76,7 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
                                             this);
 
     req_pose_.position.z = gait_config_.nominal_height;
+
 }
 
 void QuadrupedController::controlLoop_(const ros::TimerEvent& event)
@@ -113,11 +115,16 @@ void QuadrupedController::cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg
 
 void QuadrupedController::publishJoints_(const ros::TimerEvent& event)
 {
-    champ_msgs::Joints joints_msg;
-    
-    for(int i = 0; i < 12; i++)
-    {
-        joints_msg.position.push_back(current_joint_positions_[i]);
+    sensor_msgs::JointState joints_msg;
+
+    joints_msg.header.stamp = ros::Time::now();
+    joints_msg.name.resize(joint_names_.size());
+    joints_msg.position.resize(joint_names_.size());
+    joints_msg.name = joint_names_;
+
+    for (size_t i = 0; i < joint_names_.size(); ++i)
+    {    
+        joints_msg.position[i]= current_joint_positions_[i];
     }
 
     joints_publisher_.publish(joints_msg);

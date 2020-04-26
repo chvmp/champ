@@ -126,6 +126,33 @@ namespace champ
                 fillLeg(base.legs[i], nh, model, links_map[i]);
             }
         }
+
+        std::vector<std::string> getJointNames(ros::NodeHandle nh)
+        {
+            std::vector<std::string> joints_map;
+            std::vector<std::string> joint_names;
+
+            joints_map.push_back("/champ/joints_map/left_front");
+            joints_map.push_back("/champ/joints_map/right_front");
+            joints_map.push_back("/champ/joints_map/left_hind");
+            joints_map.push_back("/champ/joints_map/right_hind");
+
+           
+            for(int i = 0; i < 4; i++)
+            {
+                xh::Array output;
+                xh::fetchParam(nh, joints_map[i], output);
+                xh::Struct output_i;
+                for(int j = 0; j < 3; j++)
+                {
+                    std::string joint_name;
+                    xh::getArrayItem(output, j, joint_name);
+                    joint_names.push_back(joint_name);
+                }
+            }
+
+            return joint_names;
+        }
     }
 }
 
