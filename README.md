@@ -78,7 +78,7 @@ If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepad
 
 2.2.1. Run the Gazebo environment:
 
-    roslaunch champ_gazebo gazebo.launch 
+    roslaunch champ_config gazebo.launch 
 
 2.2.2. Run gmapping package and move_base:
 
@@ -100,7 +100,7 @@ To start mapping:
 
 2.3.1. Run the Gazebo environment: 
 
-    roslaunch champ_gazebo gazebo.launch 
+    roslaunch champ_config gazebo.launch 
 
 2.3.2. Run amcl and move_base:
 
@@ -149,7 +149,7 @@ Available Parameters:
 
   - **has_imu**- Set this to true if the robot has no IMU. This is useful when you want to view your newly configured robot. Basically, this tells the robot to use the pose commands from [champ_teleop](https://github.com/chvmp/champ_teleop) as the current pose of the robot. Take note that this is only useful for debugging the robot. It is recommended to place an IMU on a physical robot. Default: true.
 
-  - **lite** - Set this to true if you're using a micro-controller to run the algorithms. Default false.
+  - **lite** - Always set this to true if you're using a micro-controller to run the algorithms. Default false.
 
 Example Usage:
 
