@@ -1,0 +1,10 @@
+<launch>
+    <arg name="lite"  default="false" />
+
+    <include file="$(find champ_config)/launch/bringup.launch">
+        <arg name="gazebo" value="true"/>
+        <arg name="lite" value="$(arg lite)"/>
+    </include>
+
+    <include file="$(find champ_gazebo)/launch/gazebo.launch"/>
+</launch>
