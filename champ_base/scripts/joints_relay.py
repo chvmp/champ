@@ -41,7 +41,10 @@ class JointsRelay:
         self.joint_cmd_pub = rospy.Publisher('/champ/cmd_joints', Joints, queue_size = 100)
 
         self.joint_names = []
-        
+
+        self.in_gazebo = False
+        self.in_gazebo = rospy.get_param('/joints_relay/gazebo')
+
         leg_map = [None,None,None,None]
         leg_map[3] = rospy.get_param('/champ/joints_map/left_front')
         leg_map[2] = rospy.get_param('/champ/joints_map/right_front')
@@ -53,12 +56,13 @@ class JointsRelay:
                 self.joint_names.append(leg[i]) 
 
     def joint_states_callback(self, joints):
-        joint_states = JointState()
-        joint_states.header.stamp = rospy.Time.now()
-        joint_states.name = self.joint_names
+        if not self.in_gazebo:
+            joint_states = JointState()
+            joint_states.header.stamp = rospy.Time.now()
+            joint_states.name = self.joint_names
 
-        joint_states.position = joints.position
-        self.joint_states_pub.publish(joint_states)
+            joint_states.position = joints.position
+            self.joint_states_pub.publish(joint_states)
 
     def joints_cmd_callback(self, joints):
         joint_states_calibrate = Joints()
