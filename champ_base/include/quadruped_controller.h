@@ -51,6 +51,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/JointState.h>
+#include <trajectory_msgs/JointTrajectory.h>
+#include <trajectory_msgs/JointTrajectoryPoint.h>
+
 #include <boost/thread.hpp>
 
 class QuadrupedController
@@ -61,7 +64,8 @@ class QuadrupedController
     ros::Subscriber cmd_vel_subscriber_;
     ros::Subscriber cmd_pose_subscriber_;
     
-    ros::Publisher joints_publisher_;   
+    ros::Publisher joint_states_publisher_;   
+    ros::Publisher joint_commands_publisher_;   
     ros::Publisher velocities_publisher_;
     ros::Publisher foot_publisher_;
 
@@ -92,6 +96,8 @@ class QuadrupedController
     champ::Actuator actuators_;
 
     std::vector<std::string> joint_names_;
+
+    bool in_gazebo_;
 
     void controlLoop_(const ros::TimerEvent& event);
     void publishJoints_(const ros::TimerEvent& event);

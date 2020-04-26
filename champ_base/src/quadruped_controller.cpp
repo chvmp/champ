@@ -39,7 +39,8 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     cmd_vel_subscriber_ = pnh_.subscribe( "/champ/cmd_vel", 1, &QuadrupedController::cmdVelCallback_, this);
     cmd_pose_subscriber_ = pnh_.subscribe( "/champ/cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
 
-    joints_publisher_ = pnh_.advertise<sensor_msgs::JointState>("/champ/joint_states", 100);
+    joint_states_publisher_ = pnh_.advertise<sensor_msgs::JointState>("/champ/joint_states", 100);
+    joint_commands_publisher_ = pnh_.advertise<trajectory_msgs::JointTrajectory>("/champ/joint_group_position_controller/command", 100);
     velocities_publisher_   = pnh_.advertise<nav_msgs::Odometry>("/odom/raw", 100);
     foot_publisher_   = pnh_.advertise<champ_msgs::PointArray>("/champ/foot/raw", 100);
 
@@ -53,6 +54,7 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     pnh_.getParam("/champ/gait/stance_duration",        gait_config_.stance_duration);
     pnh_.getParam("/champ/gait/nominal_height",         gait_config_.nominal_height);
     pnh_.getParam("/champ/gait/knee_orientation",       knee_orientation);
+    pnh_.getParam("/champ_controller/gazebo",       in_gazebo_);
     gait_config_.knee_orientation = knee_orientation.c_str();
 
     base_.setGaitConfig(gait_config_);
@@ -115,19 +117,39 @@ void QuadrupedController::cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg
 
 void QuadrupedController::publishJoints_(const ros::TimerEvent& event)
 {
-    sensor_msgs::JointState joints_msg;
+    if(in_gazebo_)
+    {
+        trajectory_msgs::JointTrajectory joints_cmd_msg;
+        joints_cmd_msg.joint_names = joint_names_;
 
-    joints_msg.header.stamp = ros::Time::now();
-    joints_msg.name.resize(joint_names_.size());
-    joints_msg.position.resize(joint_names_.size());
-    joints_msg.name = joint_names_;
+        trajectory_msgs::JointTrajectoryPoint point;
+        point.positions.resize(12);
 
-    for (size_t i = 0; i < joint_names_.size(); ++i)
-    {    
-        joints_msg.position[i]= current_joint_positions_[i];
+        point.time_from_start = ros::Duration(1.0 / 60.0);
+        for(size_t i = 0; i < 12; i++)
+        {
+            point.positions[i] = current_joint_positions_[i];
+        }
+
+        joints_cmd_msg.points.push_back(point);
+        joint_commands_publisher_.publish(joints_cmd_msg);
     }
+    else
+    {   
+        sensor_msgs::JointState joints_msg;
 
-    joints_publisher_.publish(joints_msg);
+        joints_msg.header.stamp = ros::Time::now();
+        joints_msg.name.resize(joint_names_.size());
+        joints_msg.position.resize(joint_names_.size());
+        joints_msg.name = joint_names_;
+
+        for (size_t i = 0; i < joint_names_.size(); ++i)
+        {    
+            joints_msg.position[i]= current_joint_positions_[i];
+        }
+
+        joint_states_publisher_.publish(joints_msg);
+    }
 }
 
 void QuadrupedController::publishVelocities_(const ros::TimerEvent& event)
