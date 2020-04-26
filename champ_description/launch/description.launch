@@ -4,15 +4,10 @@
 
     <param name="$(arg description_name)" textfile="$(arg description_file)"/>
 
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-        <param name="/use_gui" value="false"/>
-        <rosparam param="/source_list">[champ/joint_states, champ/arm/joint_states]</rosparam>
-        <!-- <remap from="/joint_states" to="/champ/joint_states" /> -->
-    </node>
-
     <node name="champ_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
         <param name="use_tf_static"     value="true"/>
+        <param name="publish_frequency" value="200"/>
         <remap from="robot_description" to="$(arg description_name)"/>
-        <!-- <remap from="/joint_states" to="/champ/joint_states" /> -->
+        <remap from="/joint_states" to="/champ/joint_states" />
     </node>
 </launch>
