@@ -2,6 +2,8 @@
 # champ [![Build Status](https://travis-ci.org/chvmp/champ.svg?branch=master)](https://travis-ci.org/chvmp/champ) 
 ROS Packages for CHAMP Quadruped Controller.
 
+![champ](https://raw.githubusercontent.com/chvmp/champ/master/docs/images/robots.gif)
+
 CHAMP is an open source development framework for building new quadrupedal robots and developing new control algorithms. The control framework is based on [*"Hierarchical controller for highly dynamic locomotion utilizing pattern modulation and impedance control : implementation on the MIT Cheetah robot"*](https://dspace.mit.edu/handle/1721.1/85490).
 
 Core Features:
@@ -204,3 +206,20 @@ To navigate:
 - Click and drag at the position you want the robot to go.
 
    ![champ](https://raw.githubusercontent.com/chvmp/champ/master/docs/images/navigation.gif)
+
+### 3.5 Running your robot in Gazebo
+
+Run Gazebo and the base driver in simulation mode:
+
+    roslaunch <myrobot_config> gazebo.launch
+
+* Take note that in order for this to work, the URDF has to be Gazebo compatible and has [ros_control](http://gazebosim.org/tutorials/?tut=ros_control) capability. The controllers have been set-up so all you need is to add the transmission of the actuators. You also need to get the physics parameters right like your mass, inertia, and foot friction. 
+
+   Some useful resources on getting these parameters right:
+
+  - Inertial Calculation - https://github.com/tu-darmstadt-ros-pkg/hector_models/blob/indigo-devel/hector_xacro_tools/urdf/inertia_tensors.urdf.xacro
+
+  - List of Moment of Inertia - https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+
+  - Gazebo inertial parameters - http://gazebosim.org/tutorials?tut=inertia&cat=build_robot#Overview
+
