@@ -9,9 +9,11 @@
     <rosparam command="load" ns="champ/joints_map/" file="$(arg joints_map_file)" />
 
     <node                        pkg="champ_base" name="foot_relay"     type="foot_relay.py"     output="screen"/>
-    <node if="$(arg lite)"       pkg="champ_base" name="joints_relay"   type="joints_relay.py"   output="screen"/>
     <node if="$(arg lite)"       pkg="champ_base" name="odometry_relay" type="odometry_relay.py" output="screen"/>
     <node unless="$(arg gazebo)" pkg="champ_base" name="imu_relay"      type="imu_relay.py"      output="screen"/>
+    <node if="$(arg lite)"       pkg="champ_base" name="joints_relay"   type="joints_relay.py"   output="screen">
+        <param name="gazebo" value="$(arg gazebo)"/>
+    </node>
     <node                        pkg="champ_base" name="pose_relay"     type="pose_relay.py"     output="screen">
         <param name="has_imu" value="$(arg has_imu)"/>
     </node>
