@@ -119,7 +119,7 @@ To navigate:
 
 TODO: 
 - Hardware Documentation
-- Micro-controller based configuration
+- Microcontroller based configuration
 
 ### 3.1. Generate roobot configuration
 
@@ -130,7 +130,7 @@ TODO:
         - Gait parameters.
         - Hardware Drivers.
         - Navigation parameters (move_base, amcl and gmapping).
-        - Micro-controller header files for gait and lightweight robot description. This only applies to robot builds that use micro-controller to run the quadruped controller.
+        - Microcontroller header files for gait and lightweight robot description. This only applies to robot builds that use microcontroller to run the quadruped controller.
 
      As a reference, you can check out the collection of robots that have been pre-configured [here](https://github.com/chvmp/robots). In the list are some of the popular quadruped robots like Anymal, MIT Mini Cheetah, Boston Dynamic's LittleDog, and SpotMicroAI. Feel free to download the configuration packages in your catkin workspaces 'src' directory to try.
 
@@ -151,7 +151,7 @@ Available Parameters:
 
   - **has_imu**- Set this to true if the robot has no IMU. This is useful when you want to view your newly configured robot. Basically, this tells the robot to use the pose commands from [champ_teleop](https://github.com/chvmp/champ_teleop) as the current pose of the robot. Take note that this is only useful for debugging the robot. It is recommended to place an IMU on a physical robot. Default: true.
 
-  - **lite** - Always set this to true if you're using a micro-controller to run the algorithms. Default false.
+  - **lite** - Always set this to true if you're using a microcontroller to run the algorithms. Default false.
 
 Example Usage:
 
@@ -159,7 +159,7 @@ View your newly configured robot:
 
     roslaunch <myrobot_config> bringup.launch rviz:true has_imu:=false
 
-Run real robot with a micro-controller:
+Run real robot with a microcontroller:
 
     roslaunch <myrobot_config> bringup.launch lite:=true
 
