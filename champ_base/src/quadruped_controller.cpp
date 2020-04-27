@@ -42,7 +42,7 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     joint_states_publisher_ = pnh_.advertise<sensor_msgs::JointState>("/champ/joint_states", 100);
     joint_commands_publisher_ = pnh_.advertise<trajectory_msgs::JointTrajectory>("/champ/joint_group_position_controller/command", 100);
     velocities_publisher_   = pnh_.advertise<nav_msgs::Odometry>("/odom/raw", 100);
-    foot_publisher_   = pnh_.advertise<champ_msgs::PointArray>("/champ/foot/raw", 100);
+    foot_publisher_   = pnh_.advertise<visualization_msgs::MarkerArray>("/champ/foot", 100);
 
     std::string knee_orientation;
     pnh_.getParam("/champ/gait/pantograph_leg",         gait_config_.pantograph_leg);
@@ -54,7 +54,8 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     pnh_.getParam("/champ/gait/stance_duration",        gait_config_.stance_duration);
     pnh_.getParam("/champ/gait/nominal_height",         gait_config_.nominal_height);
     pnh_.getParam("/champ/gait/knee_orientation",       knee_orientation);
-    pnh_.getParam("/champ_controller/gazebo",       in_gazebo_);
+    pnh_.getParam("/champ_controller/gazebo",           in_gazebo_);
+    pnh_.getParam("/champ/links_map/base",              base_name_);
     gait_config_.knee_orientation = knee_orientation.c_str();
 
     base_.setGaitConfig(gait_config_);
@@ -78,7 +79,6 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
                                             this);
 
     req_pose_.position.z = gait_config_.nominal_height;
-
 }
 
 void QuadrupedController::controlLoop_(const ros::TimerEvent& event)
@@ -207,25 +207,75 @@ void QuadrupedController::publishVelocities_(const ros::TimerEvent& event)
     velocities_publisher_.publish(odom);
 }
 
+visualization_msgs::Marker QuadrupedController::createMarker(geometry::Transformation foot_pos, int id, std::string frame_id)
+{
+    visualization_msgs::Marker foot_marker;
+
+    foot_marker.header.frame_id = frame_id;
+
+    foot_marker.type = visualization_msgs::Marker::SPHERE;
+    foot_marker.action = visualization_msgs::Marker::ADD;
+    foot_marker.id = id;
+
+    foot_marker.pose.position.x = foot_pos.X();
+    foot_marker.pose.position.y = foot_pos.Y();
+    foot_marker.pose.position.z = foot_pos.Z();
+    
+    foot_marker.pose.orientation.x = 0.0;
+    foot_marker.pose.orientation.y = 0.0;
+    foot_marker.pose.orientation.z = 0.0;
+    foot_marker.pose.orientation.w = 1.0;
+
+    foot_marker.scale.x = 0.025;
+    foot_marker.scale.y = 0.025;
+    foot_marker.scale.z = 0.025;
+
+    foot_marker.color.r = 0.780;
+    foot_marker.color.g = 0.082;
+    foot_marker.color.b = 0.521;
+    foot_marker.color.a = 0.5;
+
+    return foot_marker;
+}
+
 void QuadrupedController::publishFootPositions_(const ros::TimerEvent& event)
 {
-    champ_msgs::PointArray point_msg;
+    visualization_msgs::MarkerArray marker_array;
+    float robot_height;
 
-    point_msg.lf.x = current_foot_positions_[0].X();
-    point_msg.lf.y = current_foot_positions_[0].Y();
-    point_msg.lf.z = current_foot_positions_[0].Z();
+    for(size_t i = 0; i < 4; i++)
+    {
+        marker_array.markers.push_back(createMarker(current_foot_positions_[i], i, base_name_));
+        robot_height += current_foot_positions_[i].Z();
+    }
 
-    point_msg.rf.x = current_foot_positions_[1].X();
-    point_msg.rf.y = current_foot_positions_[1].Y();
-    point_msg.rf.z = current_foot_positions_[1].Z();
+	if(foot_publisher_.getNumSubscribers())
+    {
+        foot_publisher_.publish(marker_array);
+    }
 
-    point_msg.lh.x = current_foot_positions_[2].X();
-    point_msg.lh.y = current_foot_positions_[2].Y();
-    point_msg.lh.z = current_foot_positions_[2].Z();
+    geometry_msgs::TransformStamped transformStamped;
+    
+    transformStamped.header.stamp = ros::Time::now();
+    transformStamped.header.frame_id = "base_footprint";
+    transformStamped.child_frame_id = base_name_;
 
-    point_msg.rh.x = current_foot_positions_[3].X();
-    point_msg.rh.y = current_foot_positions_[3].Y();
-    point_msg.rh.z = current_foot_positions_[3].Z();
+    transformStamped.transform.translation.x = 0.0;
+    transformStamped.transform.translation.y = 0.0;
+    transformStamped.transform.translation.z = -robot_height / 4;
 
-    foot_publisher_.publish(point_msg);
+    //TODO:: do a proper pose estimation to get RPY
+    tf2::Quaternion quaternion;
+    quaternion.setRPY(
+        req_pose_.orientation.roll, 
+        req_pose_.orientation.pitch, 
+        req_pose_.orientation.yaw
+    );
+
+    transformStamped.transform.rotation.x = quaternion.x();
+    transformStamped.transform.rotation.y = quaternion.y();
+    transformStamped.transform.rotation.z = quaternion.z();
+    transformStamped.transform.rotation.w = quaternion.w();
+
+    base_broadcaster_.sendTransform(transformStamped);    
 }

@@ -53,6 +53,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sensor_msgs/JointState.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
+#include <tf2_ros/transform_broadcaster.h>
 
 #include <boost/thread.hpp>
 
@@ -68,6 +71,8 @@ class QuadrupedController
     ros::Publisher joint_commands_publisher_;   
     ros::Publisher velocities_publisher_;
     ros::Publisher foot_publisher_;
+
+    tf2_ros::TransformBroadcaster base_broadcaster_;
 
     ros::Timer loop_timer_;
     ros::Timer odom_data_timer_;
@@ -96,6 +101,7 @@ class QuadrupedController
     champ::Actuator actuators_;
 
     std::vector<std::string> joint_names_;
+    std::string base_name_;
 
     bool in_gazebo_;
 
@@ -106,6 +112,8 @@ class QuadrupedController
 
     void cmdVelCallback_(const geometry_msgs::Twist::ConstPtr& msg);
     void cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg);
+
+    visualization_msgs::Marker createMarker(geometry::Transformation foot_pos, int id, std::string frame_id);
 
     public:
         QuadrupedController(const ros::NodeHandle &node_handle,
