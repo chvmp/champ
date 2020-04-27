@@ -12,26 +12,26 @@
         <param name="port" value="/dev/ttyACM0" />
         <param name="baud" value="500000" />
     </node>
-    <node unless="$(arg lite)" pkg="champ_base" name="champ_controller" type="quadruped_controller_node" output="screen">
-        <param name="gazebo" value="$(arg gazebo)" />
-    </node>
-    
-    <rosparam command="load" ns="champ/gait/" file="$(arg gait_config_file)" />
 
-    <include file="$(find champ_base)/launch/message_relays.launch">
-        <arg name="joints_map_file" value="$(arg joints_map_file)"/>
-        <arg name="links_map_file"  value="$(arg links_map_file)"/>
+    <include if="$(arg lite)" file="$(find champ_base)/launch/message_relays.launch">
         <arg name="gazebo"          value="$(arg gazebo)"/>
-        <arg name="lite"            value="$(arg lite)" />
         <arg name="has_imu"         value="$(arg has_imu)" />
     </include>
 
-    <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" />
-    
     <include file="$(find champ_description)/launch/description.launch">
         <arg name="description_file" value="$(arg description_file)"/>
     </include>
-    
+
+    <node unless="$(arg lite)" pkg="champ_base" name="champ_controller" type="quadruped_controller_node" output="screen">
+        <param name="gazebo" value="$(arg gazebo)" />
+    </node>
+
+    <rosparam command="load" ns="champ/gait/" file="$(arg gait_config_file)" />
+    <rosparam command="load" ns="champ/links_map/"  file="$(arg links_map_file)" />
+    <rosparam command="load" ns="champ/joints_map/" file="$(arg joints_map_file)" />
+
+    <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" />
+        
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
         <remap from="odometry/filtered" to="odom" />
         <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
