@@ -121,7 +121,7 @@ TODO:
 - Hardware Documentation
 - Microcontroller based configuration
 
-### 3.1. Generate roobot configuration
+### 3.1. Generate robot configuration
 
    - First generate a configuration package using [champ_setup_assistant](https://github.com/chvmp/champ_setup_assistant). Follow the instructions in the README to configure your own robot. The generated package contains:
 
