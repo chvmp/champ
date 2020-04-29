@@ -8,7 +8,7 @@
     <!-- AMCL used for localization -->
     <include file="$(find champ_config)/launch/include/amcl.launch" />
     
-    <!-- Calls navigation stack packages for compatible Linorobot base -->
+    <!-- Calls navigation stack packages -->
     <include file="$(find champ_config)/launch/include/move_base.launch" />
 
     <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
