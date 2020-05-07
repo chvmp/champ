@@ -22,6 +22,6 @@
         <arg name="lite"             value="$(arg lite)"/>
         <arg name="laser"            value="$(arg laser)"/>
         <arg name="rviz"             value="$(arg rviz)"/>
-        <arg name="base_frame"       value="$(arg base_frame)"/>
+        <arg name="base_frame"       value="$(arg robot_name)/$(arg base_frame)"/>
     </include>
 </launch>
