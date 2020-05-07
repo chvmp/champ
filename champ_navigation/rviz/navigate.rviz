@@ -1,18 +1,22 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 84
+    Help Height: 309
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
+        - /RobotModel1
         - /TF1/Frames1
         - /TF1/Tree1
         - /LaserScan1
+        - /Map1
+        - /Global Map1
         - /Global Map1/Costmap1
         - /Global Map1/Planner1
         - /DepthCloud1
         - /DepthCloud1/Auto Size1
       Splitter Ratio: 0.5
-    Tree Height: 922
+    Tree Height: 654
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -21,7 +25,7 @@ Panels:
       - /2D Nav Goal1
       - /Publish Point1
     Name: Tool Properties
-    Splitter Ratio: 0.588679016
+    Splitter Ratio: 0.5886790156364441
   - Class: rviz/Views
     Expanded:
       - /Current View1
@@ -32,6 +36,8 @@ Panels:
     Name: Time
     SyncMode: 0
     SyncSource: LaserScan
+Preferences:
+  PromptSaveOnExit: true
 Toolbars:
   toolButtonStyle: 2
 Visualization Manager:
@@ -43,7 +49,7 @@ Visualization Manager:
       Color: 170; 170; 127
       Enabled: true
       Line Style:
-        Line Width: 0.0299999993
+        Line Width: 0.029999999329447746
         Value: Lines
       Name: Grid
       Normal Cell Count: 0
@@ -65,7 +71,7 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_footprint:
+        base_inertia:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -74,10 +80,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_base_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         camera_depth_frame:
           Alpha: 1
           Show Axes: false
@@ -104,10 +106,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        hokuyo_scan_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         imu_link:
           Alpha: 1
           Show Axes: false
@@ -217,9 +215,9 @@ Visualization Manager:
         All Enabled: false
         base_footprint:
           Value: true
-        base_link:
+        base_inertia:
           Value: true
-        camera_base_frame:
+        base_link:
           Value: true
         camera_depth_frame:
           Value: true
@@ -232,56 +230,52 @@ Visualization Manager:
         camera_rgb_optical_frame:
           Value: true
         hokuyo_frame:
-          Value: false
-        hokuyo_scan_link:
-          Value: false
+          Value: true
         imu_link:
           Value: true
         lf_foot_link:
-          Value: false
+          Value: true
         lf_hip_debug_link:
-          Value: false
+          Value: true
         lf_hip_link:
-          Value: false
+          Value: true
         lf_lower_leg_link:
-          Value: false
+          Value: true
         lf_upper_leg_link:
-          Value: false
+          Value: true
         lh_foot_link:
-          Value: false
+          Value: true
         lh_hip_debug_link:
-          Value: false
+          Value: true
         lh_hip_link:
-          Value: false
+          Value: true
         lh_lower_leg_link:
-          Value: false
+          Value: true
         lh_upper_leg_link:
-          Value: false
+          Value: true
         map:
           Value: true
         odom:
           Value: true
         rf_foot_link:
-          Value: false
+          Value: true
         rf_hip_debug_link:
-          Value: false
+          Value: true
         rf_hip_link:
-          Value: false
+          Value: true
         rf_lower_leg_link:
-          Value: false
+          Value: true
         rf_upper_leg_link:
-          Value: false
+          Value: true
         rh_foot_link:
-          Value: false
+          Value: true
         rh_hip_debug_link:
-          Value: false
+          Value: true
         rh_hip_link:
-          Value: false
+          Value: true
         rh_lower_leg_link:
-          Value: false
+          Value: true
         rh_upper_leg_link:
-          Value: false
-        scanmatcher_frame:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -293,18 +287,17 @@ Visualization Manager:
           odom:
             base_footprint:
               base_link:
-                camera_base_frame:
+                base_inertia:
+                  {}
+                camera_link:
                   camera_depth_frame:
                     camera_depth_optical_frame:
                       {}
-                  camera_link:
-                    {}
                   camera_rgb_frame:
                     camera_rgb_optical_frame:
                       {}
                 hokuyo_frame:
-                  hokuyo_scan_link:
-                    {}
+                  {}
                 imu_link:
                   {}
                 lf_hip_debug_link:
@@ -335,15 +328,13 @@ Visualization Manager:
                     rh_lower_leg_link:
                       rh_foot_link:
                         {}
-          scanmatcher_frame:
-            {}
       Update Interval: 0
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 11.489481
-        Min Value: -5.95747185
+        Max Value: 5.042253017425537
+        Min Value: -8.957624435424805
         Value: true
       Axis: X
       Channel Name: intensities
@@ -362,32 +353,32 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.200000003
+      Size (m): 0.20000000298023224
       Style: Boxes
-      Topic: /scan
+      Topic: scan
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
-    - Alpha: 0.699999988
+    - Alpha: 0.699999988079071
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: true
       Enabled: true
       Name: Map
-      Topic: /map
+      Topic: map
       Unreliable: false
       Use Timestamp: false
       Value: true
     - Class: rviz/Group
       Displays:
-        - Alpha: 0.699999988
+        - Alpha: 0.699999988079071
           Class: rviz/Map
           Color Scheme: map
           Draw Behind: false
           Enabled: true
           Name: Costmap
-          Topic: /move_base/global_costmap/costmap
+          Topic: move_base/global_costmap/costmap
           Unreliable: false
           Use Timestamp: false
           Value: true
@@ -396,29 +387,29 @@ Visualization Manager:
           Class: rviz/Path
           Color: 170; 0; 0
           Enabled: true
-          Head Diameter: 0.0299999993
-          Head Length: 0.0199999996
-          Length: 0.300000012
+          Head Diameter: 0.029999999329447746
+          Head Length: 0.019999999552965164
+          Length: 0.30000001192092896
           Line Style: Lines
-          Line Width: 0.0299999993
+          Line Width: 0.029999999329447746
           Name: Planner
           Offset:
             X: 0
             Y: 0
             Z: 0
           Pose Color: 255; 85; 255
-          Pose Style: None
-          Radius: 0.0299999993
-          Shaft Diameter: 0.100000001
-          Shaft Length: 0.00999999978
-          Topic: /move_base/DWAPlannerROS/global_plan
+          Pose Style: Arrows
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.05000000074505806
+          Shaft Length: 0.009999999776482582
+          Topic: move_base/GlobalPlanner/plan
           Unreliable: false
           Value: true
       Enabled: true
       Name: Global Map
     - Class: rviz/Group
       Displays:
-        - Alpha: 0.699999988
+        - Alpha: 0.699999988079071
           Class: rviz/Map
           Color Scheme: costmap
           Draw Behind: false
@@ -433,11 +424,11 @@ Visualization Manager:
           Class: rviz/Path
           Color: 0; 12; 255
           Enabled: true
-          Head Diameter: 0.300000012
-          Head Length: 0.200000003
-          Length: 0.300000012
+          Head Diameter: 0.30000001192092896
+          Head Length: 0.20000000298023224
+          Length: 0.30000001192092896
           Line Style: Lines
-          Line Width: 0.0299999993
+          Line Width: 0.029999999329447746
           Name: Planner
           Offset:
             X: 0
@@ -445,13 +436,13 @@ Visualization Manager:
             Z: 0
           Pose Color: 255; 85; 255
           Pose Style: None
-          Radius: 0.0299999993
-          Shaft Diameter: 0.100000001
-          Shaft Length: 0.100000001
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.10000000149011612
+          Shaft Length: 0.10000000149011612
           Topic: /move_base/DWAPlannerROS/local_plan
           Unreliable: false
           Value: true
-        - Alpha: 0.800000012
+        - Alpha: 0.800000011920929
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
             Max Value: 10
@@ -466,15 +457,15 @@ Visualization Manager:
           Enabled: true
           Invert Rainbow: false
           Max Color: 255; 255; 255
-          Max Intensity: 785.049988
+          Max Intensity: 785.0499877929688
           Min Color: 0; 0; 0
-          Min Intensity: 29.3899994
+          Min Intensity: 29.389999389648438
           Name: Cost Cloud
           Position Transformer: XYZ
           Queue Size: 10
           Selectable: true
           Size (Pixels): 3
-          Size (m): 0.0399999991
+          Size (m): 0.03999999910593033
           Style: Flat Squares
           Topic: /move_base/DWAPlannerROS/cost_cloud
           Unreliable: false
@@ -496,15 +487,15 @@ Visualization Manager:
           Enabled: true
           Invert Rainbow: false
           Max Color: 255; 255; 255
-          Max Intensity: 9.62100029
+          Max Intensity: 9.621000289916992
           Min Color: 0; 0; 0
-          Min Intensity: 3.62100005
+          Min Intensity: 3.621000051498413
           Name: Trajectory Cloud
           Position Transformer: XYZ
           Queue Size: 10
           Selectable: true
           Size (Pixels): 3
-          Size (m): 0.0399999991
+          Size (m): 0.03999999910593033
           Style: Flat Squares
           Topic: /move_base/DWAPlannerROS/trajectory_cloud
           Unreliable: false
@@ -513,18 +504,18 @@ Visualization Manager:
           Value: true
       Enabled: true
       Name: Local Map
-    - Alpha: 0.200000003
-      Arrow Length: 0.0199999996
-      Axes Length: 0.300000012
-      Axes Radius: 0.00999999978
+    - Alpha: 0.20000000298023224
+      Arrow Length: 0.019999999552965164
+      Axes Length: 0.30000001192092896
+      Axes Radius: 0.009999999776482582
       Class: rviz/PoseArray
       Color: 255; 0; 255
       Enabled: true
-      Head Length: 0.0700000003
-      Head Radius: 0.0299999993
+      Head Length: 0.07000000029802322
+      Head Radius: 0.029999999329447746
       Name: Amcl Particle Swarm
-      Shaft Length: 0.230000004
-      Shaft Radius: 0.00999999978
+      Shaft Length: 0.23000000417232513
+      Shaft Radius: 0.009999999776482582
       Shape: Arrow (Flat)
       Topic: /particlecloud
       Unreliable: false
@@ -534,7 +525,7 @@ Visualization Manager:
       Marker Topic: /occupied_cells_vis_array
       Name: MarkerArray
       Namespaces:
-        map: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -543,8 +534,8 @@ Visualization Manager:
         Value: true
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 1.0605849
-        Min Value: 0.00035482645
+        Max Value: 1.0605849027633667
+        Min Value: 0.0003548264503479004
         Value: true
       Axis: Z
       Channel Name: rgb
@@ -554,14 +545,14 @@ Visualization Manager:
       Color Transformer: FlatColor
       Color Transport Hint: raw
       Decay Time: 0
-      Depth Map Topic: /camera/depth_registered/image_raw
+      Depth Map Topic: camera/depth_registered/image_raw
       Depth Map Transport Hint: raw
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 2.35098856e-38
+      Max Intensity: 2.3509885615147286e-38
       Min Color: 0; 0; 0
-      Min Intensity: 2.35098856e-38
+      Min Intensity: 2.3509885615147286e-38
       Name: DepthCloud
       Occlusion Compensation:
         Occlusion Time-Out: 30
@@ -588,52 +579,55 @@ Visualization Manager:
       Hide Inactive Objects: true
     - Class: rviz/Select
     - Class: rviz/SetInitialPose
-      Topic: /initialpose
+      Theta std deviation: 0.2617993950843811
+      Topic: initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
     - Class: rviz/SetGoal
-      Topic: /move_base_simple/goal
+      Topic: move_base_simple/goal
     - Class: rviz/Measure
     - Class: rviz/PublishPoint
       Single click: true
-      Topic: /clicked_point
+      Topic: clicked_point
   Value: true
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 8.50365925
+      Distance: 30.098161697387695
       Enable Stereo Rendering:
-        Stereo Eye Separation: 0.0599999987
+        Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.265414
-        Y: -6.10257006
-        Z: 3.2967735e-05
+        X: -5.873498439788818
+        Y: -0.5837043523788452
+        Z: 2.8199363441672176e-5
       Focal Shape Fixed Size: true
-      Focal Shape Size: 0.0500000007
+      Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
-      Near Clip Distance: 0.00999999978
-      Pitch: 0.529797137
+      Near Clip Distance: 0.009999999776482582
+      Pitch: 1.544796347618103
       Target Frame: <Fixed Frame>
       Value: ThirdPersonFollower (rviz)
-      Yaw: 2.10168934
+      Yaw: 3.13169002532959
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: true
-  Height: 1147
+  Height: 1143
   Hide Left Dock: true
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd00000004000000000000016b00000433fc0200000005fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006300fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000002800000433000000db00ffffff000000010000010f00000433fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002800000433000000b300fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a00000031700fffffffb0000000800540069006d00650100000000000004500000000000000000000003a90000043300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001f10000041dfc0200000004fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afc0000003d0000041d0000000000fffffffaffffffff0100000002fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000000ffffffff0000009d00fffffffb000000100044006900730070006c0061007900730000000000000001f10000015600ffffff000000010000010f00000433fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002800000433000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a0000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000003a90000041d00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
     collapsed: false
   Tool Properties:
-    collapsed: false
+    collapsed: true
   Views:
     collapsed: true
   Width: 937
-  X: 997
-  Y: 24
+  X: 589
+  Y: 27

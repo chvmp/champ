@@ -1,10 +1,13 @@
 <launch>
-    <arg name="use_sim_time" default="true"/>
-    <arg name="gui" default="true"/>
-    <arg name="headless" default="false"/>
-    <arg name="paused" default="false"/>
-    <arg name="lite"  default="false" />
+    <arg name="robot_name"       default="/"/>
+    <arg name="use_sim_time"     default="true"/>
+    <arg name="gui"              default="true"/>
+    <arg name="headless"         default="false"/>
+    <arg name="paused"           default="false"/>
+    <arg name="lite"             default="false" />
+    <arg name="ros_control_file" default="$(find champ_gazebo)/config/ros_control.yaml" />
 
+    <!-- this should be only called once on multi-robot simulation -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(find champ_gazebo)/worlds/outdoor.world"/>
         <arg name="gui" value="$(arg gui)" />
@@ -13,16 +16,18 @@
         <arg name="headless" value="$(arg headless)"/>
     </include>
 
-    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model champ -param robot_description -z 0.5" />
-    
-    <rosparam file="$(find champ_gazebo)/config/champ.yaml" command="load"/>
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
-        --namespace=champ
-        joint_states_controller
-        joint_group_position_controller
-        ">
-    </node>
+    <group ns="$(arg robot_name)">
+        <!-- remember to define initial position of robot on multi-robot simulation -->
+        <node  name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model champ -param robot_description -robot_namespace $(arg robot_name) -z 0.5" />
 
-    <node if="$(arg lite)" pkg="champ_gazebo" name="champ_joints_controller" type="joints_controller.py" output="screen"/>
+        <rosparam file="$(arg ros_control_file)" command="load"/>
+        <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
+            joint_states_controller
+            joint_group_position_controller
+            ">
+        </node>
+
+        <node if="$(arg lite)" pkg="champ_gazebo" name="champ_joints_controller" type="joints_controller.py" output="screen"/>
+    </group>
 </launch>
 

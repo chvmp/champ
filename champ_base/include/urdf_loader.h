@@ -116,10 +116,10 @@ namespace champ
             ROS_INFO("Successfully parsed urdf file");
             std::vector<std::string> links_map;
 
-            links_map.push_back("/champ/links_map/left_front");
-            links_map.push_back("/champ/links_map/right_front");
-            links_map.push_back("/champ/links_map/left_hind");
-            links_map.push_back("/champ/links_map/right_hind");
+            links_map.push_back("links_map/left_front");
+            links_map.push_back("links_map/right_front");
+            links_map.push_back("links_map/left_hind");
+            links_map.push_back("links_map/right_hind");
 
             for(int i = 0; i < 4; i++)
             {
@@ -132,10 +132,10 @@ namespace champ
             std::vector<std::string> joints_map;
             std::vector<std::string> joint_names;
 
-            joints_map.push_back("/champ/joints_map/left_front");
-            joints_map.push_back("/champ/joints_map/right_front");
-            joints_map.push_back("/champ/joints_map/left_hind");
-            joints_map.push_back("/champ/joints_map/right_hind");
+            joints_map.push_back("joints_map/left_front");
+            joints_map.push_back("joints_map/right_front");
+            joints_map.push_back("joints_map/left_hind");
+            joints_map.push_back("joints_map/right_hind");
 
            
             for(int i = 0; i < 4; i++)

@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main(int argc, char** argv )
 {
-    ros::init(argc, argv, "champ_controller_node");
+    ros::init(argc, argv, "quadruped_controller_node");
 
     ros::NodeHandle nh("");
     ros::NodeHandle nh_private("~");

@@ -50,13 +50,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <actuator.h>
 
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/TransformStamped.h>
+
 #include <sensor_msgs/JointState.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <tf2_ros/transform_broadcaster.h>
-
+#include <tf2_ros/transform_listener.h>
 #include <boost/thread.hpp>
 
 class QuadrupedController
@@ -102,6 +104,10 @@ class QuadrupedController
 
     std::vector<std::string> joint_names_;
     std::string base_name_;
+    std::string node_namespace_;
+    std::string odom_frame_;
+    std::string base_footprint_frame_;
+    std::string base_link_frame_;
 
     bool in_gazebo_;
 

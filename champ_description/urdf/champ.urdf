@@ -155,10 +155,9 @@
   <link name="camera_rgb_optical_frame"/>
   <gazebo>
     <plugin filename="libhector_gazebo_ros_imu.so" name="imu_controller">
-      <robotNamespace>/</robotNamespace>
       <updateRate>50.0</updateRate>
       <bodyName>imu_link</bodyName>
-      <topicName>champ/imu/data</topicName>
+      <topicName>imu/data</topicName>
       <accelDrift>0.005 0.005 0.005</accelDrift>
       <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
       <rateDrift>0.005 0.005 0.005 </rateDrift>
@@ -178,6 +177,10 @@
     <parent link="base_link"/>
     <child link="imu_link"/>
   </joint>
+  <!-- <xacro:include filename="$(find champ_arm_description)/urdf/champ_arm.urdf.xacro" />
+    <xacro:champ_arm parent="base_link">
+        <origin xyz="0.07 0.0 ${base_z_length / 2}" rpy="0 0 0"/>
+    </xacro:champ_arm> -->
   <link name="lf_hip_debug_link"/>
   <link name="lf_hip_link">
     <inertial>
@@ -744,7 +747,6 @@
   </gazebo>
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
-      <robotNamespace>/champ</robotNamespace>
       <legacyModeNS>true</legacyModeNS>
     </plugin>
   </gazebo>

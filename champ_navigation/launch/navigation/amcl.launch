@@ -1,6 +1,13 @@
 <launch>
+    <arg name="frame_prefix" default=""/>
+
     <node pkg="amcl" type="amcl" name="amcl" output="screen">
-        <param name="base_frame_id" value="base_footprint"/> <!-- Change this if you want to change your base frame id. -->
+        <param name="initial_pose_a" value="0.0"/>
+        <param name="use_map_topic" value="true"/>
+        <param name="base_frame_id" value="$(arg frame_prefix)base_footprint"/>
+        <param name="odom_frame_id" value="$(arg frame_prefix)odom"/>
+        <param name="global_frame_id" value="$(arg frame_prefix)map"/>
+        <param name="transform_broadcast" value="true"/>
         <param name="gui_publish_rate" value="10.0"/> <!-- Maximum rate (Hz) at which scans and paths are published for visualization, -1.0 to disable. -->
         <param name="kld_err" value="0.05"/>
         <param name="kld_z" value="0.99"/>
@@ -20,7 +27,6 @@
         <param name="odom_alpha3" value="0.5"/> <!-- Specifies the expected noise in odometry's translation estimate from the translational component of the robot's motion. -->
         <param name="odom_alpha4" value="0.5"/> <!-- Specifies the expected noise in odometry's translation estimate from the rotational component of the robot's motion. -->
         <param name="odom_alpha5" value="0.5"/> <!-- Specifies the expected noise in odometry's translation estimate from the rotational component of the robot's motion. -->
-        <param name="odom_frame_id" value="odom"/>
         <param name="odom_model_type" value="omni"/>
         <param name="recovery_alpha_slow" value="0.001"/> <!-- Exponential decay rate for the slow average weight filter, used in deciding when to recover by adding random poses. -->
         <param name="recovery_alpha_fast" value="0.1"/> <!-- Exponential decay rate for the fast average weight filter, used in deciding when to recover by adding random poses. -->

@@ -1,41 +1,53 @@
 <launch>
-    <arg name="gazebo"           default="false" />
-    <arg name="has_imu"          default="true" />
+    <arg name="robot_name"       default="/" />
     <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
     <arg name="links_map_file"   default="$(find champ_config)/config/links/links.yaml"/>
     <arg name="gait_config_file" default="$(find champ_config)/config/gait/gait.yaml"/>
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
-    <arg name="laser"            default="sim" />
+    <arg name="gazebo"           default="false" />
+    <arg name="rviz"             default="false" />
+    <arg name="base_frame"       default="odom"/>
+    <arg name="has_imu"          default="true" />
     <arg name="lite"             default="false" />
+    <arg name="laser"            default="sim" />
 
-    <node if="$(arg lite)" pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
-        <param name="port" value="/dev/ttyACM0" />
-        <param name="baud" value="500000" />
-    </node>
+    <group ns="$(arg robot_name)">
+        <param name="tf_prefix" value="$(arg robot_name)"/>
+        <param if="$(arg gazebo)" name="use_sim_time" value="true"/>
 
-    <include if="$(arg lite)" file="$(find champ_base)/launch/message_relays.launch">
-        <arg name="gazebo"          value="$(arg gazebo)"/>
-        <arg name="has_imu"         value="$(arg has_imu)" />
-    </include>
+        <node if="$(arg lite)" pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
+            <param name="port" value="/dev/ttyACM0" />
+            <param name="baud" value="500000" />
+        </node>
 
-    <include file="$(find champ_description)/launch/description.launch">
-        <arg name="description_file" value="$(arg description_file)"/>
-    </include>
+        <include if="$(arg lite)" file="$(find champ_base)/launch/message_relays.launch">
+            <arg name="gazebo"          value="$(arg gazebo)"/>
+            <arg name="has_imu"         value="$(arg has_imu)" />
+        </include>
 
-    <node unless="$(arg lite)" pkg="champ_base" name="champ_controller" type="quadruped_controller_node" output="screen">
-        <param name="gazebo" value="$(arg gazebo)" />
-    </node>
+        <include file="$(find champ_description)/launch/description.launch">
+            <arg name="description_file" value="$(arg description_file)"/>
+        </include>
 
-    <rosparam command="load" ns="champ/gait/" file="$(arg gait_config_file)" />
-    <rosparam command="load" ns="champ/links_map/"  file="$(arg links_map_file)" />
-    <rosparam command="load" ns="champ/joints_map/" file="$(arg joints_map_file)" />
+        <node unless="$(arg lite)" pkg="champ_base" name="champ_controller" type="quadruped_controller_node" output="screen">
+            <param name="gazebo" value="$(arg gazebo)" />
+        </node>
 
-    <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" />
+        <rosparam command="load" ns="gait"       file="$(arg gait_config_file)" />
+        <rosparam command="load" ns="links_map"  file="$(arg links_map_file)" />
+        <rosparam command="load" ns="joints_map" file="$(arg joints_map_file)" />
+
+        <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" />
+            
+        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
+            <remap from="odometry/filtered" to="odom" />
+            <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
+        </node>
         
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
-        <remap from="odometry/filtered" to="odom" />
-        <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
-    </node>
-    
-    <include file="$(find champ_bringup)/launch/include/laser/$(arg laser).launch" />
+        <include file="$(find champ_bringup)/launch/include/laser/$(arg laser).launch" />
+
+        <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
+            args="-d $(find champ_description)/rviz/urdf_viewer.rviz -f $(arg base_frame)"
+            output="screen"/>
+    </group>
 </launch>

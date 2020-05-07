@@ -36,31 +36,49 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     kinematics_(base_),
     odometry_(base_)
 {
-    cmd_vel_subscriber_ = pnh_.subscribe( "/champ/cmd_vel", 1, &QuadrupedController::cmdVelCallback_, this);
-    cmd_pose_subscriber_ = pnh_.subscribe( "/champ/cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
-
-    joint_states_publisher_ = pnh_.advertise<sensor_msgs::JointState>("/champ/joint_states", 100);
-    joint_commands_publisher_ = pnh_.advertise<trajectory_msgs::JointTrajectory>("/champ/joint_group_position_controller/command", 100);
-    velocities_publisher_   = pnh_.advertise<nav_msgs::Odometry>("/odom/raw", 100);
-    foot_publisher_   = pnh_.advertise<visualization_msgs::MarkerArray>("/champ/foot", 100);
+    cmd_vel_subscriber_ = nh_.subscribe("cmd_vel/smooth", 1, &QuadrupedController::cmdVelCallback_, this);
+    cmd_pose_subscriber_ = nh_.subscribe("cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
+    
+    joint_states_publisher_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 100);
+    joint_commands_publisher_ = nh_.advertise<trajectory_msgs::JointTrajectory>("joint_group_position_controller/command", 100);
+    velocities_publisher_   = nh_.advertise<nav_msgs::Odometry>("odom/raw", 100);
+    foot_publisher_   = nh_.advertise<visualization_msgs::MarkerArray>("foot", 100);
 
     std::string knee_orientation;
-    pnh_.getParam("/champ/gait/pantograph_leg",         gait_config_.pantograph_leg);
-    pnh_.getParam("/champ/gait/max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
-    pnh_.getParam("/champ/gait/max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
-    pnh_.getParam("/champ/gait/max_angular_velocity_z", gait_config_.max_angular_velocity_z);
-    pnh_.getParam("/champ/gait/swing_height",           gait_config_.swing_height);
-    pnh_.getParam("/champ/gait/stance_depth",           gait_config_.stance_depth);
-    pnh_.getParam("/champ/gait/stance_duration",        gait_config_.stance_duration);
-    pnh_.getParam("/champ/gait/nominal_height",         gait_config_.nominal_height);
-    pnh_.getParam("/champ/gait/knee_orientation",       knee_orientation);
-    pnh_.getParam("/champ_controller/gazebo",           in_gazebo_);
-    pnh_.getParam("/champ/links_map/base",              base_name_);
+    nh_.getParam("gait/pantograph_leg",         gait_config_.pantograph_leg);
+    nh_.getParam("gait/max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
+    nh_.getParam("gait/max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
+    nh_.getParam("gait/max_angular_velocity_z", gait_config_.max_angular_velocity_z);
+    nh_.getParam("gait/swing_height",           gait_config_.swing_height);
+    nh_.getParam("gait/stance_depth",           gait_config_.stance_depth);
+    nh_.getParam("gait/stance_duration",        gait_config_.stance_duration);
+    nh_.getParam("gait/nominal_height",         gait_config_.nominal_height);
+    nh_.getParam("gait/knee_orientation",       knee_orientation);
+    nh_.getParam("links_map/base",              base_name_);
+    pnh_.getParam("gazebo",                     in_gazebo_);
     gait_config_.knee_orientation = knee_orientation.c_str();
-
+    
     base_.setGaitConfig(gait_config_);
-    champ::URDF::loadFromServer(base_, pnh_);
-    joint_names_ = champ::URDF::getJointNames(pnh_);
+    champ::URDF::loadFromServer(base_, nh_);
+    joint_names_ = champ::URDF::getJointNames(nh_);
+
+    node_namespace_ = ros::this_node::getNamespace();
+    if(node_namespace_.length() > 1)
+    {
+        node_namespace_.replace(0, 1, "");
+        node_namespace_.push_back('/');
+    }
+    else
+    {
+        node_namespace_ = "";
+    }
+    odom_frame_ = node_namespace_ + "odom";
+    base_footprint_frame_ = node_namespace_ + "base_footprint";
+    base_link_frame_ = node_namespace_ + base_name_;
+
+    tf2_ros::Buffer tfBuffer;
+    tfBuffer.setUsingDedicatedThread(true);
+    geometry_msgs::TransformStamped transformStamped;
 
     loop_timer_ = pnh_.createTimer(ros::Duration(0.005),
                                    &QuadrupedController::controlLoop_,
@@ -120,6 +138,7 @@ void QuadrupedController::publishJoints_(const ros::TimerEvent& event)
     if(in_gazebo_)
     {
         trajectory_msgs::JointTrajectory joints_cmd_msg;
+        joints_cmd_msg.header.stamp = ros::Time::now();
         joints_cmd_msg.joint_names = joint_names_;
 
         trajectory_msgs::JointTrajectoryPoint point;
@@ -176,8 +195,8 @@ void QuadrupedController::publishVelocities_(const ros::TimerEvent& event)
 
     nav_msgs::Odometry odom;
     odom.header.stamp = current_time;
-    odom.header.frame_id = "odom";
-    odom.child_frame_id = "base_footprint";
+    odom.header.frame_id = odom_frame_;
+    odom.child_frame_id = base_footprint_frame_;
 
     //robot's position in x,y, and z
     odom.pose.pose.position.x = x_pos_;
@@ -245,7 +264,7 @@ void QuadrupedController::publishFootPositions_(const ros::TimerEvent& event)
 
     for(size_t i = 0; i < 4; i++)
     {
-        marker_array.markers.push_back(createMarker(current_foot_positions_[i], i, base_name_));
+        marker_array.markers.push_back(createMarker(current_foot_positions_[i], i, base_link_frame_));
         robot_height += current_foot_positions_[i].Z();
     }
 
@@ -255,10 +274,11 @@ void QuadrupedController::publishFootPositions_(const ros::TimerEvent& event)
     }
 
     geometry_msgs::TransformStamped transformStamped;
-    
+
     transformStamped.header.stamp = ros::Time::now();
-    transformStamped.header.frame_id = "base_footprint";
-    transformStamped.child_frame_id = base_name_;
+
+    transformStamped.header.frame_id = base_footprint_frame_;
+    transformStamped.child_frame_id = base_link_frame_;
 
     transformStamped.transform.translation.x = 0.0;
     transformStamped.transform.translation.y = 0.0;

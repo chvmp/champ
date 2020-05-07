@@ -1,12 +1,21 @@
 <launch>
-    <arg name="lite"  default="false" />
+    <arg name="robot_name"       default="/"/>
+    <arg name="rviz"             default="false"/>
+    <arg name="lite"             default="false" />
+    <arg name="ros_control_file" default="$(find champ_config)/config/ros_control/ros_control.yaml" />
+
+    <param name="use_sim_time" value="true" />
 
     <include file="$(find champ_config)/launch/bringup.launch">
-        <arg name="gazebo" value="true"/>
-        <arg name="lite" value="$(arg lite)"/>
+        <arg name="robot_name" value="$(arg robot_name)"/>
+        <arg name="gazebo"     value="true"/>
+        <arg name="lite"       value="$(arg lite)"/>
+        <arg name="rviz"       value="$(arg rviz)"/>
     </include>
 
     <include file="$(find champ_gazebo)/launch/gazebo.launch">
-        <arg name="lite" value="$(arg lite)"/>
+        <arg name="robot_name"       value="$(arg robot_name)"/>
+        <arg name="lite"             value="$(arg lite)"/>
+        <arg name="ros_control_file" value="$(arg ros_control_file)"/>
     </include>
 </launch>
