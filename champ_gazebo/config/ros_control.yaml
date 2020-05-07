@@ -1,4 +1,4 @@
-/champ:
+"":
   joint_states_controller:
       type: joint_state_controller/JointStateController
       publish_rate: 25
@@ -32,18 +32,3 @@
         rh_hip_joint        : {p: 180, d: 0.9, i: 20}
         rh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
         rh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
-
-# /gazebo_ros_control:
-#   pid_gains:
-#     lf_hip_joint        : {p: 180, d: 0.9, i: 20}
-#     lf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
-#     lf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
-#     rf_hip_joint        : {p: 180, d: 0.9, i: 20}
-#     rf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
-#     rf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
-#     lh_hip_joint        : {p: 180, d: 0.9, i: 20}
-#     lh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
-#     lh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
-#     rh_hip_joint        : {p: 180, d: 0.9, i: 20}
-#     rh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
-#     rh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
