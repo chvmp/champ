@@ -87,6 +87,7 @@ class QuadrupedController
     champ::Velocities current_velocities_;
     float current_joint_positions_[12];
     geometry::Transformation current_foot_positions_[4];
+    geometry::Transformation target_foot_positions_[4];
 
     float x_pos_;
     float y_pos_;

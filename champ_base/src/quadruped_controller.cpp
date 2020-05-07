@@ -101,12 +101,11 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
 
 void QuadrupedController::controlLoop_(const ros::TimerEvent& event)
 {
-    geometry::Transformation target_foot_positions[4];
     float target_joint_positions[12];
     
-    body_controller_.poseCommand(target_foot_positions, req_pose_);
-    leg_controller_.velocityCommand(target_foot_positions, req_vel_);
-    kinematics_.inverse(target_joint_positions, target_foot_positions);
+    body_controller_.poseCommand(target_foot_positions_, req_pose_);
+    leg_controller_.velocityCommand(target_foot_positions_, req_vel_);
+    kinematics_.inverse(target_joint_positions, target_foot_positions_);
     actuators_.moveJoints(target_joint_positions);
 
     actuators_.getJointPositions(current_joint_positions_);
@@ -264,7 +263,11 @@ void QuadrupedController::publishFootPositions_(const ros::TimerEvent& event)
 
     for(size_t i = 0; i < 4; i++)
     {
-        marker_array.markers.push_back(createMarker(current_foot_positions_[i], i, base_link_frame_));
+        geometry::Transformation temp_foot_pos = target_foot_positions_[i];
+        //the target foot position is calculated in the hip frame
+        //now transform this to base so we can visualize in rviz
+        champ::Kinematics::transformToBase(temp_foot_pos, *base_.legs[i]);
+        marker_array.markers.push_back(createMarker(temp_foot_pos, i, base_link_frame_));
         robot_height += current_foot_positions_[i].Z();
     }
 
