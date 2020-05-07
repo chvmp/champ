@@ -61,133 +61,79 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_inertia:
+        back_left_foot:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        base_link:
+        back_left_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        camera_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_link:
+        back_left_lower_leg:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_rgb_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        camera_rgb_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        hokuyo_frame:
+        back_left_upper_leg:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        imu_link:
+        back_right_foot:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        lf_foot_link:
+        back_right_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        lf_hip_debug_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        lf_hip_link:
+        back_right_lower_leg:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lf_lower_leg_link:
+        back_right_upper_leg:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lf_upper_leg_link:
+        body:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lh_foot_link:
+        front_left_foot:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        lh_hip_debug_link:
+        front_left_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        lh_hip_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        lh_lower_leg_link:
+        front_left_lower_leg:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lh_upper_leg_link:
+        front_left_upper_leg:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        rf_foot_link:
+        front_right_foot:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        rf_hip_debug_link:
+        front_right_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        rf_hip_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rf_lower_leg_link:
+        front_right_lower_leg:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        rf_upper_leg_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rh_foot_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rh_hip_debug_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rh_hip_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rh_lower_leg_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rh_upper_leg_link:
+        front_right_upper_leg:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -220,13 +166,13 @@ Visualization Manager:
       Update Interval: 0
       Value: false
     - Class: rviz/MarkerArray
-      Enabled: true
+      Enabled: false
       Marker Topic: foot
       Name: MarkerArray
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Alpha: 1
       Axes Length: 1
       Axes Radius: 0.10000000149011612
@@ -246,7 +192,7 @@ Visualization Manager:
   Global Options:
     Background Color: 238; 238; 236
     Default Light: true
-    Fixed Frame: odom
+    Fixed Frame: /odom
     Frame Rate: 30
   Name: root
   Tools:
