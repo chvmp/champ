@@ -1,5 +1,7 @@
 frequency: 50
 
+transform_timeout: 0.01
+
 two_d_mode: true
 diagnostics_agg: true
 
