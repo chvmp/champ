@@ -8,7 +8,7 @@
 #define MAX_ANGULAR_VELOCITY_Z  1.0
 #define SWING_HEIGHT            0.04
 #define STANCE_DEPTH            0.00
-#define STANCE_DURATION         0.330
+#define STANCE_DURATION         0.25
 #define NOMINAL_HEIGHT          0.20
 
 #endif
