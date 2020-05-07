@@ -36,7 +36,12 @@ class IMURelay:
         self.imu_pub = rospy.Publisher('imu/data', sensor_msgs.msg.Imu, queue_size = 100)
         self.mag_pub = rospy.Publisher('imu/mag', sensor_msgs.msg.MagneticField, queue_size = 100)
 
+        self.has_imu = rospy.get_param("pose_relay/has_imu", True)
+
     def imu_callback(self, imu):
+        if not self.has_imu:
+          return
+
         imu_data_msg = sensor_msgs.msg.Imu()
         imu_mag_msg = sensor_msgs.msg.MagneticField()
 
