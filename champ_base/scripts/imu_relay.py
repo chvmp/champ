@@ -32,9 +32,9 @@ import sensor_msgs.msg
 
 class IMURelay:
     def __init__(self):
-        rospy.Subscriber("/champ/imu/raw", champ_msgs.msg.Imu, self.imu_callback)
-        self.imu_pub = rospy.Publisher('/champ/imu/data', sensor_msgs.msg.Imu, queue_size = 100)
-        self.mag_pub = rospy.Publisher('/champ/imu/mag', sensor_msgs.msg.MagneticField, queue_size = 100)
+        rospy.Subscriber("imu/raw", champ_msgs.msg.Imu, self.imu_callback)
+        self.imu_pub = rospy.Publisher('imu/data', sensor_msgs.msg.Imu, queue_size = 100)
+        self.mag_pub = rospy.Publisher('imu/mag', sensor_msgs.msg.MagneticField, queue_size = 100)
 
     def imu_callback(self, imu):
         imu_data_msg = sensor_msgs.msg.Imu()

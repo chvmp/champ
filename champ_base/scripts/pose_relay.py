@@ -37,7 +37,7 @@ import tf2_ros
 
 class PoseCmd:
     def __init__(self):
-        self.pose_subscriber = rospy.Subscriber('champ/cmd_pose', Pose, self.pose_callback)
+        self.pose_subscriber = rospy.Subscriber('cmd_pose', Pose, self.pose_callback)
         self.roll = 0
         self.pitch = 0
         self.yaw = 0
@@ -49,14 +49,25 @@ class PoseCmd:
 
 class PoseRelay:
     def __init__(self):
-        rospy.Subscriber("/champ/imu/data", Imu, self.imu_callback)
-        rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
+        rospy.Subscriber("imu/data", Imu, self.imu_callback)
+        rospy.Subscriber("foot/raw", PointArray, self.foot_callback)
         self.pose_cmd = PoseCmd()
 
-        self.robot_base = rospy.get_param('/champ/links_map/base')
-        self.has_imu = rospy.get_param("/pose_relay/has_imu", True)
+        self.robot_base = rospy.get_param('links_map/base')
+        self.has_imu = rospy.get_param("pose_relay/has_imu", True)
         self.robot_height = 0
         self.imu_data = Imu()
+
+        self.node_namespace = ""
+        self.node_namespace = rospy.get_namespace()
+        if len(self.node_namespace) > 1:
+            self.node_namespace = self.node_namespace.replace('/', '')
+            self.node_namespace += "/"
+        else:
+            self.node_namespace = ""
+
+        self.base_frame = self.node_namespace + self.robot_base
+        self.base_footprint_frame = self.node_namespace + "base_footprint"
 
     def foot_callback(self, points):
         self.robot_height = (points.lf.z + points.rf.z + points.lh.z + points.rh.z) / 4
@@ -71,8 +82,8 @@ class PoseRelay:
             pose_quat = quaternion_from_euler(self.pose_cmd.roll, self.pose_cmd.pitch, self.pose_cmd.yaw)
 
         transform_stamped.header.stamp = rospy.Time.now()
-        transform_stamped.header.frame_id = "base_footprint"
-        transform_stamped.child_frame_id = self.robot_base
+        transform_stamped.header.frame_id = self.base_footprint_frame
+        transform_stamped.child_frame_id = self.base_frame
         transform_stamped.transform.translation.x = 0.0
         transform_stamped.transform.translation.y = 0.0 
         transform_stamped.transform.translation.z = -self.robot_height

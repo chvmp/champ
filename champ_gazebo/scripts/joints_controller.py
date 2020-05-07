@@ -32,8 +32,8 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 class JointsController:
     def __init__(self):
-        rospy.Subscriber("/champ/joint_states/raw", Joints, self.joint_states_callback)
-        self.joint_control_pub = rospy.Publisher('/champ/joint_group_position_controller/command', JointTrajectory, queue_size = 100)
+        rospy.Subscriber("joint_states/raw", Joints, self.joint_states_callback)
+        self.joint_control_pub = rospy.Publisher('joint_group_position_controller/command', JointTrajectory, queue_size = 100)
 
     def joint_states_callback(self, joints):
         joint_control = JointTrajectory()

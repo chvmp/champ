@@ -34,14 +34,25 @@ import tf
 
 class OdometryRelay:
     def __init__(self):
-        rospy.Subscriber("/champ/velocities/raw", Velocities, self.velocities_callback)
-        self.odom_pub = rospy.Publisher('/odom/raw', Odometry, queue_size = 100)
+        rospy.Subscriber("velocities/raw", Velocities, self.velocities_callback)
+        self.odom_pub = rospy.Publisher('odom/raw', Odometry, queue_size = 100)
         
         self.x_pos = 0.0
         self.y_pos = 0.0
         self.heading = 0.0
         
         self.prev_time = rospy.Time.now()
+
+        self.node_namespace = ""
+        self.node_namespace = rospy.get_namespace()
+        if len(self.node_namespace) > 1:
+            self.node_namespace = self.node_namespace.replace('/', '')
+            self.node_namespace += "/"
+        else:
+            self.node_namespace = ""
+
+        self.odom_frame = self.node_namespace + "odom"
+        self.base_footprint_frame = self.node_namespace + "base_footprint"
 
     def velocities_callback(self, vel):
         current_time = rospy.Time.now()
@@ -66,8 +77,8 @@ class OdometryRelay:
 
         odom = Odometry()
         odom.header.stamp = current_time
-        odom.header.frame_id = "odom"
-        odom.child_frame_id = "base_footprint"
+        odom.header.frame_id = self.odom_frame
+        odom.child_frame_id = self.base_footprint_frame
 
         #robot's position in x,y, and z
         odom.pose.pose.position.x = self.x_pos

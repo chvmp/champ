@@ -34,22 +34,22 @@ import os, sys
 
 class JointsRelay:
     def __init__(self):
-        rospy.Subscriber("/champ/joint_states/raw", Joints, self.joint_states_callback)
-        rospy.Subscriber("/champ/cmd_joints/relay", JointState, self.joints_cmd_callback)
+        rospy.Subscriber("joint_states/raw", Joints, self.joint_states_callback)
+        rospy.Subscriber("cmd_joints/relay", JointState, self.joints_cmd_callback)
 
-        self.joint_states_pub = rospy.Publisher('/champ/joint_states', JointState, queue_size = 100)
-        self.joint_cmd_pub = rospy.Publisher('/champ/cmd_joints', Joints, queue_size = 100)
+        self.joint_states_pub = rospy.Publisher('joint_states', JointState, queue_size = 100)
+        self.joint_cmd_pub = rospy.Publisher('cmd_joints', Joints, queue_size = 100)
 
         self.joint_names = []
 
         self.in_gazebo = False
-        self.in_gazebo = rospy.get_param('/joints_relay/gazebo')
+        self.in_gazebo = rospy.get_param('joints_relay/gazebo')
 
         leg_map = [None,None,None,None]
-        leg_map[3] = rospy.get_param('/champ/joints_map/left_front')
-        leg_map[2] = rospy.get_param('/champ/joints_map/right_front')
-        leg_map[1] = rospy.get_param('/champ/joints_map/left_hind')
-        leg_map[0] = rospy.get_param('/champ/joints_map/right_hind')
+        leg_map[3] = rospy.get_param('joints_map/left_front')
+        leg_map[2] = rospy.get_param('joints_map/right_front')
+        leg_map[1] = rospy.get_param('joints_map/left_hind')
+        leg_map[0] = rospy.get_param('joints_map/right_hind')
 
         for leg in reversed(leg_map):
             for i in range(3):

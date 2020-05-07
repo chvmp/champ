@@ -35,22 +35,30 @@ from tf.transformations import quaternion_from_euler
 
 class FootRelay:
     def __init__(self):
-        rospy.Subscriber("/champ/foot/raw", PointArray, self.foot_callback)
-        self.marker_array_pub = rospy.Publisher('/champ/foot', MarkerArray, queue_size = 100)
+        rospy.Subscriber("foot/raw", PointArray, self.foot_callback)
+        self.marker_array_pub = rospy.Publisher('foot', MarkerArray, queue_size = 100)
 
-        self.robot_base = rospy.get_param('/champ/links_map/base')
+        self.robot_base = rospy.get_param('links_map/base')
+
+        self.node_namespace = ""
+        self.node_namespace = rospy.get_namespace()
+        if len(self.node_namespace) > 1:
+            self.node_namespace = self.node_namespace.replace('/', '')
+            self.node_namespace += "/"
+        else:
+            self.node_namespace = ""
+
+        self.base_frame = self.node_namespace + self.robot_base
 
     def foot_callback(self, points):
         marker_array = MarkerArray()
 
-        marker_array.markers.append(self.create_marker(points.lf.x, points.lf.y, points.lf.z, 0, self.robot_base))
-        marker_array.markers.append(self.create_marker(points.rf.x, points.rf.y, points.rf.z, 1, self.robot_base))
-        marker_array.markers.append(self.create_marker(points.lh.x, points.lh.y, points.lh.z, 2, self.robot_base))
-        marker_array.markers.append(self.create_marker(points.rh.x, points.rh.y, points.rh.z, 3, self.robot_base))
+        marker_array.markers.append(self.create_marker(points.lf.x, points.lf.y, points.lf.z, 0, self.base_frame))
+        marker_array.markers.append(self.create_marker(points.rf.x, points.rf.y, points.rf.z, 1, self.base_frame))
+        marker_array.markers.append(self.create_marker(points.lh.x, points.lh.y, points.lh.z, 2, self.base_frame))
+        marker_array.markers.append(self.create_marker(points.rh.x, points.rh.y, points.rh.z, 3, self.base_frame))
 
         self.marker_array_pub.publish(marker_array)
-
-        current_time = rospy.Time.now()
 
     def create_marker(self, x, y, z, id, frame_id):
         point_marker = Marker()
