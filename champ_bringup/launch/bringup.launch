@@ -6,7 +6,7 @@
     <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
     <arg name="gazebo"           default="false" />
     <arg name="rviz"             default="false" />
-    <arg name="base_frame"       default="odom"/>
+    <arg name="rviz_ref_frame"   default="odom"/>
     <arg name="has_imu"          default="true" />
     <arg name="lite"             default="false" />
     <arg name="laser"            default="sim" />
@@ -47,7 +47,7 @@
         <include file="$(find champ_bringup)/launch/include/laser/$(arg laser).launch" />
 
         <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
-            args="-d $(find champ_description)/rviz/urdf_viewer.rviz -f $(arg base_frame)"
+            args="-d $(find champ_description)/rviz/urdf_viewer.rviz -f $(arg rviz_ref_frame)"
             output="screen"/>
     </group>
 </launch>
