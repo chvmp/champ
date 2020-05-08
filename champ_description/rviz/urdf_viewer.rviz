@@ -61,79 +61,133 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        back_left_foot:
+        base_inertia:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        back_left_hip:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        back_left_lower_leg:
+        base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        back_left_upper_leg:
+        camera_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        back_right_foot:
+        camera_rgb_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        back_right_hip:
+        camera_rgb_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        back_right_lower_leg:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        back_right_upper_leg:
+        hokuyo_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        body:
+        imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lf_foot_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lf_hip_debug_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lf_hip_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        front_left_foot:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        front_left_hip:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        front_left_lower_leg:
+        lf_lower_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        front_left_upper_leg:
+        lf_upper_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        front_right_foot:
+        lh_foot_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        front_right_hip:
+        lh_hip_debug_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        front_right_lower_leg:
+        lh_hip_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        front_right_upper_leg:
+        lh_lower_leg_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        lh_upper_leg_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rf_foot_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        rf_hip_debug_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        rf_hip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rf_lower_leg_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rf_upper_leg_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rh_foot_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        rh_hip_debug_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        rh_hip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rh_lower_leg_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rh_upper_leg_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -152,19 +206,124 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
       Value: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        base_footprint:
+          Value: true
+        base_inertia:
+          Value: true
+        base_link:
+          Value: true
+        camera_depth_frame:
+          Value: true
+        camera_depth_optical_frame:
+          Value: true
+        camera_link:
+          Value: true
+        camera_rgb_frame:
+          Value: true
+        camera_rgb_optical_frame:
+          Value: true
+        hokuyo_frame:
+          Value: true
+        imu_link:
+          Value: true
+        lf_foot_link:
+          Value: true
+        lf_hip_debug_link:
+          Value: true
+        lf_hip_link:
+          Value: true
+        lf_lower_leg_link:
+          Value: true
+        lf_upper_leg_link:
+          Value: true
+        lh_foot_link:
+          Value: true
+        lh_hip_debug_link:
+          Value: true
+        lh_hip_link:
+          Value: true
+        lh_lower_leg_link:
+          Value: true
+        lh_upper_leg_link:
+          Value: true
+        odom:
+          Value: true
+        rf_foot_link:
+          Value: true
+        rf_hip_debug_link:
+          Value: true
+        rf_hip_link:
+          Value: true
+        rf_lower_leg_link:
+          Value: true
+        rf_upper_leg_link:
+          Value: true
+        rh_foot_link:
+          Value: true
+        rh_hip_debug_link:
+          Value: true
+        rh_hip_link:
+          Value: true
+        rh_lower_leg_link:
+          Value: true
+        rh_upper_leg_link:
+          Value: true
       Marker Scale: 0.25
       Name: TF
       Show Arrows: true
       Show Axes: false
       Show Names: false
       Tree:
-        {}
+        odom:
+          base_footprint:
+            base_link:
+              base_inertia:
+                {}
+              camera_link:
+                camera_depth_frame:
+                  camera_depth_optical_frame:
+                    {}
+                camera_rgb_frame:
+                  camera_rgb_optical_frame:
+                    {}
+              hokuyo_frame:
+                {}
+              imu_link:
+                {}
+              lf_hip_debug_link:
+                {}
+              lf_hip_link:
+                lf_upper_leg_link:
+                  lf_lower_leg_link:
+                    lf_foot_link:
+                      {}
+              lh_hip_debug_link:
+                {}
+              lh_hip_link:
+                lh_upper_leg_link:
+                  lh_lower_leg_link:
+                    lh_foot_link:
+                      {}
+              rf_hip_debug_link:
+                {}
+              rf_hip_link:
+                rf_upper_leg_link:
+                  rf_lower_leg_link:
+                    rf_foot_link:
+                      {}
+              rh_hip_debug_link:
+                {}
+              rh_hip_link:
+                rh_upper_leg_link:
+                  rh_lower_leg_link:
+                    rh_foot_link:
+                      {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Class: rviz/MarkerArray
       Enabled: false
       Marker Topic: foot
