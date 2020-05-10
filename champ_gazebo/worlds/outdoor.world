@@ -82,9 +82,9 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>0</sim_time>
-      <real_time>0</real_time>
-      <wall_time>0</wall_time>
+      <sim_time>0 0</sim_time>
+      <real_time>0 0</real_time>
+      <wall_time>0 0</wall_time>
       <iterations>67886</iterations>
       <model name='Construction Barrel'>
         <pose frame=''>-1.05597 5.25063 -2e-06 -8e-06 -0 0.858265</pose>
