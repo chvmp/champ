@@ -106,8 +106,15 @@ void QuadrupedController::controlLoop_(const ros::TimerEvent& event)
     body_controller_.poseCommand(target_foot_positions_, req_pose_);
     leg_controller_.velocityCommand(target_foot_positions_, req_vel_);
     kinematics_.inverse(target_joint_positions, target_foot_positions_);
-    actuators_.moveJoints(target_joint_positions);
 
+    //This is a pseudo actuator.Virtually this just stores the set target_joint_positions by the controller.
+    //For physical hardware, the actuator class can be used to call physical hardware APIs
+    //to set the actuators' angles using target_joint_positions.
+    actuators_.moveJoints(target_joint_positions);
+    
+    //Virtually, this just grabs the stored target_joint_positions set by the controller.
+    //On real hardware, the actuator class can be used to grab the physical actuators' angles
+    //and return those values in getJointPositions function.
     actuators_.getJointPositions(current_joint_positions_);
     base_.updateJointPositions(current_joint_positions_);
     base_.getFootPositions(current_foot_positions_);

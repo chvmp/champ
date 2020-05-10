@@ -50,9 +50,14 @@ namespace champ
 
                 void moveJoint(unsigned int leg_id, float joint_position)
                 {
-                        float delta = (joint_position - thetas_[leg_id]);
-                        thetas_[leg_id] = thetas_[leg_id] + (delta * (((rand() % 80) + 70) / 100.0));  
-                        // thetas_[leg_id] = joint_position;              
+                    //until a proper hardware interface is done, hardware integration can be done here
+                    
+                    //joint_position can be passed to the hardware api to set the joint position of the actuator
+
+                    //this stores the set joint_position by the controller for pseudo feedback.
+                    float delta = (joint_position - thetas_[leg_id]);
+                    //the random number is just to add noise to the reading
+                    thetas_[leg_id] = thetas_[leg_id] + (delta * (((rand() % 80) + 70) / 100.0));  
                 }
 
                 void getJointPositions(float joint_position[12])
@@ -65,6 +70,9 @@ namespace champ
 
                 float getJointPosition(unsigned int leg_id)
                 {    
+                    //virtually this returns the stored joint_position set by the controller
+                    //until a proper hardware interface is done, this can be used to return
+                    //real actuator feedback
                     return thetas_[leg_id];
                 }
         };
