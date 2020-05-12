@@ -36,36 +36,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Imu.h>
 #include <champ_msgs/Velocities.h>
-
 #include <geometry/geometry.h>
-#include <boost/bind.hpp>
+#include <odometry/odometry.h>
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 #include <nav_msgs/Odometry.h>
 
-#include <geometry/geometry.h>
-#include <quadruped_base/quadruped_components.h>
-#include <body_controller/body_controller.h>
-#include <leg_controller/leg_controller.h>
-#include <kinematics/kinematics.h>
-#include <odometry/odometry.h>
-#include <actuator.h>
-
-#include <geometry_msgs/Twist.h>
-#include <geometry_msgs/TransformStamped.h>
-
 #include <sensor_msgs/JointState.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/MagneticField.h>
-
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/transform_listener.h>
-#include <boost/thread.hpp>
 
 class MessageRelay
 {

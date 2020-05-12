@@ -35,9 +35,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <champ_msgs/Pose.h>
 #include <champ_msgs/PointArray.h>
 
-#include <geometry/geometry.h>
-#include <boost/bind.hpp>
-
 #include <tf2/LinearMath/Quaternion.h>
 #include <nav_msgs/Odometry.h>
 
