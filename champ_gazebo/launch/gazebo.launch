@@ -27,7 +27,7 @@
             ">
         </node>
 
-        <node if="$(arg lite)" pkg="champ_gazebo" name="champ_joints_controller" type="joints_controller.py" output="screen"/>
+        <!-- <node if="$(arg lite)" pkg="champ_gazebo" name="champ_joints_controller" type="joints_controller.py" output="screen"/> -->
     </group>
 </launch>
 

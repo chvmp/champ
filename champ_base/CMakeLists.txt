@@ -93,16 +93,6 @@ target_link_libraries(message_relay_node message_relay ${catkin_LIBRARIES})
 add_dependencies(message_relay ${catkin_EXPORTED_TARGETS})
 add_dependencies(message_relay ${catkin_EXPORTED_TARGETS})
 
-install(PROGRAMS
-  scripts/foot_relay.py
-  scripts/foot_relay.py
-  scripts/imu_relay.py
-  scripts/joints_relay.py
-  scripts/odometry_relay.py
-  scripts/pose_relay.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
 install(TARGETS 
     quadruped_controller
     quadruped_controller_node
