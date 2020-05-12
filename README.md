@@ -67,7 +67,7 @@ You don't need a physical robot to run the following demos. If you're building a
 
 2.1.1. Run the base driver:
 
-    roslaunch champ_config bringup.launch rviz:=true has_imu:=false
+    roslaunch champ_config bringup.launch rviz:=true
 
 2.1.2. Run the teleop node:
 
@@ -157,8 +157,8 @@ Example Usage:
 
 View your newly configured robot:
 
-    roslaunch <myrobot_config> bringup.launch rviz:true has_imu:=false
-
+    roslaunch <myrobot_config> bringup.launch rviz:true
+    
 Run real robot with a microcontroller:
 
     roslaunch <myrobot_config> bringup.launch lite:=true
