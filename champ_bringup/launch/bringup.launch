@@ -15,19 +15,20 @@
         <param name="tf_prefix" value="$(arg robot_name)"/>
         <param if="$(arg gazebo)" name="use_sim_time" value="true"/>
 
+        <include file="$(find champ_description)/launch/description.launch">
+            <arg name="description_file" value="$(arg description_file)"/>
+        </include>
+
         <node if="$(arg lite)" pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
             <param name="port" value="/dev/ttyACM0" />
             <param name="baud" value="500000" />
         </node>
 
-        <include if="$(arg lite)" file="$(find champ_base)/launch/message_relays.launch">
-            <arg name="gazebo"          value="$(arg gazebo)"/>
-            <arg name="has_imu"         value="$(arg has_imu)" />
-        </include>
-
-        <include file="$(find champ_description)/launch/description.launch">
-            <arg name="description_file" value="$(arg description_file)"/>
-        </include>
+        <node if="$(arg lite)" pkg="champ_base" name="message_relay" type="message_relay_node" output="screen">
+            <param                        name="gazebo"  value="$(arg gazebo)" />
+            <param if="$(arg gazebo)"     name="has_imu" value="false"/>       
+            <param unless="$(arg gazebo)" name="has_imu" value="$(arg has_imu)"/>       
+        </node>
 
         <node unless="$(arg lite)" pkg="champ_base" name="champ_controller" type="quadruped_controller_node" output="screen">
             <param name="gazebo" value="$(arg gazebo)" />
