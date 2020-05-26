@@ -1,5 +1,5 @@
 <launch>
-    <node name="joints_calibrator_gui" pkg="champ_bringup" type="joint_calibrator_relay.py" output="screen" />
+    <node name="joints_calibrator_relay" pkg="champ_bringup" type="joint_calibrator_relay.py" output="screen" />
 
     <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
         <remap from="joint_states" to="joints_calibrator" />
