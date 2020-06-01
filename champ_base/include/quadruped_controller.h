@@ -56,6 +56,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <visualization_msgs/MarkerArray.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
+#include <tf2/LinearMath/Matrix3x3.h>
+
 #include <boost/thread.hpp>
 
 class QuadrupedController

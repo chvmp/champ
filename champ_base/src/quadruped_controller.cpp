@@ -49,6 +49,7 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     nh_.getParam("gait/max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
     nh_.getParam("gait/max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
     nh_.getParam("gait/max_angular_velocity_z", gait_config_.max_angular_velocity_z);
+    nh_.getParam("gait/com_x_translation",      gait_config_.com_x_translation);
     nh_.getParam("gait/swing_height",           gait_config_.swing_height);
     nh_.getParam("gait/stance_depth",           gait_config_.stance_depth);
     nh_.getParam("gait/stance_duration",        gait_config_.stance_duration);
@@ -294,18 +295,46 @@ void QuadrupedController::publishFootPositions_(const ros::TimerEvent& event)
     transformStamped.transform.translation.y = 0.0;
     transformStamped.transform.translation.z = -robot_height / 4;
 
-    //TODO:: do a proper pose estimation to get RPY
     tf2::Quaternion quaternion;
-    quaternion.setRPY(
-        req_pose_.orientation.roll, 
-        req_pose_.orientation.pitch, 
-        req_pose_.orientation.yaw
-    );
+    quaternion.setRPY(0,0,0);
+
+    //for now, only do pose estimation when the robot is static
+    //until a proper foot detection is available
+    //this is purely for visualization purpose
+
+    //TODO: include this pose estimation approach inside libchamp
+    if(current_velocities_.linear.x == 0.0 &&
+       current_velocities_.linear.y == 0.0 &&
+       current_velocities_.angular.z == 0.0)
+    {
+        //create orthonormal vectors
+        tf2::Vector3 x_axis(current_foot_positions_[1].X() - current_foot_positions_[3].X(), 
+                            current_foot_positions_[1].Y() - current_foot_positions_[3].Y(), 
+                            current_foot_positions_[1].Z() - current_foot_positions_[3].Z());
+        x_axis.normalize();
+
+        tf2::Vector3 y_axis(current_foot_positions_[2].X() - current_foot_positions_[3].X(), 
+                            current_foot_positions_[2].Y() - current_foot_positions_[3].Y(), 
+                            current_foot_positions_[2].Z() - current_foot_positions_[3].Z());
+        y_axis.normalize();
+
+        //create a perpendicular vector 
+        tf2::Vector3 z_axis = x_axis.cross(y_axis);
+        z_axis.normalize();
+
+        tf2::Matrix3x3 rotationMatrix(
+                                x_axis.x(), y_axis.x(), z_axis.x(),
+                                x_axis.y(), y_axis.y(), z_axis.y(),
+                                x_axis.z(), y_axis.z(), z_axis.z());
+
+        rotationMatrix.getRotation(quaternion);
+        quaternion.normalize();
+    }
 
     transformStamped.transform.rotation.x = quaternion.x();
     transformStamped.transform.rotation.y = quaternion.y();
     transformStamped.transform.rotation.z = quaternion.z();
-    transformStamped.transform.rotation.w = quaternion.w();
+    transformStamped.transform.rotation.w = -quaternion.w();
 
     base_broadcaster_.sendTransform(transformStamped);    
 }
