@@ -110,10 +110,23 @@ void MessageRelay::footRawCallback(const champ_msgs::PointArray::ConstPtr& msg)
     //TODO:: do a proper pose estimation to get RPY
     if(has_imu_)
     {
-        transformStamped.transform.rotation.x = imu_data_.orientation.x;
-        transformStamped.transform.rotation.y = imu_data_.orientation.y;
-        transformStamped.transform.rotation.z = imu_data_.orientation.z;
-        transformStamped.transform.rotation.w = imu_data_.orientation.w;
+        tf2::Quaternion temp_quat(
+            imu_data_.orientation.x,
+            imu_data_.orientation.y,
+            imu_data_.orientation.z,
+            imu_data_.orientation.w
+        );
+        double roll, pitch, yaw;
+        tf2::Matrix3x3 temp_m(temp_quat);
+        temp_m.getRPY(roll, pitch, yaw);
+
+        tf2::Quaternion quat;
+        quat.setRPY(roll, pitch, 0);
+
+        transformStamped.transform.rotation.x = quat.x();
+        transformStamped.transform.rotation.y = quat.y();
+        transformStamped.transform.rotation.z = quat.z();
+        transformStamped.transform.rotation.w = quat.w();
     }
     else
     {
