@@ -18,11 +18,11 @@
 		<material>Gazebo/FlatBlack</material>
 	</gazebo>
 
-    <xacro:asus_camera_model 
+    <xacro:asus_camera 
         parent="base_link" 
         name="camera">
         <origin xyz="${base_x_length / 2} 0.0 ${base_z_length / 2 + 0.01}" rpy="0 0 0"/>
-    </xacro:asus_camera_model>
+    </xacro:asus_camera>
 
     <gazebo>
         <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">

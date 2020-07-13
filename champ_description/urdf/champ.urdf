@@ -153,6 +153,32 @@
     <child link="camera_rgb_optical_frame"/>
   </joint>
   <link name="camera_rgb_optical_frame"/>
+  <!-- ASUS Xtion PRO camera for simulation -->
+  <gazebo reference="camera_depth_frame">
+    <sensor name="camera" type="depth">
+      <update_rate>20</update_rate>
+      <camera>
+        <horizontal_fov>1.09606677025</horizontal_fov>
+        <image>
+          <format>R8G8B8</format>
+          <width>640</width>
+          <height>480</height>
+        </image>
+        <clip>
+          <near>0.5</near>
+          <far>9</far>
+        </clip>
+      </camera>
+      <plugin filename="libgazebo_ros_openni_kinect.so" name="camera_camera_controller">
+        <imageTopicName>camera/rgb/image_raw</imageTopicName>
+        <cameraInfoTopicName>camera/rgb/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>camera/depth/image_raw</depthImageTopicName>
+        <depthImageCameraInfoTopicName>camera/depth/camera_info</depthImageCameraInfoTopicName>
+        <pointCloudTopicName>camera/depth/points</pointCloudTopicName>
+        <frameName>camera_depth_optical_frame</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
   <gazebo>
     <plugin filename="libhector_gazebo_ros_imu.so" name="imu_controller">
       <updateRate>50.0</updateRate>
