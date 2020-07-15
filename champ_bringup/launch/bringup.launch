@@ -19,7 +19,7 @@
             <arg name="description_file" value="$(arg description_file)"/>
         </include>
 
-        <node if="$(arg lite)" pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen">
+        <node if="$(arg lite)" pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen" respawn="true">
             <param name="port" value="/dev/ttyACM0" />
             <param name="baud" value="500000" />
         </node>
