@@ -104,13 +104,13 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/base.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/base.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/base.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/base.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -126,13 +126,13 @@
     <collision>
       <origin rpy="0 0 0" xyz="-0.0125 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/lower_arm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/lower_arm.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <visual>
       <origin rpy="0 0 0" xyz="-0.0125 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/lower_arm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/lower_arm.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -148,13 +148,13 @@
     <collision>
       <origin rpy="0 0 0" xyz="-0.0125 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/upper_arm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/upper_arm.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <visual>
       <origin rpy="0 0 0" xyz="-0.0125 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/upper_arm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/upper_arm.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -170,13 +170,13 @@
     <collision>
       <origin rpy="0 0 0" xyz="-0.0125 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/wrist1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/wrist1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <visual>
       <origin rpy="0 0 0" xyz="-0.0125 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/wrist1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/wrist1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -192,13 +192,13 @@
     <collision>
       <origin rpy="0 0 0" xyz="-0.0455 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/wrist2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/wrist2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <visual>
       <origin rpy="0 0 0" xyz="-0.0455 0 0"/>
       <geometry>
-        <mesh filename="package://champ_arm_description/meshes/wrist2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://champ_description/meshes/arm/wrist2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
