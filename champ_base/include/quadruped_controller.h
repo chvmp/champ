@@ -30,35 +30,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ros/ros.h"
 
-#include <urdf_loader.h>
+#include <utils/urdf_loader.h>
 #include <champ_msgs/Joints.h>
 #include <champ_msgs/Pose.h>
 #include <champ_msgs/PointArray.h>
+#include <champ_msgs/Contacts.h>
 
-#include <tf2/LinearMath/Quaternion.h>
-#include <nav_msgs/Odometry.h>
-
-#include <geometry/geometry.h>
-#include <quadruped_base/quadruped_components.h>
 #include <body_controller/body_controller.h>
 #include <leg_controller/leg_controller.h>
 #include <kinematics/kinematics.h>
-#include <odometry/odometry.h>
-#include <actuator.h>
 
 #include <geometry_msgs/Twist.h>
-#include <geometry_msgs/TransformStamped.h>
-
 #include <sensor_msgs/JointState.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
-#include <visualization_msgs/Marker.h>
-#include <visualization_msgs/MarkerArray.h>
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/transform_listener.h>
-#include <tf2/LinearMath/Matrix3x3.h>
-
-#include <boost/thread.hpp>
 
 class QuadrupedController
 {
@@ -70,28 +55,12 @@ class QuadrupedController
     
     ros::Publisher joint_states_publisher_;   
     ros::Publisher joint_commands_publisher_;   
-    ros::Publisher velocities_publisher_;
-    ros::Publisher foot_publisher_;
-
-    tf2_ros::TransformBroadcaster base_broadcaster_;
+    ros::Publisher contacts_publisher_;
 
     ros::Timer loop_timer_;
-    ros::Timer odom_data_timer_;
-    ros::Timer joints_position_timer_;
-    ros::Timer foot_position_timer_;
 
     champ::Velocities req_vel_;
     champ::Pose req_pose_;
-
-    champ::Velocities current_velocities_;
-    float current_joint_positions_[12];
-    geometry::Transformation current_foot_positions_[4];
-    geometry::Transformation target_foot_positions_[4];
-
-    float x_pos_;
-    float y_pos_;
-    float heading_;
-    ros::Time last_vel_time_;
 
     champ::GaitConfig gait_config_;
 
@@ -99,27 +68,20 @@ class QuadrupedController
     champ::BodyController body_controller_;
     champ::LegController leg_controller_;
     champ::Kinematics kinematics_;
-    champ::Odometry odometry_;
-    champ::Actuator actuators_;
 
     std::vector<std::string> joint_names_;
-    std::string base_name_;
-    std::string node_namespace_;
-    std::string odom_frame_;
-    std::string base_footprint_frame_;
-    std::string base_link_frame_;
 
+    bool publish_foot_contacts_;
+    bool publish_joint_states_;
     bool in_gazebo_;
 
     void controlLoop_(const ros::TimerEvent& event);
-    void publishJoints_(const ros::TimerEvent& event);
-    void publishVelocities_(const ros::TimerEvent& event);
-    void publishFootPositions_(const ros::TimerEvent& event);
+    
+    void publishJoints_(float target_joints[12]);
+    void publishFootContacts_(bool foot_contacts[4]);
 
     void cmdVelCallback_(const geometry_msgs::Twist::ConstPtr& msg);
     void cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg);
-
-    visualization_msgs::Marker createMarker(geometry::Transformation foot_pos, int id, std::string frame_id);
 
     public:
         QuadrupedController(const ros::NodeHandle &node_handle,
