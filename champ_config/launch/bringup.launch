@@ -11,7 +11,7 @@
     <arg name="lite"                   default="false" />
     <arg name="publish_foot_contacts"  default="true" />
     <arg name="laser"                  default="sim"/>
-    <arg name="joint_controller_topic" default="joint_group_position_controller/commands" />
+    <arg name="joint_controller_topic" default="joint_group_position_controller/command" />
     <arg name="hardware_connected"     default="false" />
 
     <include file="$(find champ_bringup)/launch/bringup.launch">
