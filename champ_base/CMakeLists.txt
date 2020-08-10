@@ -82,6 +82,7 @@ include_directories(
 
 add_library(quadruped_controller src/quadruped_controller.cpp)
 add_library(message_relay src/message_relay.cpp)
+add_library(state_estimation src/state_estimation.cpp)
 
 add_executable(quadruped_controller_node src/quadruped_controller_node.cpp)
 target_link_libraries(quadruped_controller_node quadruped_controller ${catkin_LIBRARIES})
@@ -93,11 +94,18 @@ target_link_libraries(message_relay_node message_relay ${catkin_LIBRARIES})
 add_dependencies(message_relay ${catkin_EXPORTED_TARGETS})
 add_dependencies(message_relay ${catkin_EXPORTED_TARGETS})
 
+add_executable(state_estimation_node src/state_estimation_node.cpp)
+target_link_libraries(state_estimation_node state_estimation ${catkin_LIBRARIES})
+add_dependencies(state_estimation ${catkin_EXPORTED_TARGETS})
+add_dependencies(state_estimation ${catkin_EXPORTED_TARGETS})
+
 install(TARGETS 
     quadruped_controller
     quadruped_controller_node
     message_relay
     message_relay_node
+    state_estimation
+    state_estimation_node
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

@@ -25,53 +25,55 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MESSAGE_RELAY_H
-#define QUADRUPED_CONTROLLER_H
+#ifndef STATE_ESTIMATION_H
+#define STATE_ESTIMATION_H
 
 #include "ros/ros.h"
 
 #include <utils/urdf_loader.h>
-#include <champ_msgs/Joints.h>
-#include <champ_msgs/Pose.h>
-#include <champ_msgs/PointArray.h>
-#include <champ_msgs/Imu.h>
-#include <champ_msgs/Velocities.h>
-#include <geometry/geometry.h>
+#include <champ_msgs/Contacts.h>
 #include <odometry/odometry.h>
 
 #include <tf2/LinearMath/Quaternion.h>
-#include <tf2/LinearMath/Matrix3x3.h>
 #include <nav_msgs/Odometry.h>
 
+#include <geometry_msgs/TransformStamped.h>
 #include <sensor_msgs/JointState.h>
-#include <sensor_msgs/Imu.h>
-#include <sensor_msgs/MagneticField.h>
-#include <trajectory_msgs/JointTrajectory.h>
-#include <trajectory_msgs/JointTrajectoryPoint.h>
+
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <tf2_ros/transform_broadcaster.h>
-#include <geometry_msgs/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
 
-class MessageRelay
+class StateEstimation
 {
     ros::NodeHandle nh_;
     ros::NodeHandle pnh_;
-    
-    ros::Subscriber cmd_pose_subscriber_;
-    ros::Subscriber foot_raw_subscriber_;
-    ros::Subscriber imu_raw_subscriber_;
-    ros::Subscriber joints_raw_subscriber_;
-    ros::Subscriber velocities_raw_subscriber_;
 
+    ros::Subscriber joint_states_subscriber_;
+    ros::Subscriber foot_contacts_subscriber_;
+    
+    ros::Publisher velocities_publisher_;
     ros::Publisher foot_publisher_;
-    ros::Publisher imu_publisher_;
-    ros::Publisher mag_publisher_;
-    ros::Publisher joint_states_publisher_;   
-    ros::Publisher joint_commands_publisher_;   
-    ros::Publisher odometry_publisher_;
 
     tf2_ros::TransformBroadcaster base_broadcaster_;
+
+    ros::Timer odom_data_timer_;
+    ros::Timer foot_position_timer_;
+
+    champ::Velocities current_velocities_;
+    geometry::Transformation current_foot_positions_[4];
+    geometry::Transformation target_foot_positions_[4];
+
+    float x_pos_;
+    float y_pos_;
+    float heading_;
+    ros::Time last_vel_time_;
+
+    champ::GaitConfig gait_config_;
+
+    champ::QuadrupedBase base_;
+    champ::Odometry odometry_;
 
     std::vector<std::string> joint_names_;
     std::string base_name_;
@@ -79,30 +81,17 @@ class MessageRelay
     std::string odom_frame_;
     std::string base_footprint_frame_;
     std::string base_link_frame_;
-    std::string imu_frame_;
 
-    bool in_gazebo_;
-    bool has_imu_;
+    void publishVelocities_(const ros::TimerEvent& event);
+    void publishFootPositions_(const ros::TimerEvent& event);
 
-    float x_pos_;
-    float y_pos_;
-    float heading_;
-    ros::Time last_vel_time_;
-
-    champ::Pose req_pose_;
-    sensor_msgs::Imu imu_data_;
-
-    champ::Velocities current_velocities_;
+    void jointStatesCallback_(const sensor_msgs::JointState::ConstPtr& msg);
+    void footContactCallback_(const champ_msgs::Contacts::ConstPtr& msg);
 
     visualization_msgs::Marker createMarker(geometry::Transformation foot_pos, int id, std::string frame_id);
-    void footRawCallback(const champ_msgs::PointArray::ConstPtr& msg);
-    void IMURawCallback(const champ_msgs::Imu::ConstPtr& msg);
-    void jointStatesRawCallback(const champ_msgs::Joints::ConstPtr& msg);
-    void odometryRawCallback(const champ_msgs::Velocities::ConstPtr& msg);
-    void cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg);
 
     public:
-        MessageRelay(const ros::NodeHandle &node_handle,
+        StateEstimation(const ros::NodeHandle &node_handle,
                             const ros::NodeHandle &private_node_handle);
 };
 
