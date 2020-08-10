@@ -1,15 +1,18 @@
 <launch>
-    <arg name="robot_name"       default="/" />
-    <arg name="joints_map_file"  default="$(find champ_config)/config/joints/joints.yaml"/>
-    <arg name="links_map_file"   default="$(find champ_config)/config/links/links.yaml"/>
-    <arg name="gait_config_file" default="$(find champ_config)/config/gait/gait.yaml"/>
-    <arg name="description_file" default="$(find champ_description)/urdf/champ.urdf"/>
-    <arg name="gazebo"           default="false" />
-    <arg name="rviz"             default="false" />
-    <arg name="rviz_ref_frame"   default="odom"/>
-    <arg name="has_imu"          default="true" />
-    <arg name="lite"             default="false" />
-    <arg name="laser"            default="sim" />
+    <arg name="robot_name"             default="/" />
+    <arg name="joints_map_file"        default="$(find champ_config)/config/joints/joints.yaml"/>
+    <arg name="links_map_file"         default="$(find champ_config)/config/links/links.yaml"/>
+    <arg name="gait_config_file"       default="$(find champ_config)/config/gait/gait.yaml"/>
+    <arg name="description_file"       default="$(find champ_description)/urdf/champ.urdf"/>
+    <arg name="gazebo"                 default="false" />
+    <arg name="rviz"                   default="false" />
+    <arg name="rviz_ref_frame"         default="odom"/>
+    <arg name="has_imu"                default="true" />
+    <arg name="lite"                   default="false" />
+    <arg name="laser"                  default="sim" />
+    <arg name="joint_controller_topic" default="joint_group_position_controller/command" />
+    <arg name="hardware_connected"     default="false" />
+    <arg name="publish_foot_contacts"  default="true" />
 
     <group ns="$(arg robot_name)">
         <param name="tf_prefix" value="$(arg robot_name)"/>
@@ -31,8 +34,13 @@
         </node>
 
         <node unless="$(arg lite)" pkg="champ_base" name="champ_controller" type="quadruped_controller_node" output="screen">
-            <param name="gazebo" value="$(arg gazebo)" />
+            <param                                    name="gazebo"                value="$(arg gazebo)" />
+            <param if="$(arg hardware_connected)"     name="publish_joint_states"  value="false" />
+            <param unless="$(arg hardware_connected)" name="publish_joint_states"  value="true" />
+            <param                                    name="publish_foot_contacts" value="$(arg publish_foot_contacts)" />
+            <remap from="joint_group_position_controller/command" to="$(arg joint_controller_topic)" />
         </node>
+        <node unless="$(arg lite)" pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen"/>
 
         <rosparam command="load" ns="gait"       file="$(arg gait_config_file)" />
         <rosparam command="load" ns="links_map"  file="$(arg links_map_file)" />

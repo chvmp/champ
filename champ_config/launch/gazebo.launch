@@ -7,10 +7,13 @@
     <param name="use_sim_time" value="true" />
 
     <include file="$(find champ_config)/launch/bringup.launch">
-        <arg name="robot_name" value="$(arg robot_name)"/>
-        <arg name="gazebo"     value="true"/>
-        <arg name="lite"       value="$(arg lite)"/>
-        <arg name="rviz"       value="$(arg rviz)"/>
+        <arg name="robot_name"             value="$(arg robot_name)"/>
+        <arg name="gazebo"                 value="true"/>
+        <arg name="lite"                   value="$(arg lite)"/>
+        <arg name="rviz"                   value="$(arg rviz)"/>
+        <arg name="joint_controller_topic" value="joint_group_position_controller/command"/>
+        <arg name="hardware_connected"     value="false"/>
+        <arg name="publish_foot_contacts"  value="true"/>
     </include>
 
     <include file="$(find champ_gazebo)/launch/gazebo.launch">
