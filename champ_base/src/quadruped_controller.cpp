@@ -55,6 +55,7 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     nh_.getParam("gait/knee_orientation",       knee_orientation);
     pnh_.getParam("publish_foot_contacts",      publish_foot_contacts_);
     pnh_.getParam("publish_joint_states",       publish_joint_states_);
+    pnh_.getParam("publish_joint_control",      publish_joint_control_);
     pnh_.getParam("gazebo",                     in_gazebo_);
 
     gait_config_.knee_orientation = knee_orientation.c_str();
@@ -112,21 +113,24 @@ void QuadrupedController::cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg
 
 void QuadrupedController::publishJoints_(float target_joints[12])
 {
-    trajectory_msgs::JointTrajectory joints_cmd_msg;
-    joints_cmd_msg.header.stamp = ros::Time::now();
-    joints_cmd_msg.joint_names = joint_names_;
-
-    trajectory_msgs::JointTrajectoryPoint point;
-    point.positions.resize(12);
-
-    point.time_from_start = ros::Duration(1.0 / 60.0);
-    for(size_t i = 0; i < 12; i++)
+    if(publish_joint_control_)
     {
-        point.positions[i] = target_joints[i];
-    }
+        trajectory_msgs::JointTrajectory joints_cmd_msg;
+        joints_cmd_msg.header.stamp = ros::Time::now();
+        joints_cmd_msg.joint_names = joint_names_;
 
-    joints_cmd_msg.points.push_back(point);
-    joint_commands_publisher_.publish(joints_cmd_msg);
+        trajectory_msgs::JointTrajectoryPoint point;
+        point.positions.resize(12);
+
+        point.time_from_start = ros::Duration(1.0 / 60.0);
+        for(size_t i = 0; i < 12; i++)
+        {
+            point.positions[i] = target_joints[i];
+        }
+
+        joints_cmd_msg.points.push_back(point);
+        joint_commands_publisher_.publish(joints_cmd_msg);
+    }
 
     if(publish_joint_states_ && !in_gazebo_)
     {

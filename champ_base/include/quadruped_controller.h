@@ -73,6 +73,7 @@ class QuadrupedController
 
     bool publish_foot_contacts_;
     bool publish_joint_states_;
+    bool publish_joint_control_;
     bool in_gazebo_;
 
     void controlLoop_(const ros::TimerEvent& event);

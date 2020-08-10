@@ -10,6 +10,7 @@
     <arg name="has_imu"                default="true" />
     <arg name="lite"                   default="false" />
     <arg name="publish_foot_contacts"  default="true" />
+    <arg name="publish_joint_control"  default="true" />
     <arg name="laser"                  default="sim"/>
     <arg name="joint_controller_topic" default="joint_group_position_controller/command" />
     <arg name="hardware_connected"     default="false" />
@@ -29,5 +30,6 @@
         <arg name="joint_controller_topic" value="$(arg joint_controller_topic)" />
         <arg name="hardware_connected"     value="$(arg hardware_connected)" />
         <arg name="publish_foot_contacts"  value="$(arg publish_foot_contacts)" />
+        <arg name="publish_joint_control"  value="$(arg publish_joint_control)" />
     </include>
 </launch>
