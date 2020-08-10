@@ -37,7 +37,7 @@ class JointsCalibratorRelay:
         rospy.Subscriber("joints_calibrator", JointState, self.joints_cmd_callback)
 
         self.joint_minimal_pub = rospy.Publisher('cmd_joints', Joints, queue_size = 100)
-        self.joint_trajectory_pub = rospy.Publisher('joint_group_position_controller/commands', JointTrajectory, queue_size = 100)
+        self.joint_trajectory_pub = rospy.Publisher('joint_group_position_controller/command', JointTrajectory, queue_size = 100)
 
         joints_map = [None,None,None,None]
         joints_map[3] = rospy.get_param('/joints_map/left_front')
