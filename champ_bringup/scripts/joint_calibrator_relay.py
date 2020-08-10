@@ -27,6 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import rospy
 from champ_msgs.msg import Joints
 from sensor_msgs.msg import JointState
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+
 import rosparam
 import os, sys
 
@@ -34,16 +36,39 @@ class JointsCalibratorRelay:
     def __init__(self):
         rospy.Subscriber("joints_calibrator", JointState, self.joints_cmd_callback)
 
-        self.joint_cmd_pub = rospy.Publisher('cmd_joints', Joints, queue_size = 100)
+        self.joint_minimal_pub = rospy.Publisher('cmd_joints', Joints, queue_size = 100)
+        self.joint_trajectory_pub = rospy.Publisher('joint_group_position_controller/commands', JointTrajectory, queue_size = 100)
+
+        joints_map = [None,None,None,None]
+        joints_map[3] = rospy.get_param('/joints_map/left_front')
+        joints_map[2] = rospy.get_param('/joints_map/right_front')
+        joints_map[1] = rospy.get_param('/joints_map/left_hind')
+        joints_map[0] = rospy.get_param('/joints_map/right_hind')
+
+        self.joint_names = []
+        for leg in reversed(joints_map):
+            for joint in leg:
+                self.joint_names.append(joint) 
+
+        print self.joint_names
 
     def joints_cmd_callback(self, joints):
-        print(joints)
-        joint_states_calibrate = Joints()
-        
+        joint_minimal_msg = Joints()
         for i in range(12):
-            joint_states_calibrate.position.append(joints.position[i])
+            joint_minimal_msg.position.append(joints.position[i])
 
-        self.joint_cmd_pub.publish(joint_states_calibrate)
+        self.joint_minimal_pub.publish(joint_minimal_msg)
+
+        joint_trajectory_msg = JointTrajectory()
+        joint_trajectory_msg.joint_names = self.joint_names
+
+        point = JointTrajectoryPoint()
+        point.time_from_start = rospy.Duration(1.0 / 60.0)
+        point.positions = joint_minimal_msg.position    
+        joint_trajectory_msg.points.append(point)
+        print(joint_minimal_msg.position    )
+        self.joint_trajectory_pub.publish(joint_trajectory_msg)
+
 
 if __name__ == "__main__":
     rospy.init_node('joints_calibrator_relay', anonymous=True)
