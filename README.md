@@ -16,7 +16,7 @@ Core Features:
 - Demo Applications like [TOWR](https://github.com/ethz-adrl/towr) and [chicken head](https://github.com/chvmp/chicken_head) stabilization.
 - Lightweight C++ header-only [library](https://github.com/chvmp/libchamp) that can run on both SBC and micro-controllers.
 
-Tested ON:
+Tested on:
 
 - Ubuntu 16.04 (ROS Kinetic)
 - Ubuntu 18.04 (ROS Melodic)
@@ -131,8 +131,6 @@ This will run the quadruped controller and all sensor/hardware drivers:
 Available Parameters:
 
   - **rviz** - Launch together with RVIZ. Default: false
-
-  - **has_imu**- Set this to true if the robot has no IMU. This is useful when you want to view your newly configured robot. Basically, this tells the robot to use the pose commands from [champ_teleop](https://github.com/chvmp/champ_teleop) as the current pose of the robot. Take note that this is only useful for debugging the robot. It is recommended to place an IMU on a physical robot. Default: true.
 
   - **lite** - Always set this to true if you're using a microcontroller to run the algorithms. Default false.
 
