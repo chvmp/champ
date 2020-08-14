@@ -98,10 +98,10 @@ To navigate:
 
 There are two ways to run CHAMP on a real robot:
 
-## Linux Machine
+Linux Machine
 - Use this ROS package to calculate the joint angles and send it to a hardware interface to control your actuators. You can follow these [guidelines](https://github.com/chvmp/champ/wiki/Hardware-Integration) to create your actuators' interface.
 
-## Lightweight Version
+Lightweight Version
 - Run CHAMP's [lightweight version](https://github.com/chvmp/firmware) on Teensy series microcontrollers and use it to directly control your actuators. 
 
 ### 3.1. Generate robot configuration
@@ -206,7 +206,7 @@ Run Gazebo and the base driver in simulation mode:
 
   - Gazebo inertial parameters - http://gazebosim.org/tutorials?tut=inertia&cat=build_robot#Overview
 
-### 4. Tuning the gait parameters
+## 4. Tuning gait parameters
 
 The gait configuration for your robot can be found in <my_robot_config>/gait/gait.yaml.
 
