@@ -1,4 +1,8 @@
 <launch>
+    <arg name="lite"                   default="false" />
+    <arg name="robot_name"             default="/" />
+    <arg name="joint_controller_topic" default="joint_group_position_controller/command" />
+
     <node name="joints_calibrator_relay" pkg="champ_bringup" type="joint_calibrator_relay.py" output="screen" />
 
     <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">

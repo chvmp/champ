@@ -36,8 +36,9 @@ class JointsCalibratorRelay:
     def __init__(self):
         rospy.Subscriber("joints_calibrator", JointState, self.joints_cmd_callback)
 
+        joint_controller_topic = rospy.get_param('champ_controller/joint_controller_topic')
         self.joint_minimal_pub = rospy.Publisher('cmd_joints', Joints, queue_size = 100)
-        self.joint_trajectory_pub = rospy.Publisher('joint_group_position_controller/command', JointTrajectory, queue_size = 100)
+        self.joint_trajectory_pub = rospy.Publisher(joint_controller_topic, JointTrajectory, queue_size = 100)
 
         joints_map = [None,None,None,None]
         joints_map[3] = rospy.get_param('/joints_map/left_front')
@@ -49,8 +50,6 @@ class JointsCalibratorRelay:
         for leg in reversed(joints_map):
             for joint in leg:
                 self.joint_names.append(joint) 
-
-        print self.joint_names
 
     def joints_cmd_callback(self, joints):
         joint_minimal_msg = Joints()
@@ -66,7 +65,7 @@ class JointsCalibratorRelay:
         point.time_from_start = rospy.Duration(1.0 / 60.0)
         point.positions = joint_minimal_msg.position    
         joint_trajectory_msg.points.append(point)
-        print(joint_minimal_msg.position    )
+
         self.joint_trajectory_pub.publish(joint_trajectory_msg)
 
 
