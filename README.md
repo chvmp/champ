@@ -16,28 +16,7 @@ Core Features:
 - Demo Applications like [TOWR](https://github.com/ethz-adrl/towr) and [chicken head](https://github.com/chvmp/chicken_head) stabilization.
 - Lightweight C++ header-only [library](https://github.com/chvmp/libchamp) that can run on both SBC and micro-controllers.
 
-Supported Hardware:
-
-LIDAR:
-- XV11 Lidar
-- RPLidar
-- YDLIDAR X4
-- Hokuyo (SCIP 2.2 Compliant)
-
-IMU:
-- BNO080
-
-SBC:
-- Nvidia Jetson Nano
-
-    This should also work on Single Board Computers that support Ubuntu 16/18 capable of running ROS Navigation Stack.
-
-ACTUATORS:
-- Digital Servos
-- Dynamixel AX12
-- Odrive Driven Brushless Motors - WIP
-
-TESTED ON:
+Tested ON:
 
 - Ubuntu 16.04 (ROS Kinetic)
 - Ubuntu 18.04 (ROS Melodic)
@@ -117,9 +96,13 @@ To navigate:
 
 ## 3. Running your own robot:
 
-TODO: 
-- Hardware Documentation
-- Microcontroller based configuration
+There are two ways to run CHAMP on a real robot:
+
+## Linux Machine
+- Use this ROS package to calculate the joint angles and send it to a hardware interface to control your actuators. You can follow these [guidelines](https://github.com/chvmp/champ/wiki/Hardware-Integration) to create your actuators' interface.
+
+## Lightweight Version
+- Run CHAMP's [lightweight version](https://github.com/chvmp/firmware) on Teensy series microcontrollers and use it to directly control your actuators. 
 
 ### 3.1. Generate robot configuration
 
@@ -223,3 +206,29 @@ Run Gazebo and the base driver in simulation mode:
 
   - Gazebo inertial parameters - http://gazebosim.org/tutorials?tut=inertia&cat=build_robot#Overview
 
+### 4. Tuning the gait parameters
+
+The gait configuration for your robot can be found in <my_robot_config>/gait/gait.yaml.
+
+ **Knee Orientation** - How the knees should be bent. You can can configure the robot to follow the following orientation .>> .>< .<< .<> where dot is the front side of the robot.
+
+  **Max Linear Velocity X** (meters/second) - Robot's maximum forward/reverse speed.
+
+  **Max Linear Velocity Y** (meteres/second) - Robot's maximum speed when moving sideways.
+
+  **Max Angular Velocity Z** (radians/second)- Robot's maximum rotational speed.
+
+  **Stance Duration** (seconds)- How long should each leg spend on the ground while walking. You can set this to default(0.25) if you're not sure. The higher the stance duration the further the displacement is from the reference point.
+
+  **Leg Swing Height** (meters)- Trajectory height during swing phase.
+
+  **Leg Stance Height** (meters)- Trajectory depth during stance phase.
+
+  **Robot Walking Height** (meters) - Distance from hip to the ground while walking. Take note that setting this parameter too high can get your robot unstable.
+
+  **COM X Translation** (meters) - You can use this parameter to move the reference point in the X axis. This is useful when you want to compensate for the weight if the center of mass is not in the middle of the robot (from front hip to rear hip). For instance, if you find that the robot is heavier at the back, you'll set a negative value to shift the reference point to the back.
+
+  **Odometry Scaler** - You can use this parameter as a multiplier to the calculated velocities for dead reckoning. This can be useful to compensate odometry errors on open-loop systems. Normally this value ranges from 1.0 to 1.20.
+
+
+![CHAMP Setup Assistant](https://raw.githubusercontent.com/chvmp/champ_setup_assistant/master/docs/images/gait_parameters.png)
