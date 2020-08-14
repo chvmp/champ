@@ -27,24 +27,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <state_estimation.h>
 
-StateEstimation::StateEstimation(const ros::NodeHandle &node_handle,
-                                const ros::NodeHandle &private_node_handle):
-    nh_(node_handle),
-    pnh_(private_node_handle),
+StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
     odometry_(base_)
 {
-    joint_states_subscriber_ = nh_.subscribe("joint_states", 100, &StateEstimation::jointStatesCallback_, this);
-    foot_contacts_subscriber_ = nh_.subscribe("foot_contacts", 100, &StateEstimation::footContactCallback_, this);
+    joint_states_subscriber_ = nh->subscribe("joint_states", 100, &StateEstimation::jointStatesCallback_, this);
+    foot_contacts_subscriber_ = nh->subscribe("foot_contacts", 100, &StateEstimation::footContactCallback_, this);
     
-    velocities_publisher_   = nh_.advertise<nav_msgs::Odometry>("odom/raw", 100);
-    foot_publisher_   = nh_.advertise<visualization_msgs::MarkerArray>("foot", 100);
+    velocities_publisher_   = nh->advertise<nav_msgs::Odometry>("odom/raw", 100);
+    foot_publisher_   = nh->advertise<visualization_msgs::MarkerArray>("foot", 100);
 
-    nh_.getParam("links_map/base", base_name_);
-    nh_.getParam("gait/odom_scaler", gait_config_.odom_scaler);
+    nh->getParam("links_map/base", base_name_);
+    nh->getParam("gait/odom_scaler", gait_config_.odom_scaler);
 
     base_.setGaitConfig(gait_config_);
-    champ::URDF::loadFromServer(base_, nh_);
-    joint_names_ = champ::URDF::getJointNames(nh_);
+    champ::URDF::loadFromServer(base_, nh);
+    joint_names_ = champ::URDF::getJointNames(nh);
 
     node_namespace_ = ros::this_node::getNamespace();
     if(node_namespace_.length() > 1)
@@ -60,11 +57,11 @@ StateEstimation::StateEstimation(const ros::NodeHandle &node_handle,
     base_footprint_frame_ = node_namespace_ + "base_footprint";
     base_link_frame_ = node_namespace_ + base_name_;
 
-    odom_data_timer_ = pnh_.createTimer(ros::Duration(0.02),
+    odom_data_timer_ = pnh->createTimer(ros::Duration(0.02),
                                         &StateEstimation::publishVelocities_, 
                                         this);
 
-    foot_position_timer_ = pnh_.createTimer(ros::Duration(0.02),
+    foot_position_timer_ = pnh->createTimer(ros::Duration(0.02),
                                             &StateEstimation::publishFootPositions_, 
                                             this);
 }

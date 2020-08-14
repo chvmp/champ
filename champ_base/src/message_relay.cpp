@@ -27,31 +27,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <message_relay.h>
 
-MessageRelay::MessageRelay(const ros::NodeHandle &node_handle,
-                           const ros::NodeHandle &private_node_handle):
-    nh_(node_handle),
-    pnh_(private_node_handle)
+MessageRelay::MessageRelay(ros::NodeHandle *nh, ros::NodeHandle *pnh)
 {    
     imu_data_.orientation.w = 1.0;
 
-    foot_publisher_ = nh_.advertise<visualization_msgs::MarkerArray>("foot", 100);
-    imu_publisher_ = nh_.advertise<sensor_msgs::Imu>("imu/data", 100);
-    mag_publisher_ = nh_.advertise<sensor_msgs::MagneticField>("imu/mag", 100);
-    joint_states_publisher_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 100);
-    joint_commands_publisher_ = nh_.advertise<trajectory_msgs::JointTrajectory>("joint_group_position_controller/command", 100);
-    odometry_publisher_  = nh_.advertise<nav_msgs::Odometry>("odom/raw", 100);
+    foot_publisher_ = nh->advertise<visualization_msgs::MarkerArray>("foot", 100);
+    imu_publisher_ = nh->advertise<sensor_msgs::Imu>("imu/data", 100);
+    mag_publisher_ = nh->advertise<sensor_msgs::MagneticField>("imu/mag", 100);
+    joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 100);
+    joint_commands_publisher_ = nh->advertise<trajectory_msgs::JointTrajectory>("joint_group_position_controller/command", 100);
+    odometry_publisher_  = nh->advertise<nav_msgs::Odometry>("odom/raw", 100);
 
-    cmd_pose_subscriber_ = nh_.subscribe("cmd_pose", 1, &MessageRelay::cmdPoseCallback_, this);
-    foot_raw_subscriber_ = nh_.subscribe("foot/raw", 1, &MessageRelay::footRawCallback, this);
-    imu_raw_subscriber_ = nh_.subscribe("imu/raw", 1, &MessageRelay::IMURawCallback, this);
-    joints_raw_subscriber_ = nh_.subscribe("joint_states/raw", 1, &MessageRelay::jointStatesRawCallback, this);
-    velocities_raw_subscriber_ = nh_.subscribe("velocities/raw", 1, &MessageRelay::odometryRawCallback, this);
+    cmd_pose_subscriber_ = nh->subscribe("cmd_pose", 1, &MessageRelay::cmdPoseCallback_, this);
+    foot_raw_subscriber_ = nh->subscribe("foot/raw", 1, &MessageRelay::footRawCallback, this);
+    imu_raw_subscriber_ = nh->subscribe("imu/raw", 1, &MessageRelay::IMURawCallback, this);
+    joints_raw_subscriber_ = nh->subscribe("joint_states/raw", 1, &MessageRelay::jointStatesRawCallback, this);
+    velocities_raw_subscriber_ = nh->subscribe("velocities/raw", 1, &MessageRelay::odometryRawCallback, this);
 
-    nh_.getParam("links_map/base", base_name_);
-    pnh_.getParam("gazebo",        in_gazebo_);
-    pnh_.getParam("has_imu",       has_imu_);
+    nh->getParam("links_map/base", base_name_);
+    pnh->getParam("gazebo",        in_gazebo_);
+    pnh->getParam("has_imu",       has_imu_);
 
-    joint_names_ = champ::URDF::getJointNames(nh_);
+    joint_names_ = champ::URDF::getJointNames(nh);
 
     node_namespace_ = ros::this_node::getNamespace();
     if(node_namespace_.length() > 1)

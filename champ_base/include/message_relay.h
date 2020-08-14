@@ -55,9 +55,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class MessageRelay
 {
-    ros::NodeHandle nh_;
-    ros::NodeHandle pnh_;
-    
     ros::Subscriber cmd_pose_subscriber_;
     ros::Subscriber foot_raw_subscriber_;
     ros::Subscriber imu_raw_subscriber_;
@@ -102,8 +99,7 @@ class MessageRelay
     void cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg);
 
     public:
-        MessageRelay(const ros::NodeHandle &node_handle,
-                            const ros::NodeHandle &private_node_handle);
+        MessageRelay(ros::NodeHandle *nh, ros::NodeHandle *pnh);
 };
 
 #endif

@@ -27,10 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <quadruped_controller.h>
 
-QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
-                                         const ros::NodeHandle &private_node_handle):
-    nh_(node_handle),
-    pnh_(private_node_handle),
+QuadrupedController::QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *pnh):
     body_controller_(base_),
     leg_controller_(base_),
     kinematics_(base_)
@@ -38,36 +35,36 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     std::string joint_control_topic = "joint_group_position_controller/command";
     std::string knee_orientation;
 
-    nh_.getParam("gait/pantograph_leg",         gait_config_.pantograph_leg);
-    nh_.getParam("gait/max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
-    nh_.getParam("gait/max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
-    nh_.getParam("gait/max_angular_velocity_z", gait_config_.max_angular_velocity_z);
-    nh_.getParam("gait/com_x_translation",      gait_config_.com_x_translation);
-    nh_.getParam("gait/swing_height",           gait_config_.swing_height);
-    nh_.getParam("gait/stance_depth",           gait_config_.stance_depth);
-    nh_.getParam("gait/stance_duration",        gait_config_.stance_duration);
-    nh_.getParam("gait/nominal_height",         gait_config_.nominal_height);
-    nh_.getParam("gait/knee_orientation",       knee_orientation);
-    pnh_.getParam("publish_foot_contacts",      publish_foot_contacts_);
-    pnh_.getParam("publish_joint_states",       publish_joint_states_);
-    pnh_.getParam("publish_joint_control",      publish_joint_control_);
-    pnh_.getParam("gazebo",                     in_gazebo_);
-    pnh_.getParam("joint_controller_topic", joint_control_topic);
+    nh->getParam("gait/pantograph_leg",         gait_config_.pantograph_leg);
+    nh->getParam("gait/max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
+    nh->getParam("gait/max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
+    nh->getParam("gait/max_angular_velocity_z", gait_config_.max_angular_velocity_z);
+    nh->getParam("gait/com_x_translation",      gait_config_.com_x_translation);
+    nh->getParam("gait/swing_height",           gait_config_.swing_height);
+    nh->getParam("gait/stance_depth",           gait_config_.stance_depth);
+    nh->getParam("gait/stance_duration",        gait_config_.stance_duration);
+    nh->getParam("gait/nominal_height",         gait_config_.nominal_height);
+    nh->getParam("gait/knee_orientation",       knee_orientation);
+    pnh->getParam("publish_foot_contacts",      publish_foot_contacts_);
+    pnh->getParam("publish_joint_states",       publish_joint_states_);
+    pnh->getParam("publish_joint_control",      publish_joint_control_);
+    pnh->getParam("gazebo",                     in_gazebo_);
+    pnh->getParam("joint_controller_topic", joint_control_topic);
 
-    joint_commands_publisher_ = nh_.advertise<trajectory_msgs::JointTrajectory>(joint_control_topic, 100);
-    cmd_vel_subscriber_ = nh_.subscribe("cmd_vel/smooth", 1, &QuadrupedController::cmdVelCallback_, this);
-    cmd_pose_subscriber_ = nh_.subscribe("cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
+    joint_commands_publisher_ = nh->advertise<trajectory_msgs::JointTrajectory>(joint_control_topic, 10);
+    cmd_vel_subscriber_ = nh->subscribe("cmd_vel/smooth", 1, &QuadrupedController::cmdVelCallback_, this);
+    cmd_pose_subscriber_ = nh->subscribe("cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
     
-    joint_states_publisher_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 100);
-    contacts_publisher_   = nh_.advertise<champ_msgs::Contacts>("foot_contacts", 100);
+    joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 10);
+    contacts_publisher_   = nh->advertise<champ_msgs::Contacts>("foot_contacts", 10);
 
     gait_config_.knee_orientation = knee_orientation.c_str();
     
     base_.setGaitConfig(gait_config_);
-    champ::URDF::loadFromServer(base_, nh_);
-    joint_names_ = champ::URDF::getJointNames(nh_);
+    champ::URDF::loadFromServer(base_, nh);
+    joint_names_ = champ::URDF::getJointNames(nh);
 
-    loop_timer_ = pnh_.createTimer(ros::Duration(0.005),
+    loop_timer_ = pnh->createTimer(ros::Duration(0.005),
                                    &QuadrupedController::controlLoop_,
                                    this);
 

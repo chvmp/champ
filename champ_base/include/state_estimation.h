@@ -47,9 +47,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class StateEstimation
 {
-    ros::NodeHandle nh_;
-    ros::NodeHandle pnh_;
-
     ros::Subscriber joint_states_subscriber_;
     ros::Subscriber foot_contacts_subscriber_;
     
@@ -91,8 +88,7 @@ class StateEstimation
     visualization_msgs::Marker createMarker(geometry::Transformation foot_pos, int id, std::string frame_id);
 
     public:
-        StateEstimation(const ros::NodeHandle &node_handle,
-                            const ros::NodeHandle &private_node_handle);
+        StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh);
 };
 
 #endif

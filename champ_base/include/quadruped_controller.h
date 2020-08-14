@@ -47,9 +47,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class QuadrupedController
 {
-    ros::NodeHandle nh_;
-    ros::NodeHandle pnh_;
-
     ros::Subscriber cmd_vel_subscriber_;
     ros::Subscriber cmd_pose_subscriber_;
     
@@ -85,8 +82,7 @@ class QuadrupedController
     void cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg);
 
     public:
-        QuadrupedController(const ros::NodeHandle &node_handle,
-                            const ros::NodeHandle &private_node_handle);
+        QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *pnh);
 };
 
 #endif

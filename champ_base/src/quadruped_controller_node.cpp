@@ -35,7 +35,7 @@ int main(int argc, char** argv )
     ros::NodeHandle nh("");
     ros::NodeHandle nh_private("~");
     
-    QuadrupedController champ(nh, nh_private);
+    QuadrupedController champ(&nh, &nh_private);
     
     ros::spin();
     return 0;
