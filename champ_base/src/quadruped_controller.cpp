@@ -35,14 +35,9 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     leg_controller_(base_),
     kinematics_(base_)
 {
-    cmd_vel_subscriber_ = nh_.subscribe("cmd_vel/smooth", 1, &QuadrupedController::cmdVelCallback_, this);
-    cmd_pose_subscriber_ = nh_.subscribe("cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
-    
-    joint_states_publisher_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 100);
-    joint_commands_publisher_ = nh_.advertise<trajectory_msgs::JointTrajectory>("joint_group_position_controller/command", 100);
-    contacts_publisher_   = nh_.advertise<champ_msgs::Contacts>("foot_contacts", 100);
-
+    std::string joint_control_topic = "joint_group_position_controller/command";
     std::string knee_orientation;
+
     nh_.getParam("gait/pantograph_leg",         gait_config_.pantograph_leg);
     nh_.getParam("gait/max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
     nh_.getParam("gait/max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
@@ -57,6 +52,14 @@ QuadrupedController::QuadrupedController(const ros::NodeHandle &node_handle,
     pnh_.getParam("publish_joint_states",       publish_joint_states_);
     pnh_.getParam("publish_joint_control",      publish_joint_control_);
     pnh_.getParam("gazebo",                     in_gazebo_);
+    pnh_.getParam("joint_controller_topic", joint_control_topic);
+
+    joint_commands_publisher_ = nh_.advertise<trajectory_msgs::JointTrajectory>(joint_control_topic, 100);
+    cmd_vel_subscriber_ = nh_.subscribe("cmd_vel/smooth", 1, &QuadrupedController::cmdVelCallback_, this);
+    cmd_pose_subscriber_ = nh_.subscribe("cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
+    
+    joint_states_publisher_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 100);
+    contacts_publisher_   = nh_.advertise<champ_msgs::Contacts>("foot_contacts", 100);
 
     gait_config_.knee_orientation = knee_orientation.c_str();
     

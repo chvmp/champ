@@ -35,12 +35,12 @@
         </node>
 
         <node unless="$(arg lite)" pkg="champ_base" name="champ_controller" type="quadruped_controller_node" output="screen">
-            <param                                    name="gazebo"                value="$(arg gazebo)" />
-            <param if="$(arg hardware_connected)"     name="publish_joint_states"  value="false" />
-            <param unless="$(arg hardware_connected)" name="publish_joint_states"  value="true" />
-            <param                                    name="publish_foot_contacts" value="$(arg publish_foot_contacts)" />
-            <param                                    name="publish_joint_control" value="$(arg publish_joint_control)" />
-            <remap from="joint_group_position_controller/command" to="$(arg joint_controller_topic)" />
+            <param                                    name="gazebo"                 value="$(arg gazebo)" />
+            <param if="$(arg hardware_connected)"     name="publish_joint_states"   value="false" />
+            <param unless="$(arg hardware_connected)" name="publish_joint_states"   value="true" />
+            <param                                    name="publish_foot_contacts"  value="$(arg publish_foot_contacts)" />
+            <param                                    name="publish_joint_control"  value="$(arg publish_joint_control)" />
+            <param                                    name="joint_controller_topic" value="$(arg joint_controller_topic)" />
         </node>
         <node unless="$(arg lite)" pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen"/>
 
