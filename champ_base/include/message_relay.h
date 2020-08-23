@@ -30,14 +30,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ros/ros.h"
 
-#include <utils/urdf_loader.h>
 #include <champ_msgs/Joints.h>
 #include <champ_msgs/Pose.h>
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Imu.h>
 #include <champ_msgs/Velocities.h>
-#include <geometry/geometry.h>
-#include <odometry/odometry.h>
+
+#include <champ/utils/urdf_loader.h>
+#include <champ/geometry/geometry.h>
+#include <champ/odometry/odometry.h>
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>

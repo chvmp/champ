@@ -30,9 +30,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ros/ros.h"
 
-#include <utils/urdf_loader.h>
 #include <champ_msgs/Contacts.h>
-#include <odometry/odometry.h>
+
+#include <champ/odometry/odometry.h>
+#include <champ/utils/urdf_loader.h>
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <nav_msgs/Odometry.h>

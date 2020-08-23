@@ -30,15 +30,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ros/ros.h"
 
-#include <utils/urdf_loader.h>
 #include <champ_msgs/Joints.h>
 #include <champ_msgs/Pose.h>
 #include <champ_msgs/PointArray.h>
 #include <champ_msgs/Contacts.h>
 
-#include <body_controller/body_controller.h>
-#include <leg_controller/leg_controller.h>
-#include <kinematics/kinematics.h>
+#include <champ/utils/urdf_loader.h>
+#include <champ/body_controller/body_controller.h>
+#include <champ/leg_controller/leg_controller.h>
+#include <champ/kinematics/kinematics.h>
 
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/JointState.h>

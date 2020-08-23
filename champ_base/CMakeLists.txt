@@ -17,6 +17,7 @@ find_package(catkin
     tf
     tf2_ros
     urdf
+    champ
 )
 
 catkin_package(
@@ -35,23 +36,6 @@ catkin_package(
     tf2_ros
     urdf
 )
-
-install(DIRECTORY include/libchamp/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
-
-#Download libchamp
-set(LIBCHAMP_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/libchamp/include")
-set(HEADER_URL "https://github.com/chvmp/libchamp")
-
-if (NOT EXISTS "${LIBCHAMP_HEADERS}")
-  message(STATUS "Downloading libchamp...")
-  message(STATUS ${CMAKE_CURRENT_SOURCE_DIR}/include)
-  execute_process(
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
-    COMMAND git clone ${HEADER_URL}
-  )
-endif()
-##end of libchamp download
 
 #Download velocity smoother
 set(YOCS_URL "https://github.com/chvmp/yocs_velocity_smoother")
@@ -75,10 +59,9 @@ endif()
 
 include_directories(
   include
-  ${LIBCHAMP_HEADERS}
+  ${champ_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
-##end of auto download
 
 add_library(quadruped_controller src/quadruped_controller.cpp)
 add_library(message_relay src/message_relay.cpp)
