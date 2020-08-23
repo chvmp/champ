@@ -45,7 +45,7 @@ install:
   - export PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages
   - sudo apt update
   - mkdir -p catkin_ws/src && cd catkin_ws/src
-  - git clone https://github.com/chvmp/champ
+  - git clone --recursive https://github.com/chvmp/champ.git
   - cd ../
   - rosdep install --from-paths src --ignore-src -r -y
   - catkin_make

@@ -23,16 +23,16 @@ Tested on:
 
 ## 1. Installation
 
-1.1. Clone and install all dependencies:
+### 1.1. Clone and install all dependencies:
 
     sudo apt install -y python-rosdep
     cd <your_ws>/src
-    git clone https://github.com/chvmp/champ
+    git clone --recursive https://github.com/chvmp/champ
     git clone https://github.com/chvmp/champ_teleop
     cd ..
     rosdep install --from-paths src --ignore-src -r -y
 
-1.2. Build your workspace:
+### 1.2. Build your workspace:
 
     cd <your_ws>
     catkin_make
@@ -44,11 +44,11 @@ You don't need a physical robot to run the following demos. If you're building a
 
 ### 2.1. Walking demo in RVIZ:
 
-2.1.1. Run the base driver:
+#### 2.1.1. Run the base driver:
 
     roslaunch champ_config bringup.launch rviz:=true
 
-2.1.2. Run the teleop node:
+#### 2.1.2. Run the teleop node:
 
     roslaunch champ_teleop teleop.launch
 
@@ -57,11 +57,11 @@ If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepad
 
 ### 2.2. SLAM demo:
 
-2.2.1. Run the Gazebo environment:
+#### 2.2.1. Run the Gazebo environment:
 
     roslaunch champ_config gazebo.launch 
 
-2.2.2. Run gmapping package and move_base:
+#### 2.2.2. Run gmapping package and move_base:
 
     roslaunch champ_config slam.launch rviz:=true
 
@@ -79,11 +79,11 @@ To start mapping:
 
 ### 2.3. Autonomous Navigation:
 
-2.3.1. Run the Gazebo environment: 
+#### 2.3.1. Run the Gazebo environment: 
 
     roslaunch champ_config gazebo.launch 
 
-2.3.2. Run amcl and move_base:
+#### 2.3.2. Run amcl and move_base:
 
     roslaunch champ_config navigate.launch rviz:=true
 
