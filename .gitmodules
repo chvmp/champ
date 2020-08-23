@@ -1,0 +1,3 @@
+[submodule "champ/include/champ"]
+	path = champ/include/champ
+	url = https://github.com/chvmp/libchamp

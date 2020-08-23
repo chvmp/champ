@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>champ</name>
+  <version>0.1.0</version>
+  <description>CHAMP Core Library</description>
+
+  <maintainer email="jimenojmm@gmail.com">Juan Miguel Jimeno</maintainer>
+  <author>Juan Miguel Jimeno</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>
