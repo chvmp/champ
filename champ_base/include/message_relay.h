@@ -48,7 +48,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <geometry_msgs/Quaternion.h>
 
 class MessageRelay
-
+{
     ros::Subscriber imu_raw_subscriber_;
     ros::Subscriber joints_raw_subscriber_;
 
