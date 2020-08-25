@@ -1,4 +1,6 @@
 <launch>
+	<arg name="sensor"  default="velodyne"/>
+
 	<node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
 		<param name="resolution" value="0.05" />
 
@@ -11,8 +13,12 @@
 		<param name="filter_ground" value="true" />
 
 		<!-- data source to integrate (PointCloud2) -->
-		<remap from="cloud_in" to="camera/depth_registered/points" />
+		<remap if="$(eval arg('sensor')=='velodyne')" from="cloud_in" to="velodyne_points" />
+		<remap if="$(eval arg('sensor')=='depth')" from="cloud_in" to="camera/depth/points" />
 	</node>
+
+	<!-- flatten pointcloud lidar to feed hector mapping. When using depth sensor it is assumed that there's a 2D lidar available -->
+    <include if="$(eval arg('sensor')=='velodyne')" file="$(find champ_navigation)/launch/slam/velodyne_pointcloud_to_laser.launch" />
 
     <include file="$(find champ_navigation)/launch/slam/hector_mapping.launch" />
 </launch>
