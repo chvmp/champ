@@ -1,0 +1,32 @@
+<launch>
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+        <remap from="cloud_in" to="/velodyne_points"/>
+        <rosparam>
+            <!-- target_frame: camera_link # Leave disabled to output scan in pointcloud frame -->
+            transform_tolerance: 0.01
+            min_height: 0
+            max_height: 0.1
+            <!-- min_height: -0.102
+            max_height: -0.002 -->
+            <!-- min_height: 0.098
+            max_height: 0.198 -->
+
+            angle_min: -3.1415926535897931 # -M_PI/2
+            angle_max: 3.1415926535897931 # M_PI/2
+            angle_increment: 0.0174533 # 1 deg in rad
+            scan_time: 0.1
+            range_min: 0.1
+            range_max: 100.0
+            use_inf: true
+            inf_epsilon: 0.1
+
+            # Concurrency level, affects number of pointclouds queued for processing, thread number governed by nodelet manager
+            # 0 : Detect number of cores
+            # 1 : Single threaded
+            # 2->inf : Parallelism level
+            concurrency_level: 1
+        </rosparam>
+
+    </node>
+
+</launch>
