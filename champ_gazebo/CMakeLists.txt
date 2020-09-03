@@ -2,9 +2,23 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(champ_gazebo)
 
-find_package(catkin REQUIRED COMPONENTS)
+add_compile_options(-std=c++11)
 
-catkin_package()
+find_package(gazebo REQUIRED)
+
+find_package(catkin 
+  REQUIRED 
+  COMPONENTS
+  roscpp
+  urdf
+  champ
+  champ_msgs
+)
+
+catkin_package(
+   CATKIN_DEPENDS 
+   roscpp
+)
 
 install(PROGRAMS
   scripts/imu_sensor.py
@@ -13,3 +27,16 @@ install(PROGRAMS
   scripts/odometry.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+include_directories(
+  include
+  ${champ_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+  ${GAZEBO_INCLUDE_DIRS}
+)
+
+link_directories(${GAZEBO_LIBRARY_DIRS} ${catkin_LIBRARIES})
+list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
+
+add_executable(contact_sensor src/contact_sensor.cpp)
+target_link_libraries(contact_sensor ${GAZEBO_LIBRARIES} pthread ${catkin_LIBRARIES} )
