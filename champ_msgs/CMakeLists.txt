@@ -13,6 +13,7 @@ add_message_files(
   PointArray.msg
   Joints.msg
   Contacts.msg
+  ContactsStamped.msg
   Pose.msg
 )
 

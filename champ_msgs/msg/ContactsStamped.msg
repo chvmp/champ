@@ -1,0 +1,2 @@
+Header header
+bool[] contacts
