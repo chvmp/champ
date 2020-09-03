@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <champ_msgs/Joints.h>
 #include <champ_msgs/Pose.h>
 #include <champ_msgs/PointArray.h>
-#include <champ_msgs/Contacts.h>
+#include <champ_msgs/ContactsStamped.h>
 
 #include <champ/utils/urdf_loader.h>
 #include <champ/body_controller/body_controller.h>

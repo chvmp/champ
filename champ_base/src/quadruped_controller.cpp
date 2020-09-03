@@ -51,12 +51,23 @@ QuadrupedController::QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *p
     pnh->getParam("gazebo",                     in_gazebo_);
     pnh->getParam("joint_controller_topic", joint_control_topic);
 
-    joint_commands_publisher_ = nh->advertise<trajectory_msgs::JointTrajectory>(joint_control_topic, 10);
     cmd_vel_subscriber_ = nh->subscribe("cmd_vel/smooth", 1, &QuadrupedController::cmdVelCallback_, this);
     cmd_pose_subscriber_ = nh->subscribe("cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
     
-    joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 10);
-    contacts_publisher_   = nh->advertise<champ_msgs::Contacts>("foot_contacts", 10);
+    if(publish_joint_control_)
+    {
+        joint_commands_publisher_ = nh->advertise<trajectory_msgs::JointTrajectory>(joint_control_topic, 10);
+    }
+
+    if(publish_joint_states_ && !in_gazebo_)
+    {
+        joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 10);
+    }
+
+    if(publish_foot_contacts_ && !in_gazebo_)
+    {
+        contacts_publisher_   = nh->advertise<champ_msgs::ContactsStamped>("foot_contacts", 10);
+    }
 
     gait_config_.knee_orientation = knee_orientation.c_str();
     
@@ -152,9 +163,10 @@ void QuadrupedController::publishJoints_(float target_joints[12])
 
 void QuadrupedController::publishFootContacts_(bool foot_contacts[4])
 {
-    if(publish_foot_contacts_)
+    if(publish_foot_contacts_ && !in_gazebo_)
     {
-        champ_msgs::Contacts contacts_msg;
+        champ_msgs::ContactsStamped contacts_msg;
+        contacts_msg.header.stamp = ros::Time::now();
         contacts_msg.contacts.resize(4);
 
         for(size_t i = 0; i < 4; i++)
