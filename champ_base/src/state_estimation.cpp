@@ -30,8 +30,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
     odometry_(base_)
 {
-    joint_states_subscriber_ = nh->subscribe("joint_states", 100, &StateEstimation::jointStatesCallback_, this);
-    foot_contacts_subscriber_ = nh->subscribe("foot_contacts", 100, &StateEstimation::footContactCallback_, this);
+    joint_states_subscriber_.subscribe(*nh, "joint_states", 1);
+    foot_contacts_subscriber_ .subscribe(*nh, "foot_contacts", 1);
+    
+    sync.reset(new Sync(SyncPolicy(10), joint_states_subscriber_, foot_contacts_subscriber_)); 
+    sync->registerCallback(boost::bind(&StateEstimation::synchronized_callback_, this, _1, _2));
     
     velocities_publisher_   = nh->advertise<nav_msgs::Odometry>("odom/raw", 100);
     foot_publisher_   = nh->advertise<visualization_msgs::MarkerArray>("foot", 100);
@@ -53,6 +56,7 @@ StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
     {
         node_namespace_ = "";
     }
+
     odom_frame_ = node_namespace_ + "odom";
     base_footprint_frame_ = node_namespace_ + "base_footprint";
     base_link_frame_ = node_namespace_ + base_name_;
@@ -66,32 +70,29 @@ StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
                                             this);
 }
 
-void StateEstimation::jointStatesCallback_(const sensor_msgs::JointState::ConstPtr& msg)
+void StateEstimation::synchronized_callback_(const sensor_msgs::JointStateConstPtr& joints_msg, const champ_msgs::ContactsStampedConstPtr& contacts_msg)
 {
     float current_joint_positions[12];
 
     for(size_t i = 0; i < 12; i++)
     {
-        std::vector<std::string>::iterator itr = std::find(joint_names_.begin(), joint_names_.end(), msg->name[i]);
+        std::vector<std::string>::iterator itr = std::find(joint_names_.begin(), joint_names_.end(), joints_msg->name[i]);
 
         int index = std::distance(joint_names_.begin(), itr);
-        current_joint_positions[index] = msg->position[i];
+        current_joint_positions[index] = joints_msg->position[i];
     }
 
     base_.updateJointPositions(current_joint_positions);
-}
 
-void StateEstimation::footContactCallback_(const champ_msgs::Contacts::ConstPtr& msg)
-{
     for(size_t i = 0; i < 4; i++)
     {
-        base_.legs[i]->gait_phase(msg->contacts[i]);
+        base_.legs[i]->gait_phase(contacts_msg->contacts[i]);
     }
 }
 
 void StateEstimation::publishVelocities_(const ros::TimerEvent& event)
 {
-    odometry_.getVelocities(current_velocities_);
+        odometry_.getVelocities(current_velocities_);
 
     ros::Time current_time = ros::Time::now();
 
@@ -139,9 +140,12 @@ void StateEstimation::publishVelocities_(const ros::TimerEvent& event)
     odom.twist.twist.angular.y = 0.0;
     odom.twist.twist.angular.z = current_velocities_.angular.z;
 
-    odom.twist.covariance[0] = 0.001;
-    odom.twist.covariance[7] = 0.001;
-    odom.twist.covariance[35] = 0.001;
+    odom.twist.covariance[0] = 1.0;
+    odom.twist.covariance[7] = 1.0;
+    odom.twist.covariance[35] = 1.0;
+    // odom.twist.covariance[0] = 4;
+    // odom.twist.covariance[7] = 4;
+    // odom.twist.covariance[35] = 4;
 
     velocities_publisher_.publish(odom);
 }
@@ -209,11 +213,6 @@ void StateEstimation::publishFootPositions_(const ros::TimerEvent& event)
     tf2::Quaternion quaternion;
     quaternion.setRPY(0,0,0);
 
-    //for now, only do pose estimation when the robot is static
-    //until a proper foot detection is available
-    //this is purely for visualization purpose
-
-    //TODO: include this pose estimation approach inside libchamp
     if(current_velocities_.linear.x == 0.0 &&
        current_velocities_.linear.y == 0.0 &&
        current_velocities_.angular.z == 0.0)

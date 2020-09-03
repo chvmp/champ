@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ros/ros.h"
 
-#include <champ_msgs/Contacts.h>
+#include <champ_msgs/ContactsStamped.h>
 
 #include <champ/odometry/odometry.h>
 #include <champ/utils/urdf_loader.h>
@@ -46,10 +46,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 
+#include <message_filters/subscriber.h>
+#include <message_filters/synchronizer.h>
+#include <message_filters/sync_policies/approximate_time.h>
+
 class StateEstimation
 {
-    ros::Subscriber joint_states_subscriber_;
-    ros::Subscriber foot_contacts_subscriber_;
+    typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::JointState, champ_msgs::ContactsStamped> SyncPolicy;
+    typedef message_filters::Synchronizer<SyncPolicy> Sync;
+    boost::shared_ptr<Sync> sync;
+
+    message_filters::Subscriber<sensor_msgs::JointState> joint_states_subscriber_;
+    message_filters::Subscriber<champ_msgs::ContactsStamped> foot_contacts_subscriber_;
     
     ros::Publisher velocities_publisher_;
     ros::Publisher foot_publisher_;
@@ -82,9 +90,7 @@ class StateEstimation
 
     void publishVelocities_(const ros::TimerEvent& event);
     void publishFootPositions_(const ros::TimerEvent& event);
-
-    void jointStatesCallback_(const sensor_msgs::JointState::ConstPtr& msg);
-    void footContactCallback_(const champ_msgs::Contacts::ConstPtr& msg);
+    void synchronized_callback_(const sensor_msgs::JointStateConstPtr&, const champ_msgs::ContactsStampedConstPtr&);
 
     visualization_msgs::Marker createMarker(geometry::Transformation foot_pos, int id, std::string frame_id);
 

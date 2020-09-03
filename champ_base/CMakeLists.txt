@@ -18,6 +18,7 @@ find_package(catkin
     tf2_ros
     urdf
     champ
+    message_filters
 )
 
 catkin_package(
@@ -35,6 +36,7 @@ catkin_package(
     tf
     tf2_ros
     urdf
+    message_filters
 )
 
 #Download velocity smoother
