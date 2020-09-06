@@ -31,12 +31,12 @@ MessageRelay::MessageRelay(ros::NodeHandle *nh, ros::NodeHandle *pnh)
 {    
     imu_data_.orientation.w = 1.0;
 
-    imu_publisher_ = nh->advertise<sensor_msgs::Imu>("imu/data", 100);
-    mag_publisher_ = nh->advertise<sensor_msgs::MagneticField>("imu/mag", 100);
-    foot_contacts_publisher_   = nh->advertise<champ_msgs::ContactsStamped>("foot_contacts", 100);
+    imu_publisher_ = nh->advertise<sensor_msgs::Imu>("imu/data", 1);
+    mag_publisher_ = nh->advertise<sensor_msgs::MagneticField>("imu/mag", 1);
+    foot_contacts_publisher_   = nh->advertise<champ_msgs::ContactsStamped>("foot_contacts", 1);
 
-    joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 100);
-    joint_commands_publisher_ = nh->advertise<trajectory_msgs::JointTrajectory>("joint_group_position_controller/command", 100);
+    joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 1);
+    joint_commands_publisher_ = nh->advertise<trajectory_msgs::JointTrajectory>("joint_group_position_controller/command", 1);
 
     imu_raw_subscriber_ = nh->subscribe("imu/raw", 1, &MessageRelay::IMURawCallback_, this);
     joints_raw_subscriber_ = nh->subscribe("joint_states/raw", 1, &MessageRelay::jointStatesRawCallback_, this);
