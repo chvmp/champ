@@ -56,17 +56,17 @@ QuadrupedController::QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *p
     
     if(publish_joint_control_)
     {
-        joint_commands_publisher_ = nh->advertise<trajectory_msgs::JointTrajectory>(joint_control_topic, 10);
+        joint_commands_publisher_ = nh->advertise<trajectory_msgs::JointTrajectory>(joint_control_topic, 1);
     }
 
     if(publish_joint_states_ && !in_gazebo_)
     {
-        joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 10);
+        joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 1);
     }
 
     if(publish_foot_contacts_ && !in_gazebo_)
     {
-        foot_contacts_publisher_   = nh->advertise<champ_msgs::ContactsStamped>("foot_contacts", 10);
+        foot_contacts_publisher_   = nh->advertise<champ_msgs::ContactsStamped>("foot_contacts", 1);
     }
 
     gait_config_.knee_orientation = knee_orientation.c_str();
