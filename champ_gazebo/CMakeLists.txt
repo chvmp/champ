@@ -40,3 +40,11 @@ list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
 
 add_executable(contact_sensor src/contact_sensor.cpp)
 target_link_libraries(contact_sensor ${GAZEBO_LIBRARIES} pthread ${catkin_LIBRARIES} )
+add_dependencies(contact_sensor ${catkin_EXPORTED_TARGETS})
+
+install(TARGETS 
+    contact_sensor
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
