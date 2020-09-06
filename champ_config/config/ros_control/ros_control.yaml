@@ -1,7 +1,7 @@
 "":
   joint_states_controller:
       type: joint_state_controller/JointStateController
-      publish_rate: 25
+      publish_rate: 200
 
   joint_group_position_controller:
       type: effort_controllers/JointTrajectoryController
