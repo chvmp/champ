@@ -203,7 +203,7 @@ Visualization Manager:
       Enabled: true
       Length: 1
       Name: Axes
-      Radius: 0.0010000000474974513
+      Radius: 0.005
       Reference Frame: <Fixed Frame>
       Value: true
     - Class: rviz/TF
