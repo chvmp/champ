@@ -75,6 +75,7 @@ class StateEstimation
     float y_pos_;
     float heading_;
     ros::Time last_vel_time_;
+    ros::Time last_sync_time_;
 
     champ::GaitConfig gait_config_;
 
@@ -87,6 +88,7 @@ class StateEstimation
     std::string odom_frame_;
     std::string base_footprint_frame_;
     std::string base_link_frame_;
+    bool close_loop_odom_;
 
     void publishVelocities_(const ros::TimerEvent& event);
     void publishFootPositions_(const ros::TimerEvent& event);

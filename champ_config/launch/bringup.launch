@@ -9,6 +9,7 @@
     <arg name="rviz_ref_frame"         default="odom"/>
     <arg name="has_imu"                default="true" />
     <arg name="lite"                   default="false" />
+    <arg name="close_loop_odom"        default="false" />
     <arg name="publish_foot_contacts"  default="true" />
     <arg name="publish_joint_control"  default="true" />
     <arg name="laser"                  default="sim"/>
@@ -31,5 +32,6 @@
         <arg name="hardware_connected"     value="$(arg hardware_connected)" />
         <arg name="publish_foot_contacts"  value="$(arg publish_foot_contacts)" />
         <arg name="publish_joint_control"  value="$(arg publish_joint_control)" />
+        <arg name="close_loop_odom"        value="$(arg close_loop_odom)" />
     </include>
 </launch>

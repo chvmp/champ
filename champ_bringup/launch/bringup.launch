@@ -14,6 +14,7 @@
     <arg name="hardware_connected"     default="false" />
     <arg name="publish_joint_control"  default="true" />
     <arg name="publish_foot_contacts"  default="true" />
+    <arg name="close_loop_odom"        default="false" />
 
     <group ns="$(arg robot_name)">
         <param name="tf_prefix" value="$(arg robot_name)"/>
@@ -42,7 +43,9 @@
             <param                                    name="publish_joint_control"  value="$(arg publish_joint_control)" />
             <param                                    name="joint_controller_topic" value="$(arg joint_controller_topic)" />
         </node>
-        <node pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen"/>
+        <node pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen">
+            <param name="close_loop_odom" value="$(arg close_loop_odom)" />
+        </node>
 
         <rosparam command="load" ns="gait"       file="$(arg gait_config_file)" />
         <rosparam command="load" ns="links_map"  file="$(arg links_map_file)" />

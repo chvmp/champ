@@ -41,6 +41,7 @@ StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
 
     nh->getParam("links_map/base", base_name_);
     nh->getParam("gait/odom_scaler", gait_config_.odom_scaler);
+    pnh->getParam("close_loop_odom", close_loop_odom_);
 
     base_.setGaitConfig(gait_config_);
     champ::URDF::loadFromServer(base_, nh);
@@ -72,6 +73,8 @@ StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
 
 void StateEstimation::synchronized_callback_(const sensor_msgs::JointStateConstPtr& joints_msg, const champ_msgs::ContactsStampedConstPtr& contacts_msg)
 {
+    last_sync_time_ = ros::Time::now();
+
     float current_joint_positions[12];
 
     for(size_t i = 0; i < 12; i++)
@@ -92,7 +95,7 @@ void StateEstimation::synchronized_callback_(const sensor_msgs::JointStateConstP
 
 void StateEstimation::publishVelocities_(const ros::TimerEvent& event)
 {
-        odometry_.getVelocities(current_velocities_);
+    odometry_.getVelocities(current_velocities_, close_loop_odom_);
 
     ros::Time current_time = ros::Time::now();
 
@@ -140,13 +143,10 @@ void StateEstimation::publishVelocities_(const ros::TimerEvent& event)
     odom.twist.twist.angular.y = 0.0;
     odom.twist.twist.angular.z = current_velocities_.angular.z;
 
-    odom.twist.covariance[0] = 1.0;
-    odom.twist.covariance[7] = 1.0;
-    odom.twist.covariance[35] = 1.0;
-    // odom.twist.covariance[0] = 4;
-    // odom.twist.covariance[7] = 4;
-    // odom.twist.covariance[35] = 4;
-
+    odom.twist.covariance[0] = 0.001;
+    odom.twist.covariance[7] = 0.001;
+    odom.twist.covariance[35] = 0.001;
+    
     velocities_publisher_.publish(odom);
 }
 

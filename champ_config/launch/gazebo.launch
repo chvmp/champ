@@ -14,6 +14,7 @@
         <arg name="joint_controller_topic" value="joint_group_position_controller/command"/>
         <arg name="hardware_connected"     value="false"/>
         <arg name="publish_foot_contacts"  value="true"/>
+        <arg name="close_loop_odom"        value="true"/>
     </include>
 
     <include file="$(find champ_gazebo)/launch/gazebo.launch">
