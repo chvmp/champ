@@ -20,9 +20,17 @@
         <param name="tf_prefix" value="$(arg robot_name)"/>
         <param if="$(arg gazebo)" name="use_sim_time" value="true"/>
 
+        <!-- ==================== LOAD PARAMETERS ==================== -->
         <include file="$(find champ_description)/launch/description.launch">
             <arg name="description_file" value="$(arg description_file)"/>
         </include>
+        <rosparam command="load" ns="gait"       file="$(arg gait_config_file)" />
+        <rosparam command="load" ns="links_map"  file="$(arg links_map_file)" />
+        <rosparam command="load" ns="joints_map" file="$(arg joints_map_file)" />
+
+
+        <!-- ==================== HARDWARE ==================== -->
+        <include file="$(find champ_bringup)/launch/include/laser/$(arg laser).launch" />
 
         <node if="$(arg lite)" pkg="rosserial_python" name="rosserial_champ" type="serial_node.py" output="screen" respawn="true">
             <param name="port" value="/dev/ttyACM0" />
@@ -35,6 +43,9 @@
             <param unless="$(arg gazebo)" name="has_imu" value="$(arg has_imu)"/>       
         </node>
 
+        <!-- ==================== CONTROLLER ==================== -->
+        <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" />
+
         <node unless="$(arg lite)" pkg="champ_base" name="champ_controller" type="quadruped_controller_node" output="screen">
             <param                                    name="gazebo"                 value="$(arg gazebo)" />
             <param if="$(arg hardware_connected)"     name="publish_joint_states"   value="false" />
@@ -43,23 +54,22 @@
             <param                                    name="publish_joint_control"  value="$(arg publish_joint_control)" />
             <param                                    name="joint_controller_topic" value="$(arg joint_controller_topic)" />
         </node>
+
+        <!-- ==================== STATE ESTIMATION ==================== -->
         <node pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen">
             <param name="close_loop_odom" value="$(arg close_loop_odom)" />
         </node>
 
-        <rosparam command="load" ns="gait"       file="$(arg gait_config_file)" />
-        <rosparam command="load" ns="links_map"  file="$(arg links_map_file)" />
-        <rosparam command="load" ns="joints_map" file="$(arg joints_map_file)" />
+        <node pkg="robot_localization" type="ekf_localization_node" name="base_to_footprint_ekf"> 
+            <remap from="odometry/filtered" to="odom/local" />
+            <rosparam command="load" file="$(find champ_base)/config/ekf/base_to_footprint.yaml" />
+        </node>
 
-        <include file="$(find champ_bringup)/launch/include/velocity_smoother.launch" />
-            
-        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
+        <node pkg="robot_localization" type="ekf_localization_node" name="footprint_to_odom_ekf"> 
             <remap from="odometry/filtered" to="odom" />
-            <rosparam command="load" file="$(find champ_base)/config/ekf/ekf.yaml" />
+            <rosparam command="load" file="$(find champ_base)/config/ekf/footprint_to_odom.yaml" />
         </node>
         
-        <include file="$(find champ_bringup)/launch/include/laser/$(arg laser).launch" />
-
         <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
             args="-d $(find champ_description)/rviz/urdf_viewer.rviz -f $(arg rviz_ref_frame)"
             output="screen"/>

@@ -37,6 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <nav_msgs/Odometry.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 #include <geometry_msgs/TransformStamped.h>
 #include <sensor_msgs/JointState.h>
@@ -59,13 +60,14 @@ class StateEstimation
     message_filters::Subscriber<sensor_msgs::JointState> joint_states_subscriber_;
     message_filters::Subscriber<champ_msgs::ContactsStamped> foot_contacts_subscriber_;
     
-    ros::Publisher velocities_publisher_;
+    ros::Publisher footprint_to_odom_publisher_;
+    ros::Publisher base_to_footprint_publisher_;
     ros::Publisher foot_publisher_;
 
     tf2_ros::TransformBroadcaster base_broadcaster_;
 
     ros::Timer odom_data_timer_;
-    ros::Timer foot_position_timer_;
+    ros::Timer base_pose_timer_;
 
     champ::Velocities current_velocities_;
     geometry::Transformation current_foot_positions_[4];
@@ -90,8 +92,8 @@ class StateEstimation
     std::string base_link_frame_;
     bool close_loop_odom_;
 
-    void publishVelocities_(const ros::TimerEvent& event);
-    void publishFootPositions_(const ros::TimerEvent& event);
+    void publishFootprintToOdom_(const ros::TimerEvent& event);
+    void publishBaseToFootprint_(const ros::TimerEvent& event);
     void synchronized_callback_(const sensor_msgs::JointStateConstPtr&, const champ_msgs::ContactsStampedConstPtr&);
 
     visualization_msgs::Marker createMarker_(geometry::Transformation foot_pos, int id, std::string frame_id);
