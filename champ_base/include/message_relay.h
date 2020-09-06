@@ -32,6 +32,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <champ_msgs/Joints.h>
 #include <champ_msgs/Imu.h>
+#include <champ_msgs/Contacts.h>
+#include <champ_msgs/ContactsStamped.h>
 
 #include <champ/utils/urdf_loader.h>
 
@@ -51,11 +53,13 @@ class MessageRelay
 {
     ros::Subscriber imu_raw_subscriber_;
     ros::Subscriber joints_raw_subscriber_;
+    ros::Subscriber foot_contacts_subscriber_;
 
     ros::Publisher imu_publisher_;
     ros::Publisher mag_publisher_;
     ros::Publisher joint_states_publisher_;   
     ros::Publisher joint_commands_publisher_;   
+    ros::Publisher foot_contacts_publisher_;
 
     std::vector<std::string> joint_names_;
     std::string node_namespace_;
@@ -66,9 +70,10 @@ class MessageRelay
 
     sensor_msgs::Imu imu_data_;
 
-    void IMURawCallback(const champ_msgs::Imu::ConstPtr& msg);
-    void jointStatesRawCallback(const champ_msgs::Joints::ConstPtr& msg);
-  
+    void IMURawCallback_(const champ_msgs::Imu::ConstPtr& msg);
+    void jointStatesRawCallback_(const champ_msgs::Joints::ConstPtr& msg);
+    void footContactCallback_(const champ_msgs::Contacts::ConstPtr& msg);
+
     public:
         MessageRelay(ros::NodeHandle *nh, ros::NodeHandle *pnh);
 };

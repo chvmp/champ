@@ -33,11 +33,14 @@ MessageRelay::MessageRelay(ros::NodeHandle *nh, ros::NodeHandle *pnh)
 
     imu_publisher_ = nh->advertise<sensor_msgs::Imu>("imu/data", 100);
     mag_publisher_ = nh->advertise<sensor_msgs::MagneticField>("imu/mag", 100);
+    foot_contacts_publisher_   = nh->advertise<champ_msgs::ContactsStamped>("foot_contacts", 100);
+
     joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 100);
     joint_commands_publisher_ = nh->advertise<trajectory_msgs::JointTrajectory>("joint_group_position_controller/command", 100);
 
-    imu_raw_subscriber_ = nh->subscribe("imu/raw", 1, &MessageRelay::IMURawCallback, this);
-    joints_raw_subscriber_ = nh->subscribe("joint_states/raw", 1, &MessageRelay::jointStatesRawCallback, this);
+    imu_raw_subscriber_ = nh->subscribe("imu/raw", 1, &MessageRelay::IMURawCallback_, this);
+    joints_raw_subscriber_ = nh->subscribe("joint_states/raw", 1, &MessageRelay::jointStatesRawCallback_, this);
+    foot_contacts_subscriber_ = nh->subscribe("foot_contacts/raw", 1, &MessageRelay::footContactCallback_, this);
 
     pnh->getParam("gazebo",        in_gazebo_);
     pnh->getParam("has_imu",       has_imu_);
@@ -58,7 +61,7 @@ MessageRelay::MessageRelay(ros::NodeHandle *nh, ros::NodeHandle *pnh)
     imu_frame_ = node_namespace_ + "imu_link";
 }
 
-void MessageRelay::IMURawCallback(const champ_msgs::Imu::ConstPtr& msg)
+void MessageRelay::IMURawCallback_(const champ_msgs::Imu::ConstPtr& msg)
 {
     sensor_msgs::Imu imu_data_msg;
     sensor_msgs::MagneticField imu_mag_msg;
@@ -115,7 +118,7 @@ void MessageRelay::IMURawCallback(const champ_msgs::Imu::ConstPtr& msg)
     mag_publisher_.publish(imu_mag_msg);
 }
 
-void MessageRelay::jointStatesRawCallback(const champ_msgs::Joints::ConstPtr& msg)
+void MessageRelay::jointStatesRawCallback_(const champ_msgs::Joints::ConstPtr& msg)
 {
     if(in_gazebo_)
     {
@@ -151,4 +154,18 @@ void MessageRelay::jointStatesRawCallback(const champ_msgs::Joints::ConstPtr& ms
 
         joint_states_publisher_.publish(joints_msg);
     }
+}
+
+void MessageRelay::footContactCallback_(const champ_msgs::Contacts::ConstPtr& msg)
+{
+    champ_msgs::ContactsStamped contacts_msg;
+    contacts_msg.header.stamp = ros::Time::now();
+    contacts_msg.contacts.resize(4);
+
+    for(size_t i = 0; i < 4; i++)
+    {
+        contacts_msg.contacts[i] = msg->contacts[i];
+    }
+
+    foot_contacts_publisher_.publish(contacts_msg);
 }
