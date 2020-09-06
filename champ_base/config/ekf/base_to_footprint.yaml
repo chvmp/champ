@@ -26,5 +26,4 @@ imu0_config: [false, false, false,
               false, false, false]
 
 odom_frame: base_footprint
-base_link_frame: base_link
 world_frame: base_footprint

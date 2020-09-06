@@ -1,5 +1,6 @@
 <launch>
     <arg name="robot_name"             default="/" />
+    <arg name="base_frame"             default="base_link" />
     <arg name="joints_map_file"        default="$(find champ_config)/config/joints/joints.yaml"/>
     <arg name="links_map_file"         default="$(find champ_config)/config/links/links.yaml"/>
     <arg name="gait_config_file"       default="$(find champ_config)/config/gait/gait.yaml"/>
@@ -62,6 +63,7 @@
 
         <node pkg="robot_localization" type="ekf_localization_node" name="base_to_footprint_ekf"> 
             <remap from="odometry/filtered" to="odom/local" />
+            <param name="base_link_frame" value="$(arg base_frame)" />
             <rosparam command="load" file="$(find champ_base)/config/ekf/base_to_footprint.yaml" />
         </node>
 

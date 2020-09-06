@@ -1,5 +1,6 @@
 <launch>
     <arg name="robot_name"             default="/"/>
+    <arg name="base_frame"             default="base_link" />
     <arg name="joints_map_file"        default="$(find champ_config)/config/joints/joints.yaml"/>
     <arg name="links_map_file"         default="$(find champ_config)/config/links/links.yaml"/>
     <arg name="gait_config_file"       default="$(find champ_config)/config/gait/gait.yaml"/>
@@ -18,6 +19,7 @@
 
     <include file="$(find champ_bringup)/launch/bringup.launch">
         <arg name="robot_name"             value="$(arg robot_name)"/>
+        <arg name="base_frame"             value="$(arg base_frame)"/>
         <arg name="joints_map_file"        value="$(arg joints_map_file)"/>
         <arg name="links_map_file"         value="$(arg links_map_file)"/>
         <arg name="gait_config_file"       value="$(arg gait_config_file)"/>
