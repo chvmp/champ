@@ -66,7 +66,7 @@ QuadrupedController::QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *p
 
     if(publish_foot_contacts_ && !in_gazebo_)
     {
-        contacts_publisher_   = nh->advertise<champ_msgs::ContactsStamped>("foot_contacts", 10);
+        foot_contacts_publisher_   = nh->advertise<champ_msgs::ContactsStamped>("foot_contacts", 10);
     }
 
     gait_config_.knee_orientation = knee_orientation.c_str();
@@ -174,6 +174,6 @@ void QuadrupedController::publishFootContacts_(bool foot_contacts[4])
             contacts_msg.contacts[i] = foot_contacts[i];
         }
 
-        contacts_publisher_.publish(contacts_msg);
+        foot_contacts_publisher_.publish(contacts_msg);
     }
 }

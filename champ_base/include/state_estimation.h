@@ -94,7 +94,7 @@ class StateEstimation
     void publishFootPositions_(const ros::TimerEvent& event);
     void synchronized_callback_(const sensor_msgs::JointStateConstPtr&, const champ_msgs::ContactsStampedConstPtr&);
 
-    visualization_msgs::Marker createMarker(geometry::Transformation foot_pos, int id, std::string frame_id);
+    visualization_msgs::Marker createMarker_(geometry::Transformation foot_pos, int id, std::string frame_id);
 
     public:
         StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh);

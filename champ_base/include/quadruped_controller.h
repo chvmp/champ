@@ -52,7 +52,7 @@ class QuadrupedController
     
     ros::Publisher joint_states_publisher_;   
     ros::Publisher joint_commands_publisher_;   
-    ros::Publisher contacts_publisher_;
+    ros::Publisher foot_contacts_publisher_;
 
     ros::Timer loop_timer_;
 

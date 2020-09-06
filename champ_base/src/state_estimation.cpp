@@ -150,7 +150,7 @@ void StateEstimation::publishVelocities_(const ros::TimerEvent& event)
     velocities_publisher_.publish(odom);
 }
 
-visualization_msgs::Marker StateEstimation::createMarker(geometry::Transformation foot_pos, int id, std::string frame_id)
+visualization_msgs::Marker StateEstimation::createMarker_(geometry::Transformation foot_pos, int id, std::string frame_id)
 {
     visualization_msgs::Marker foot_marker;
 
@@ -190,7 +190,7 @@ void StateEstimation::publishFootPositions_(const ros::TimerEvent& event)
 
     for(size_t i = 0; i < 4; i++)
     {
-        marker_array.markers.push_back(createMarker(current_foot_positions_[i], i, base_link_frame_));
+        marker_array.markers.push_back(createMarker_(current_foot_positions_[i], i, base_link_frame_));
         robot_height += current_foot_positions_[i].Z();
     }
 
