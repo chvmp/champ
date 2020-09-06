@@ -76,12 +76,12 @@ add_dependencies(quadruped_controller ${catkin_EXPORTED_TARGETS})
 
 add_executable(message_relay_node src/message_relay_node.cpp)
 target_link_libraries(message_relay_node message_relay ${catkin_LIBRARIES})
-add_dependencies(message_relay ${catkin_EXPORTED_TARGETS})
+add_dependencies(message_relay_node ${catkin_EXPORTED_TARGETS})
 add_dependencies(message_relay ${catkin_EXPORTED_TARGETS})
 
 add_executable(state_estimation_node src/state_estimation_node.cpp)
 target_link_libraries(state_estimation_node state_estimation ${catkin_LIBRARIES})
-add_dependencies(state_estimation ${catkin_EXPORTED_TARGETS})
+add_dependencies(state_estimation_node ${catkin_EXPORTED_TARGETS})
 add_dependencies(state_estimation ${catkin_EXPORTED_TARGETS})
 
 install(TARGETS 
