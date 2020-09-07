@@ -63,11 +63,11 @@ StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
     base_footprint_frame_ = node_namespace_ + "base_footprint";
     base_link_frame_ = node_namespace_ + base_name_;
 
-    odom_data_timer_ = pnh->createTimer(ros::Duration(0.015),
+    odom_data_timer_ = pnh->createTimer(ros::Duration(0.02),
                                         &StateEstimation::publishFootprintToOdom_, 
                                         this);
 
-    base_pose_timer_ = pnh->createTimer(ros::Duration(0.015),
+    base_pose_timer_ = pnh->createTimer(ros::Duration(0.02),
                                             &StateEstimation::publishBaseToFootprint_, 
                                             this);
 }
@@ -132,9 +132,9 @@ void StateEstimation::publishFootprintToOdom_(const ros::TimerEvent& event)
     odom.pose.pose.orientation.y = odom_quat.y();
     odom.pose.pose.orientation.z = odom_quat.z();
     odom.pose.pose.orientation.w = odom_quat.w();
-    odom.pose.covariance[0] = 0.001;
-    odom.pose.covariance[7] = 0.001;
-    odom.pose.covariance[35] = 0.001;
+    odom.pose.covariance[0] = 0.017;
+    odom.pose.covariance[7] = 0.017;
+    odom.pose.covariance[35] = 0.017;
 
     odom.twist.twist.linear.x = current_velocities_.linear.x;
     odom.twist.twist.linear.y = current_velocities_.linear.y;
@@ -243,9 +243,9 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
     pose_msg.pose.covariance[0] = 0.01;
     pose_msg.pose.covariance[7] = 0.01;
     pose_msg.pose.covariance[14] = 0.01;
-    pose_msg.pose.covariance[21] = 0.001;
-    pose_msg.pose.covariance[28] = 0.001;
-    pose_msg.pose.covariance[35] = 0.001;
+    pose_msg.pose.covariance[21] = 0.017;
+    pose_msg.pose.covariance[28] = 0.017;
+    pose_msg.pose.covariance[35] = 0.017;
 
     pose_msg.pose.pose.position.x = 0.0;
     pose_msg.pose.pose.position.y = 0.0;
