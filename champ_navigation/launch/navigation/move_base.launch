@@ -11,11 +11,13 @@
         <rosparam file="$(find champ_navigation)/param/move_base_params.yaml" command="load" />
 
         <!-- explicitly define frame ids for movebase -->
-        <param name="global_costmap/global_frame"              value="$(arg frame_prefix)map"/>
-        <param name="global_costmap/robot_base_frame"          value="$(arg frame_prefix)base_footprint"/>
-        <param name="local_costmap/global_frame"               value="$(arg frame_prefix)odom"/>
-        <param name="local_costmap/robot_base_frame"           value="$(arg frame_prefix)base_footprint"/>
-        <param name="local_costmap/obstacle_layer/scan/topic"  value="$(arg robot_name)scan"/>
-        <param name="global_costmap/obstacle_layer/scan/topic" value="$(arg robot_name)scan"/>
+        <param name="global_costmap/global_frame"                   value="$(arg frame_prefix)map"/>
+        <param name="global_costmap/robot_base_frame"               value="$(arg frame_prefix)base_footprint"/>
+        <param name="global_costmap/2d_obstacles_layer/scan/topic"  value="$(arg robot_name)scan"/>
+        <param name="global_costmap/3d_obstacles_layer/depth/topic" value="$(arg robot_name)camera/depth/points"/>
+        <param name="local_costmap/global_frame"                    value="$(arg frame_prefix)odom"/>
+        <param name="local_costmap/robot_base_frame"                value="$(arg frame_prefix)base_footprint"/>
+        <param name="local_costmap/2d_obstacles_layer/scan/topic"   value="$(arg robot_name)scan"/>
+        <param name="local_costmap/3d_obstacles_layer/depth/topic"  value="$(arg robot_name)camera/depth/points"/>
     </node>
 </launch>
