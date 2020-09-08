@@ -1,6 +1,7 @@
 frequency: 50
 
 transform_timeout: 0.01
+# transform_time_offset: 0.05
 
 two_d_mode: true
 # diagnostics_agg: true
