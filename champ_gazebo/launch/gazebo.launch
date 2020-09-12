@@ -18,7 +18,7 @@
 
     <group ns="$(arg robot_name)">
         <!-- remember to define initial position of robot on multi-robot simulation -->
-        <node  name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model champ -param robot_description -robot_namespace $(arg robot_name) -z 0.5" />
+        <node  name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model champ -param robot_description -robot_namespace $(arg robot_name) -z 0.6" />
 
         <rosparam file="$(arg ros_control_file)" command="load"/>
         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
