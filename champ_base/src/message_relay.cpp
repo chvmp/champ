@@ -31,8 +31,6 @@ MessageRelay::MessageRelay(ros::NodeHandle *nh, ros::NodeHandle *pnh)
 {    
     imu_data_.orientation.w = 1.0;
 
-    imu_publisher_ = nh->advertise<sensor_msgs::Imu>("imu/data", 1);
-    mag_publisher_ = nh->advertise<sensor_msgs::MagneticField>("imu/mag", 1);
     foot_contacts_publisher_   = nh->advertise<champ_msgs::ContactsStamped>("foot_contacts", 1);
 
     joint_states_publisher_ = nh->advertise<sensor_msgs::JointState>("joint_states", 1);
@@ -56,6 +54,12 @@ MessageRelay::MessageRelay(ros::NodeHandle *nh, ros::NodeHandle *pnh)
     else
     {
         node_namespace_ = "";
+    }
+
+    if(has_imu_)
+    {
+        imu_publisher_ = nh->advertise<sensor_msgs::Imu>("imu/data", 1);
+        mag_publisher_ = nh->advertise<sensor_msgs::MagneticField>("imu/mag", 1);
     }
 
     imu_frame_ = node_namespace_ + "imu_link";
