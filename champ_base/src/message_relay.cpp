@@ -94,16 +94,6 @@ void MessageRelay::IMURawCallback_(const champ_msgs::Imu::ConstPtr& msg)
     imu_data_msg.linear_acceleration_covariance[4] = 0.0001;
     imu_data_msg.linear_acceleration_covariance[8] = 0.0001;
 
-    imu_data_ = imu_data_msg;
-
-    //prevent from clashing in gazebo imu
-    if(!has_imu_)
-    {
-        return;
-    }
-
-    imu_publisher_.publish(imu_data_msg);
-
     imu_mag_msg.header.stamp = ros::Time::now();
     imu_mag_msg.header.frame_id = imu_frame_;
 
@@ -115,7 +105,11 @@ void MessageRelay::IMURawCallback_(const champ_msgs::Imu::ConstPtr& msg)
     imu_mag_msg.magnetic_field_covariance[4] = 0.000001;
     imu_mag_msg.magnetic_field_covariance[8] = 0.000001;
 
-    mag_publisher_.publish(imu_mag_msg);
+    if(has_imu_)
+    {
+        imu_publisher_.publish(imu_data_msg);
+        mag_publisher_.publish(imu_mag_msg);
+    }
 }
 
 void MessageRelay::jointStatesRawCallback_(const champ_msgs::Joints::ConstPtr& msg)
