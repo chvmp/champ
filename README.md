@@ -10,9 +10,9 @@ Core Features:
 
 - Fully Autonomous (using ROS navigation Stack).
 - [Setup-assistant](https://github.com/chvmp/champ_setup_assistant) to configure newly built robots.
-- Collection of pre-configured [URDFs](https://github.com/chvmp/robots) like Anymal, MIT Mini Cheetah, Boston Dynamic's LittleDog, and SpotMicroAi. 
+- Collection of pre-configured [URDFs](https://github.com/chvmp/robots) like Anymal, MIT Mini Cheetah, Boston Dynamic's Spot and LittleDog. 
 - Gazebo simulation environment.
-- Demo robot built using accessible components so you can build it from home.
+- Compatible with DIY quadruped projects like [SpotMicroAI](https://spotmicroai.readthedocs.io/en/latest/) and [OpenQuadruped](https://github.com/adham-elarabawy/open-quadruped).
 - Demo Applications like [TOWR](https://github.com/ethz-adrl/towr) and [chicken head](https://github.com/chvmp/chicken_head) stabilization.
 - Lightweight C++ header-only [library](https://github.com/chvmp/libchamp) that can run on both SBC and micro-controllers.
 
@@ -31,6 +31,8 @@ Tested on:
     git clone https://github.com/chvmp/champ_teleop
     cd ..
     rosdep install --from-paths src --ignore-src -r -y
+
+If you want to use any of the pre-configured robots like Anymal, Mini Cheetah, or Spot, follow the instructions [here](https://github.com/chvmp/robots).
 
 ### 1.2. Build your workspace:
 
