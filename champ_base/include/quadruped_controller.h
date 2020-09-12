@@ -41,6 +41,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <champ/kinematics/kinematics.h>
 
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Pose.h>
+#include "tf/transform_datatypes.h"
+
 #include <sensor_msgs/JointState.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
@@ -79,7 +82,7 @@ class QuadrupedController
     void publishFootContacts_(bool foot_contacts[4]);
 
     void cmdVelCallback_(const geometry_msgs::Twist::ConstPtr& msg);
-    void cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg);
+    void cmdPoseCallback_(const geometry_msgs::Pose::ConstPtr& msg);
 
     public:
         QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *pnh);

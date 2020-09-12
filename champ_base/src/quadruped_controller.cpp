@@ -52,7 +52,7 @@ QuadrupedController::QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *p
     pnh->getParam("joint_controller_topic", joint_control_topic);
 
     cmd_vel_subscriber_ = nh->subscribe("cmd_vel/smooth", 1, &QuadrupedController::cmdVelCallback_, this);
-    cmd_pose_subscriber_ = nh->subscribe("cmd_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
+    cmd_pose_subscriber_ = nh->subscribe("body_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
     
     if(publish_joint_control_)
     {
@@ -111,15 +111,22 @@ void QuadrupedController::cmdVelCallback_(const geometry_msgs::Twist::ConstPtr& 
     req_vel_.angular.z = msg->angular.z;
 }
 
-void QuadrupedController::cmdPoseCallback_(const champ_msgs::Pose::ConstPtr& msg)
+void QuadrupedController::cmdPoseCallback_(const geometry_msgs::Pose::ConstPtr& msg)
 {
-    req_pose_.orientation.roll = msg->roll;
-    req_pose_.orientation.pitch = msg->pitch;
-    req_pose_.orientation.yaw = msg->yaw;
+    tf::Quaternion quat(
+        msg->orientation.x,
+        msg->orientation.y,
+        msg->orientation.z,
+        msg->orientation.w);
+    tf::Matrix3x3 m(quat);
+    double roll, pitch, yaw;
+    m.getRPY(roll, pitch, yaw);
+    
+    req_pose_.orientation.roll = roll;
+    req_pose_.orientation.pitch = pitch;
+    req_pose_.orientation.yaw = yaw;
 
-    req_pose_.position.z = msg->z * gait_config_.nominal_height;
-    if(req_pose_.position.z < (gait_config_.nominal_height * 0.5))
-        req_pose_.position.z = gait_config_.nominal_height * 0.5;
+    req_pose_.position.z = msg->position.z +  gait_config_.nominal_height;
 }
 
 void QuadrupedController::publishJoints_(float target_joints[12])
