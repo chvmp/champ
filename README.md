@@ -206,6 +206,26 @@ Run Gazebo and the base driver in simulation mode:
 
   - Gazebo inertial parameters - http://gazebosim.org/tutorials?tut=inertia&cat=build_robot#Overview
 
+You can also check out [this](https://github.com/moribots/spot_mini_mini/pull/7) pull request as an example.
+
+### 3.6 Spawning multiple robots in Gazebo
+
+Run Gazebo and default simulation world:
+
+    roslaunch champ_gazebo spawn_world.launch 
+
+You can also load your own world file by passing your world's path to 'gazebo_world' argument:
+
+    roslaunch champ_gazebo spawn_world.launch gazebo_world:=<path_to_world_file>
+
+Spawning a robot:
+
+    roslaunch champ_config spawn_robot.launch robot_name:=<unique_robot_name> world_init_x:=<x_position> world_init_y:=<y_position>
+
+    
+* Every instance of the spawned robot must have a unique robot name to prevent the topics and transforms from clashing.
+
+
 ## 4. Tuning gait parameters
 
 The gait configuration for your robot can be found in <my_robot_config>/gait/gait.yaml.
