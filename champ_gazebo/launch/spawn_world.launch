@@ -1,0 +1,17 @@
+<launch>
+    <arg name="use_sim_time"       default="true"/>
+    <arg name="gui"                default="true"/>
+    <arg name="headless"           default="false"/>
+    <arg name="paused"             default="false"/>
+    <arg name="gazebo_world"       default="$(find champ_gazebo)/worlds/outdoor.world" />
+
+    <!-- this should be only called once on multi-robot simulation -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg gazebo_world)"/>
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="headless" value="$(arg headless)"/>
+    </include>
+</launch>
+
