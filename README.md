@@ -23,7 +23,7 @@ Tested on:
 
 ## 1. Installation
 
-### 1.1. Clone and install all dependencies:
+### 1.1 Clone and install all dependencies:
 
     sudo apt install -y python-rosdep
     cd <your_ws>/src
@@ -34,7 +34,7 @@ Tested on:
 
 If you want to use any of the pre-configured robots like Anymal, Mini Cheetah, or Spot, follow the instructions [here](https://github.com/chvmp/robots).
 
-### 1.2. Build your workspace:
+### 1.2 Build your workspace:
 
     cd <your_ws>
     catkin_make
@@ -44,26 +44,26 @@ If you want to use any of the pre-configured robots like Anymal, Mini Cheetah, o
 
 You don't need a physical robot to run the following demos. If you're building a physical robot, you can find out more how to configure and run a new robot in step 3.
 
-### 2.1. Walking demo in RVIZ:
+### 2.1 Walking demo in RVIZ:
 
-#### 2.1.1. Run the base driver:
+#### 2.1.1 Run the base driver:
 
     roslaunch champ_config bringup.launch rviz:=true
 
-#### 2.1.2. Run the teleop node:
+#### 2.1.2 Run the teleop node:
 
     roslaunch champ_teleop teleop.launch
 
 If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepads/f710-wireless-gamepad.html) add joy:=true as an argument.
 
 
-### 2.2. SLAM demo:
+### 2.2 SLAM demo:
 
-#### 2.2.1. Run the Gazebo environment:
+#### 2.2.1 Run the Gazebo environment:
 
     roslaunch champ_config gazebo.launch 
 
-#### 2.2.2. Run gmapping package and move_base:
+#### 2.2.2 Run gmapping package and move_base:
 
     roslaunch champ_config slam.launch rviz:=true
 
@@ -79,13 +79,13 @@ To start mapping:
       roscd champ_config/maps
       rosrun map_server map_saver
 
-### 2.3. Autonomous Navigation:
+### 2.3 Autonomous Navigation:
 
-#### 2.3.1. Run the Gazebo environment: 
+#### 2.3.1 Run the Gazebo environment: 
 
     roslaunch champ_config gazebo.launch 
 
-#### 2.3.2. Run amcl and move_base:
+#### 2.3.2 Run amcl and move_base:
 
     roslaunch champ_config navigate.launch rviz:=true
 
@@ -106,7 +106,7 @@ Linux Machine
 Lightweight Version
 - Run CHAMP's [lightweight version](https://github.com/chvmp/firmware) on Teensy series microcontrollers and use it to directly control your actuators. 
 
-### 3.1. Generate robot configuration
+### 3.1 Generate robot configuration
 
    - First generate a configuration package using [champ_setup_assistant](https://github.com/chvmp/champ_setup_assistant). Follow the instructions in the README to configure your own robot. The generated package contains:
 
@@ -124,7 +124,7 @@ Lightweight Version
          cd <your_ws>
          catkin_make
 
-### 3.2.Base Driver:
+### 3.2 Base Driver:
 
 This will run the quadruped controller and all sensor/hardware drivers:
 
@@ -147,7 +147,7 @@ Run real robot with a microcontroller:
     roslaunch <myrobot_config> bringup.launch lite:=true
 
 
-### 3.3. Creating a map:
+### 3.3 Creating a map:
 The base driver described in 3.2 must be running to run gmapping and move_base.
 
 Run gmapping package and move_base:
@@ -170,7 +170,7 @@ To start mapping:
       roscd <myrobot_config>/maps
       rosrun map_server map_saver
 
-### 3.4. Autonomous Navigation:
+### 3.4 Autonomous Navigation:
 
 The base driver described in 3.2 must be running to run amcl and move_base.
 
