@@ -24,6 +24,7 @@
     <include file="$(find champ_gazebo)/launch/spawn_robot.launch">
         <arg name="robot_name"         value="$(arg robot_name)"/>
         <arg name="lite"               value="$(arg lite)"/>
+        <arg name="ros_control_file"   value="$(arg ros_control_file)"/>
         <arg name="world_init_x"       value="$(arg world_init_x)" />
         <arg name="world_init_y"       value="$(arg world_init_y)" />
         <arg name="world_init_heading" value="$(arg world_init_heading)" />
