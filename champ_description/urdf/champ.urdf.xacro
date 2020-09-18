@@ -42,6 +42,12 @@
 
     <xacro:include filename="$(find champ_description)/urdf/accessories.urdf.xacro" />
 
+    <xacro:accessories 
+        base_name="base_link" 
+        base_length="${base_x_length}"
+        base_height="${base_z_length}"
+    />
+
     <xacro:champ_leg leg="lf"/>
     <xacro:champ_leg leg="lh"/>
     <xacro:champ_leg leg="rf"/>

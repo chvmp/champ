@@ -94,9 +94,6 @@
       </plugin>
     </sensor>
   </gazebo>
-  <gazebo reference="hokuyo_frame">
-    <material>Gazebo/FlatBlack</material>
-  </gazebo>
   <joint name="camera_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.25 0.0 -0.075"/>
     <parent link="base_link"/>
@@ -204,14 +201,14 @@
     <child link="imu_link"/>
   </joint>
   <!-- <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
-    <xacro:VLP-16 parent="base_link" name="velodyne" topic="velodyne_points" hz="10" samples="1024" gpu="false" lasers="16" max_range="100">
-        <origin xyz="0 0 ${base_z_length / 2}" rpy="0 0 0" />
-    </xacro:VLP-16>
+        <xacro:VLP-16 parent="${base_name}" name="velodyne" topic="velodyne_points" hz="10" samples="1024" gpu="false" lasers="16" max_range="100">
+            <origin xyz="0 0 ${base_height / 2}" rpy="0 0 0" />
+        </xacro:VLP-16>
 
-    <xacro:include filename="$(find champ_arm_description)/urdf/champ_arm.urdf.xacro" />
-    <xacro:champ_arm parent="base_link">
-        <origin xyz="0.07 0.0 ${base_z_length / 2}" rpy="0 0 0"/>
-    </xacro:champ_arm> -->
+        <xacro:include filename="$(find champ_arm_description)/urdf/champ_arm.urdf.xacro" />
+        <xacro:champ_arm parent="${base_name}">
+            <origin xyz="0.07 0.0 ${base_height / 2}" rpy="0 0 0"/>
+        </xacro:champ_arm> -->
   <link name="lf_hip_debug_link"/>
   <link name="lf_hip_link">
     <inertial>
