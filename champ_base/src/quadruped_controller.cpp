@@ -34,6 +34,7 @@ QuadrupedController::QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *p
 {
     std::string joint_control_topic = "joint_group_position_controller/command";
     std::string knee_orientation;
+    double loop_rate = 200.0;
 
     nh->getParam("gait/pantograph_leg",         gait_config_.pantograph_leg);
     nh->getParam("gait/max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
@@ -49,7 +50,8 @@ QuadrupedController::QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *p
     pnh->getParam("publish_joint_states",       publish_joint_states_);
     pnh->getParam("publish_joint_control",      publish_joint_control_);
     pnh->getParam("gazebo",                     in_gazebo_);
-    pnh->getParam("joint_controller_topic", joint_control_topic);
+    pnh->getParam("joint_controller_topic",     joint_control_topic);
+    pnh->getParam("loop_rate",                  loop_rate);
 
     cmd_vel_subscriber_ = nh->subscribe("cmd_vel/smooth", 1, &QuadrupedController::cmdVelCallback_, this);
     cmd_pose_subscriber_ = nh->subscribe("body_pose", 1, &QuadrupedController::cmdPoseCallback_, this);
@@ -75,7 +77,7 @@ QuadrupedController::QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *p
     champ::URDF::loadFromServer(base_, nh);
     joint_names_ = champ::URDF::getJointNames(nh);
 
-    loop_timer_ = pnh->createTimer(ros::Duration(0.005),
+    loop_timer_ = pnh->createTimer(ros::Duration(1 / loop_rate),
                                    &QuadrupedController::controlLoop_,
                                    this);
 
