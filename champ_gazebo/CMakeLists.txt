@@ -30,6 +30,8 @@ install(PROGRAMS
 include_directories(
   include
   ${champ_INCLUDE_DIRS}
+  ${champ_INCLUDE_DIRS}/champ/
+  ${champ_INCLUDE_DIRS}/champ/champ/
   ${catkin_INCLUDE_DIRS}
   ${GAZEBO_INCLUDE_DIRS}
 )
