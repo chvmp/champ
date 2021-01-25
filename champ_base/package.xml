@@ -13,6 +13,7 @@
   <exec_depend>roslaunch</exec_depend>
   <depend>roscpp</depend>
   <depend>rospy</depend>
+  <depend>champ</depend>
   <depend>champ_msgs</depend>
   <depend>visualization_msgs</depend>
   <depend>geometry_msgs</depend>
