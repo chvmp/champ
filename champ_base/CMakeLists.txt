@@ -62,7 +62,13 @@ endif()
 include_directories(
   include
   ${champ_INCLUDE_DIRS}
+  ${champ_INCLUDE_DIRS}/champ/
+  ${champ_INCLUDE_DIRS}/champ/champ/
   ${catkin_INCLUDE_DIRS}
+)
+
+install(DIRECTORY config
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 add_library(quadruped_controller src/quadruped_controller.cpp)
