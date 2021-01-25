@@ -22,7 +22,6 @@ catkin_package(
 
 install(PROGRAMS
   scripts/imu_sensor.py
-  scripts/joints_controller.py
   scripts/odometry_tf.py
   scripts/odometry.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -47,4 +46,12 @@ install(TARGETS
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY launch config
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(DIRECTORY worlds/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/worlds
 )

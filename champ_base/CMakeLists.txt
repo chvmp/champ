@@ -65,6 +65,10 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+install(DIRECTORY config
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
 add_library(quadruped_controller src/quadruped_controller.cpp)
 add_library(message_relay src/message_relay.cpp)
 add_library(state_estimation src/state_estimation.cpp)
