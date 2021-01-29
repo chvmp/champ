@@ -128,6 +128,8 @@ void QuadrupedController::cmdPoseCallback_(const geometry_msgs::Pose::ConstPtr& 
     req_pose_.orientation.pitch = pitch;
     req_pose_.orientation.yaw = yaw;
 
+    req_pose_.position.x = msg->position.x;
+    req_pose_.position.y = msg->position.y;
     req_pose_.position.z = msg->position.z +  gait_config_.nominal_height;
 }
 
