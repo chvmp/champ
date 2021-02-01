@@ -78,7 +78,7 @@ void StateEstimation::synchronized_callback_(const sensor_msgs::JointStateConstP
 
     float current_joint_positions[12];
 
-    for(size_t i = 0; i < 12; i++)
+    for(size_t i = 0; i < joints_msg->name.size(); i++)
     {
         std::vector<std::string>::iterator itr = std::find(joint_names_.begin(), joint_names_.end(), joints_msg->name[i]);
 
