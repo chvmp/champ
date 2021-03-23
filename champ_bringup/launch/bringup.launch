@@ -16,6 +16,7 @@
     <arg name="publish_joint_control"  default="true" />
     <arg name="publish_foot_contacts"  default="true" />
     <arg name="close_loop_odom"        default="false" />
+    <arg name="orientation_from_imu"   default="$(arg gazebo)" />
 
     <group ns="$(arg robot_name)">
         <param name="tf_prefix" value="$(arg robot_name)"/>
@@ -59,6 +60,7 @@
         <!-- ==================== STATE ESTIMATION ==================== -->
         <node pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen">
             <param name="close_loop_odom" value="$(arg close_loop_odom)" />
+            <param name="orientation_from_imu" value="$(arg orientation_from_imu)" />
         </node>
 
         <node pkg="robot_localization" type="ekf_localization_node" name="base_to_footprint_ekf"> 
