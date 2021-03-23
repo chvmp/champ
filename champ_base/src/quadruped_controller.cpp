@@ -27,9 +27,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <quadruped_controller.h>
 
+champ::PhaseGenerator::Time rosTimeToChampTime(const ros::Time& time)
+{
+  return time.toNSec() / 1000ul;
+}
+
 QuadrupedController::QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *pnh):
     body_controller_(base_),
-    leg_controller_(base_),
+    leg_controller_(base_, rosTimeToChampTime(ros::Time::now())),
     kinematics_(base_)
 {
     std::string joint_control_topic = "joint_group_position_controller/command";
@@ -91,7 +96,7 @@ void QuadrupedController::controlLoop_(const ros::TimerEvent& event)
     bool foot_contacts[4];
 
     body_controller_.poseCommand(target_foot_positions, req_pose_);
-    leg_controller_.velocityCommand(target_foot_positions, req_vel_);
+    leg_controller_.velocityCommand(target_foot_positions, req_vel_, rosTimeToChampTime(ros::Time::now()));
     kinematics_.inverse(target_joint_positions, target_foot_positions);
     
     for(size_t i = 0; i < 4; i++)
