@@ -187,7 +187,7 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
     base_.getFootPositions(current_foot_positions_);
 
     visualization_msgs::MarkerArray marker_array;
-    float robot_height = 0.0;
+    float robot_height = 0.0, all_height = 0.0;
     int foot_in_contact = 0;
 
     for(size_t i = 0; i < 4; i++)
@@ -198,6 +198,13 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
             robot_height += current_foot_positions_[i].Z();
             foot_in_contact++;
         }
+        all_height += current_foot_positions_[i].Z();
+    }
+
+    if (foot_in_contact == 0)
+    {
+      robot_height = all_height;
+      foot_in_contact = 4;
     }
 
 	if(foot_publisher_.getNumSubscribers())
