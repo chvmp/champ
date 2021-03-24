@@ -93,7 +93,6 @@ class StateEstimation
     std::string odom_frame_;
     std::string base_footprint_frame_;
     std::string base_link_frame_;
-    bool close_loop_odom_;
     bool orientation_from_imu_;
 
     void publishFootprintToOdom_(const ros::TimerEvent& event);

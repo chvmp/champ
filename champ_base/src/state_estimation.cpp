@@ -27,8 +27,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <state_estimation.h>
 
+champ::Odometry::Time rosTimeToChampTime(const ros::Time& time)
+{
+  return time.toNSec() / 1000ul;
+}
+
 StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
-    odometry_(base_)
+    odometry_(base_, rosTimeToChampTime(ros::Time::now()))
 {
     joint_states_subscriber_.subscribe(*nh, "joint_states", 1);
     foot_contacts_subscriber_ .subscribe(*nh, "foot_contacts", 1);
@@ -42,7 +47,6 @@ StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
 
     nh->getParam("links_map/base", base_name_);
     nh->getParam("gait/odom_scaler", gait_config_.odom_scaler);
-    pnh->getParam("close_loop_odom", close_loop_odom_);
     pnh->param("orientation_from_imu", orientation_from_imu_, false);
 
     if (orientation_from_imu_)
@@ -105,7 +109,7 @@ void StateEstimation::imu_callback_(const sensor_msgs::ImuConstPtr& msg)
 
 void StateEstimation::publishFootprintToOdom_(const ros::TimerEvent& event)
 {
-    odometry_.getVelocities(current_velocities_, close_loop_odom_);
+    odometry_.getVelocities(current_velocities_, rosTimeToChampTime(ros::Time::now()));
 
     ros::Time current_time = ros::Time::now();
 

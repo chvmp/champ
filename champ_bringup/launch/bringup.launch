@@ -59,7 +59,6 @@
 
         <!-- ==================== STATE ESTIMATION ==================== -->
         <node pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen">
-            <param name="close_loop_odom" value="$(arg close_loop_odom)" />
             <param name="orientation_from_imu" value="$(arg orientation_from_imu)" />
         </node>
 
