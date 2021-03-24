@@ -99,14 +99,6 @@ void QuadrupedController::controlLoop_(const ros::TimerEvent& event)
     leg_controller_.velocityCommand(target_foot_positions, req_vel_, rosTimeToChampTime(ros::Time::now()));
     kinematics_.inverse(target_joint_positions, target_foot_positions);
     
-    for(size_t i = 0; i < 4; i++)
-    {
-        if(base_.legs[i]->gait_phase())
-            foot_contacts[i] = 1;
-        else
-            foot_contacts[i] = 0;
-    }
-
     publishFootContacts_(foot_contacts);
     publishJoints_(target_joint_positions);
 }
@@ -187,7 +179,10 @@ void QuadrupedController::publishFootContacts_(bool foot_contacts[4])
 
         for(size_t i = 0; i < 4; i++)
         {
-            contacts_msg.contacts[i] = foot_contacts[i];
+            //This is only published when there's no feedback on the robot
+            //that a leg is in contact with the ground
+            //For such cases, we use the stance phase in the gait for foot contacts
+            contacts_msg.contacts[i] = base_.legs[i]->gait_phase();
         }
 
         foot_contacts_publisher_.publish(contacts_msg);

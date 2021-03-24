@@ -98,7 +98,7 @@ void StateEstimation::synchronized_callback_(const sensor_msgs::JointStateConstP
 
     for(size_t i = 0; i < 4; i++)
     {
-        base_.legs[i]->gait_phase(contacts_msg->contacts[i]);
+        base_.legs[i]->in_contact(contacts_msg->contacts[i]);
     }
 }
 
@@ -202,16 +202,16 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
     visualization_msgs::MarkerArray marker_array;
     float robot_height = 0.0, all_height = 0.0;
     int foot_in_contact = 0;
-    geometry::Transformation touchingFeet[4];
+    geometry::Transformation touching_feet[4];
     bool no_contact = false;
 
     for(size_t i = 0; i < 4; i++)
     {
         marker_array.markers.push_back(createMarker_(current_foot_positions_[i], i, base_link_frame_));
-        if(base_.legs[i]->gait_phase())
+        if(base_.legs[i]->in_contact())
         {
             robot_height += current_foot_positions_[i].Z();
-            touchingFeet[foot_in_contact] = current_foot_positions_[i];
+            touching_feet[foot_in_contact] = current_foot_positions_[i];
             foot_in_contact++;
         }
         all_height += current_foot_positions_[i].Z();
@@ -223,7 +223,7 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
       robot_height = all_height;
       foot_in_contact = 4;
       for (size_t i = 0; i < 4; ++i)
-        touchingFeet[i] = current_foot_positions_[i];
+        touching_feet[i] = current_foot_positions_[i];
     }
 
 	if(foot_publisher_.getNumSubscribers())
@@ -238,7 +238,7 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
     // if the IMU provides good orientation estimates, these can be used to
     // greatly improve body orientation; IMUs in Gazebo provide even non-noisy
     // orientation measurements!
-    tf2::Matrix3x3 imuRotation;
+    tf2::Matrix3x3 imu_rotation;
     if (orientation_from_imu_ && last_imu_ != nullptr)
     {
       tf2::Quaternion imu_orientation(
@@ -246,11 +246,11 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
         last_imu_->orientation.y,
         last_imu_->orientation.z,
         last_imu_->orientation.w);
-      imuRotation.setRotation(imu_orientation);
+      imu_rotation.setRotation(imu_orientation);
     }
     else
     {
-      imuRotation.setIdentity();
+      imu_rotation.setIdentity();
     }
 
     // handle the orientation estimation based on the number of touching legs
@@ -260,14 +260,14 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
         // any 3 touching legs and create a plane from them
 
         // create two vectors in base_footprint plane
-        x_axis = tf2::Vector3(touchingFeet[0].X() - touchingFeet[2].X(),
-                              touchingFeet[0].Y() - touchingFeet[2].Y(),
-                              touchingFeet[0].Z() - touchingFeet[2].Z());
+        x_axis = tf2::Vector3(touching_feet[0].X() - touching_feet[2].X(),
+                              touching_feet[0].Y() - touching_feet[2].Y(),
+                              touching_feet[0].Z() - touching_feet[2].Z());
         x_axis.normalize();
 
-        y_axis = tf2::Vector3(touchingFeet[1].X() - touchingFeet[2].X(),
-                              touchingFeet[1].Y() - touchingFeet[2].Y(),
-                              touchingFeet[1].Z() - touchingFeet[2].Z());
+        y_axis = tf2::Vector3(touching_feet[1].X() - touching_feet[2].X(),
+                              touching_feet[1].Y() - touching_feet[2].Y(),
+                              touching_feet[1].Z() - touching_feet[2].Z());
         y_axis.normalize();
 
         // compute normal vector of the plane
@@ -285,32 +285,32 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
     }
     else if (foot_in_contact == 2)
     {
-      if ((base_.legs[0]->gait_phase() && base_.legs[2]->gait_phase()) ||
-          (base_.legs[1]->gait_phase() && base_.legs[3]->gait_phase()))
+      if ((base_.legs[0]->in_contact() && base_.legs[2]->in_contact()) ||
+          (base_.legs[1]->in_contact() && base_.legs[3]->in_contact()))
       {
         // both left or both right legs are touching... let them define the x axis
-        x_axis = tf2::Vector3(touchingFeet[0].X() - touchingFeet[1].X(),
-                              touchingFeet[0].Y() - touchingFeet[1].Y(),
-                              touchingFeet[0].Z() - touchingFeet[1].Z());
+        x_axis = tf2::Vector3(touching_feet[0].X() - touching_feet[1].X(),
+                              touching_feet[0].Y() - touching_feet[1].Y(),
+                              touching_feet[0].Z() - touching_feet[1].Z());
         x_axis.normalize();
 
         // get Z from IMU as we do not have enough contact points to define a plane
-        z_axis = imuRotation.inverse() * z_axis;
+        z_axis = imu_rotation.inverse() * z_axis;
         y_axis = z_axis.cross(x_axis);
         // and find the last vector which just has to be perpendicular to y and z
         x_axis = y_axis.cross(z_axis);
       }
-      else if ((base_.legs[0]->gait_phase() && base_.legs[1]->gait_phase()) ||
-               (base_.legs[2]->gait_phase() && base_.legs[3]->gait_phase()))
+      else if ((base_.legs[0]->in_contact() && base_.legs[1]->in_contact()) ||
+               (base_.legs[2]->in_contact() && base_.legs[3]->in_contact()))
       {
         // both front or both hind legs are touching... let them define the y axis
-        y_axis = tf2::Vector3(touchingFeet[0].X() - touchingFeet[1].X(),
-                              touchingFeet[0].Y() - touchingFeet[1].Y(),
-                              touchingFeet[0].Z() - touchingFeet[1].Z());
+        y_axis = tf2::Vector3(touching_feet[0].X() - touching_feet[1].X(),
+                              touching_feet[0].Y() - touching_feet[1].Y(),
+                              touching_feet[0].Z() - touching_feet[1].Z());
         y_axis.normalize();
 
         // get Z from IMU as we do not have enough contact points to define a plane
-        z_axis = imuRotation.inverse() * z_axis;
+        z_axis = imu_rotation.inverse() * z_axis;
         x_axis = y_axis.cross(z_axis);
         // and find the last vector which just has to be perpendicular to x and z
         y_axis = z_axis.cross(x_axis);
@@ -320,13 +320,13 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
         // diagonal legs touching... axis1 is the line going through both touching
         // legs. axis2 is perpendicular to axis1 and z axis (from IMU)... then we
         // just rotate axis1 and axis2 to form a coordinate system
-        tf2::Vector3 axis1(touchingFeet[0].X() - touchingFeet[1].X(),
-                           touchingFeet[0].Y() - touchingFeet[1].Y(),
-                           touchingFeet[0].Z() - touchingFeet[1].Z());
+        tf2::Vector3 axis1(touching_feet[0].X() - touching_feet[1].X(),
+                           touching_feet[0].Y() - touching_feet[1].Y(),
+                           touching_feet[0].Z() - touching_feet[1].Z());
         axis1.normalize();
 
         // get Z from IMU as we do not have enough contact points to define a plane
-        z_axis = imuRotation.inverse() * z_axis;
+        z_axis = imu_rotation.inverse() * z_axis;
         auto axis2 = z_axis.cross(axis1);
         z_axis = axis1.cross(axis2);
 
@@ -339,7 +339,7 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
     else if (foot_in_contact == 1 || no_contact)
     {
       // Zero or one feet in contact... There isn't much to do, so just take Z from IMU
-      z_axis = imuRotation.inverse() * z_axis;
+      z_axis = imu_rotation.inverse() * z_axis;
 
       // project base_link 1,0,0 axis along the computed plane normal
       x_axis = (x_axis - (x_axis.dot(z_axis) * z_axis)).normalized();
