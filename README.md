@@ -38,7 +38,7 @@ If you want to use any of the pre-configured robots like Anymal, Mini Cheetah, o
 
     cd <your_ws>
     catkin_make
-    source <your_ws/>/devel/setup.bash
+    source <your_ws>/devel/setup.bash
 
 ## 2. Quick Start
 
