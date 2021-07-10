@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="standpipe">
+    <static>true</static>
+    <link name="standpipe">
+      <pose>0 0 0.1 0 1.57078 0</pose>
+      <collision name="collision_stopper">
+        <pose>0 0 0.22 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.069</radius>
+            <length>0.1</length>
+          </cylinder>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.5</mu>
+              <mu2>0.5</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <collision name="collision">
+        <pose>0 0 0.15 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://standpipe/meshes/standpipe.dae</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.5</mu>
+              <mu2>0.5</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <pose>0 0 0.15 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://standpipe/meshes/standpipe.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

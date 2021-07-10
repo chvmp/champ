@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="car_wheel">
+    <link name="link">
+      <pose>0 0 0.21682 0 1.5707 0</pose>
+      <inertial>
+        <mass>12</mass>
+        <inertia>
+          <ixx>0.167005283</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.167005283</iyy>
+          <iyz>0</iyz>
+          <izz>0.282065474</izz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.21682</radius>
+            <length>0.16116</length>
+          </cylinder>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+              <fdir1>0 0 1</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <min_depth>0.005</min_depth>
+              <kp>1e8</kp>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <pose>0 0 -0.08058 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://car_wheel/meshes/car_wheel.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

@@ -5,7 +5,13 @@
   <description>CHAMP Gazebo Package</description>
 
   <maintainer email="jimenojmm@gmail.com">Juan Miguel Jimeno</maintainer>
+  <maintainer email="pranshutople@gmail.com">Pranshu Tople</maintainer>
+
   <author>Juan Miguel Jimeno</author>
+  <author>Pranshu Tople</author>
+
+  <url type="website">https://www.youtube.com/PranshuTople</url>
+  <url type="emanual">https://youtu.be/C9quuhNuWIM</url>
 
   <license>BSD</license>
 
@@ -13,10 +19,17 @@
   <depend>roscpp</depend>
   <depend>champ</depend>
   <depend>champ_msgs</depend>
+  <depend>gazebo_ros</depend>
   <exec_depend>roslaunch</exec_depend>
-  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>gazebo</exec_depend>
   <exec_depend>gazebo_ros_pkgs</exec_depend>
   <exec_depend>gazebo_ros_control</exec_depend>
   <exec_depend>gazebo_plugins</exec_depend>
   <exec_depend>ros_controllers</exec_depend>
+
+  <export>
+    <gazebo_ros gazebo_media_path="${prefix}"/>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
+  </export>
+
 </package>

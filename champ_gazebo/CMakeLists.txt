@@ -9,6 +9,7 @@ find_package(gazebo REQUIRED)
 find_package(catkin 
   REQUIRED 
   COMPONENTS
+  gazebo_ros
   roscpp
   urdf
   champ
@@ -16,8 +17,9 @@ find_package(catkin
 )
 
 catkin_package(
-   CATKIN_DEPENDS 
+   CATKIN_DEPENDS gazebo_ros
    roscpp
+   DEPENDS gazebo
 )
 
 install(PROGRAMS

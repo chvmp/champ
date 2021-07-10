@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="truss">
+    <link name="link">
+      <inertial>
+        <mass>20.7307</mass>
+        <inertia>
+          <ixx>4.7978</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.4699</iyy>
+          <iyz>-0.002</iyz>
+          <izz>4.7978</izz>
+        </inertia>
+      </inertial> 
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://drc_practice_truss/meshes/truss.dae</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <bounce>
+            <restitution_coefficient>0.0</restitution_coefficient>
+            <threshold>100000</threshold>
+          </bounce>
+          <friction>
+            <ode>
+              <mu>10</mu>
+              <mu2>10</mu2>
+            </ode>
+          </friction>
+        </surface> 
+      </collision>
+
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://drc_practice_truss/meshes/truss.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <!-- visual used for measuring mesh size ->
+      <visual name="visual_box">
+        <transparency>0.5</transparency>
+        <geometry>
+          <box>
+            <size>0.25 1.5 0.25</size>
+          </box>
+        </geometry>
+      </visual>
+      -->
+    </link>
+  </model>
+</sdf>
