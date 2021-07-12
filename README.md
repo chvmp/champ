@@ -21,6 +21,26 @@ Tested on:
 - Ubuntu 16.04 (ROS Kinetic)
 - Ubuntu 18.04 (ROS Melodic)
 
+Video Tutorial:
+
+If you wish to watach a video tutorial of how you can implement this package, then please consider watching the below video. Just click on the thumbnail to redirect to the video. All the time stamps to specific points of video is also provided to save your time:
+
+<a href="https://youtu.be/C9quuhNuWIM">
+<img src="https://i.ytimg.com/vi/C9quuhNuWIM/hqdefault.jpg?s…AFwAcABBg==&rs=AOn4CLAbwQ49K3oNZsV6H3kPuVgdmrhC3g" width="400" alt="Champ/Spot Mini Simulation Tutorial"></a>
+
+| Description                           | Time Stamp                                        |
+|---------------------------------------|---------------------------------------------------|
+| Introduction to Champ Package         | [24:16](https://youtu.be/C9quuhNuWIM?t=1456)      |
+| Installing Champ Package              | [26:19](https://youtu.be/C9quuhNuWIM?t=1579)      |
+| Installing Robot Configuration Files  | [28:26](https://youtu.be/C9quuhNuWIM?t=1706)      |
+| Installing Robot Description Files    | [31:58](https://youtu.be/C9quuhNuWIM?t=1918)      |
+| Building the Package                  | [33:44](https://youtu.be/C9quuhNuWIM?t=2024)      |
+| Installing Hector Package             | [47:12](https://youtu.be/C9quuhNuWIM?t=2832)      |
+| Walking Demo in RViz                  | [55:29](https://youtu.be/C9quuhNuWIM?t=3329)      |
+| Controlling using Joystick            | [57:42](https://youtu.be/C9quuhNuWIM?t=3462)      |
+| Simulating in Gazebo                  | [59:50](https://youtu.be/C9quuhNuWIM?t=3590)      |
+| Autonomous Navigation Demo            | [1:04:41](https://youtu.be/C9quuhNuWIM?t=3881)    |
+
 ## 1. Installation
 
 ### 1.1 Clone and install all dependencies:
