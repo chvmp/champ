@@ -17,6 +17,9 @@
     <arg name="joint_controller_topic" default="joint_group_position_controller/command" />
     <arg name="hardware_connected"     default="false" />
 
+    <arg if="$(eval arg('robot_name') == '/')"  name="frame_prefix" value="" />
+    <arg unless="$(eval arg('robot_name') == '/')" name="frame_prefix" value="$(arg robot_name)/" />
+
     <include file="$(find champ_bringup)/launch/bringup.launch">
         <arg name="robot_name"             value="$(arg robot_name)"/>
         <arg name="base_frame"             value="$(arg base_frame)"/>
@@ -29,7 +32,7 @@
         <arg name="lite"                   value="$(arg lite)"/>
         <arg name="laser"                  value="$(arg laser)"/>
         <arg name="rviz"                   value="$(arg rviz)"/>
-        <arg name="rviz_ref_frame"         value="$(arg robot_name)/$(arg rviz_ref_frame)"/>
+        <arg name="rviz_ref_frame"         value="$(arg frame_prefix)$(arg rviz_ref_frame)"/>
         <arg name="joint_controller_topic" value="$(arg joint_controller_topic)" />
         <arg name="hardware_connected"     value="$(arg hardware_connected)" />
         <arg name="publish_foot_contacts"  value="$(arg publish_foot_contacts)" />
