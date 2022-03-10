@@ -15,6 +15,7 @@
     <arg name="hardware_connected"     default="false" />
     <arg name="publish_joint_control"  default="true" />
     <arg name="publish_foot_contacts"  default="true" />
+    <arg name="publish_odom_tf"        default="true" />
     <arg name="close_loop_odom"        default="false" />
 
     <group ns="$(arg robot_name)">
@@ -68,7 +69,7 @@
             <rosparam command="load" file="$(find champ_base)/config/ekf/base_to_footprint.yaml" />
         </node>
 
-        <node pkg="robot_localization" type="ekf_localization_node" name="footprint_to_odom_ekf"> 
+        <node if="$(arg publish_odom_tf)" pkg="robot_localization" type="ekf_localization_node" name="footprint_to_odom_ekf"> 
             <remap from="odometry/filtered" to="odom" />
             <rosparam command="load" file="$(find champ_base)/config/ekf/footprint_to_odom.yaml" />
         </node>
