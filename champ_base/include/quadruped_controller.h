@@ -84,8 +84,8 @@ class QuadrupedController: public rclcpp::Node
     void publishJoints_(float target_joints[12]);
     void publishFootContacts_(bool foot_contacts[4]);
 
-    void cmdVelCallback_(const geometry_msgs::msg::Twist::SharedPtr& msg);
-    void cmdPoseCallback_(const geometry_msgs::msg::Pose::SharedPtr& msg);
+    void cmdVelCallback_(const geometry_msgs::msg::Twist::SharedPtr msg);
+    void cmdPoseCallback_(const geometry_msgs::msg::Pose::SharedPtr msg);
 
     public:
         QuadrupedController();

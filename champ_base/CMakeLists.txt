@@ -66,33 +66,32 @@ install(DIRECTORY config
 
 add_library(quadruped_controller SHARED src/quadruped_controller.cpp)
 ament_target_dependencies(quadruped_controller ${dependencies})
-
-# add_library(message_relay src/message_relay.cpp)
-# add_library(state_estimation src/state_estimation.cpp)
-
 add_executable(quadruped_controller_node src/quadruped_controller_node.cpp)
 target_link_libraries(quadruped_controller_node quadruped_controller)
 ament_target_dependencies(quadruped_controller_node ${dependencies})
-# add_dependencies(quadruped_controller_node quadruped_controller)
 
 
-# add_executable(message_relay_node src/message_relay_node.cpp)
-# target_link_libraries(message_relay_node message_relay)
-# ament_target_dependencies(message_relay_node ${dependencies})
+add_library(message_relay SHARED src/message_relay.cpp)
+ament_target_dependencies(message_relay ${dependencies})
+add_executable(message_relay_node src/message_relay_node.cpp)
+target_link_libraries(message_relay_node message_relay)
+ament_target_dependencies(message_relay_node ${dependencies})
 
 
+add_library(state_estimation SHARED src/state_estimation.cpp)
+ament_target_dependencies(state_estimation ${dependencies})
+add_executable(state_estimation_node src/state_estimation_node.cpp)
+target_link_libraries(state_estimation_node state_estimation)
+ament_target_dependencies(state_estimation_node ${dependencies})
 
-# add_executable(state_estimation_node src/state_estimation_node.cpp)
-# target_link_libraries(state_estimation_node state_estimation)
-# ament_target_dependencies(state_estimation_node ${dependencies})
 
 install(TARGETS 
     quadruped_controller
     quadruped_controller_node
-    # message_relay
-    # message_relay_node
-    # state_estimation
-    # state_estimation_node
+    message_relay
+    message_relay_node
+    state_estimation
+    state_estimation_node
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin

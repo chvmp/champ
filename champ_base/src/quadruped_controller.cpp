@@ -60,9 +60,10 @@ QuadrupedController::QuadrupedController():
     this->get_parameter("joint_controller_topic",      joint_control_topic);
     this->get_parameter("loop_rate",                   loop_rate);
 
-    // this->cmd_vel_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel/smooth", 10, 
-    //                                 std::bind(&QuadrupedController::cmdVelCallback_, this,  std::placeholders::_1));
-    // cmd_pose_subscription_ = this->create_subscription<geometry_msgs::msg::Pose>("body_pose", 1,  std::bind(&QuadrupedController::cmdPoseCallback_, this,  std::placeholders::_1));
+    cmd_vel_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
+        "cmd_vel/smooth", 10, std::bind(&QuadrupedController::cmdVelCallback_, this,  std::placeholders::_1));
+    cmd_pose_subscription_ = this->create_subscription<geometry_msgs::msg::Pose>(
+        "body_pose", 1,  std::bind(&QuadrupedController::cmdPoseCallback_, this,  std::placeholders::_1));
     
     if(publish_joint_control_)
     {
@@ -105,14 +106,14 @@ void QuadrupedController::controlLoop_()
     publishJoints_(target_joint_positions);
 }
 
-void QuadrupedController::cmdVelCallback_(const geometry_msgs::msg::Twist::SharedPtr& msg)
+void QuadrupedController::cmdVelCallback_(const geometry_msgs::msg::Twist::SharedPtr msg)
 {
     req_vel_.linear.x = msg->linear.x;
     req_vel_.linear.y = msg->linear.y;
     req_vel_.angular.z = msg->angular.z;
 }
 
-void QuadrupedController::cmdPoseCallback_(const geometry_msgs::msg::Pose::SharedPtr& msg)
+void QuadrupedController::cmdPoseCallback_(const geometry_msgs::msg::Pose::SharedPtr msg)
 {   
     
     tf2::Quaternion quat(
