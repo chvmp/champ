@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+
+    <xacro:macro name="hokuyo_utm30lx_model" params="name parent *origin">
+      <joint name="${name}_joint" type="fixed">
+        <xacro:insert_block name="origin" />
+        <parent link="${parent}"/>
+        <child link="${name}_frame"/>
+      </joint>
+
+      <link name="${name}_frame">
+        <inertial>
+          <mass value="0.270" />
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <inertia ixx="2.632e-4" ixy="0" ixz="0" iyy="2.632e-4" iyz="0" izz="1.62e-4" />
+        </inertial>
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+          <mesh filename="file://$(find champ_description)/meshes/hokuyo_utm30lx/hokuyo_utm_30lx$(optenv TEST_SELF_FILTER).dae"/>
+        </geometry>
+        </visual>
+        <collision>
+          <origin xyz="0 0 -0.0115" rpy="0 0 0" />
+          <geometry>
+          <box size="0.058 0.058 0.087" />
+          <!--<mesh filename="package://hector_sensors_description/meshes/hokuyo_utm30lx/hokuyo_utm_30lx.stl"/>-->
+        </geometry>
+        </collision>
+      </link>
+    </xacro:macro>
+
+    <xacro:macro name="hokuyo_utm30lx" params="name parent *origin ros_topic update_rate ray_count min_angle max_angle">
+      <xacro:hokuyo_utm30lx_model name="${name}" parent="${parent}">
+        <xacro:insert_block name="origin" />
+      </xacro:hokuyo_utm30lx_model>
+
+      <gazebo reference="${name}_frame">
+        <sensor type="ray" name="${name}">
+          <always_on>true</always_on>
+          <update_rate>${update_rate}</update_rate>
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>false</visualize>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>${ray_count}</samples>
+                <resolution>1</resolution>
+                <min_angle>${min_angle * M_PI/180}</min_angle>
+                <max_angle>${max_angle * M_PI/180}</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.2</min>
+              <max>30.0</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.004</stddev>
+            </noise>
+          </ray>
+          <plugin name="gazebo_ros_${name}_controller" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+              <namespace>${name}_frame</namespace>
+              <argument>~/out:=${ros_topic}</argument>
+            </ros>
+            <!-- Set output to sensor_msgs/PointCloud to get same output type as gazebo_ros_block_laser -->
+            <output_type>sensor_msgs/LaserScan</output_type>
+            <!-- <frame_name> ommited, will default to block_laser_link -->
+      
+            <!-- min_intensity instead of hokuyoMinIntensity -->
+            <min_intensity>100.0</min_intensity>
+          </plugin>
+        </sensor>
+      </gazebo>
+    </xacro:macro>
+  
+    <xacro:macro name="hokuyo_utm30lx_gpu" params="name parent *origin ros_topic update_rate ray_count min_angle max_angle">
+      <xacro:hokuyo_utm30lx_model name="${name}" parent="${parent}">
+        <xacro:insert_block name="origin" />
+      </xacro:hokuyo_utm30lx_model>
+
+      <gazebo reference="${name}_frame">
+        <sensor type="gpu_ray" name="${name}">          
+          <update_rate>${update_rate}</update_rate>
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>false</visualize>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>${ray_count}</samples>
+                <resolution>1</resolution>
+                <min_angle>${min_angle * M_PI/180}</min_angle>
+                <max_angle>${max_angle * M_PI/180}</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.2</min>
+              <max>30.0</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.004</stddev>
+            </noise>
+          </ray>
+          <plugin name="gazebo_ros_${name}_controller" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+              <namespace>${name}_frame</namespace>
+              <argument>~/out:=${ros_topic}</argument>
+            </ros>
+            <!-- Set output to sensor_msgs/PointCloud to get same output type as gazebo_ros_block_laser -->
+            <output_type>sensor_msgs/LaserScan</output_type>
+            <!-- <frame_name> ommited, will default to block_laser_link -->
+      
+            <!-- min_intensity instead of hokuyoMinIntensity -->
+            <min_intensity>100.0</min_intensity>
+          </plugin>
+        </sensor>
+      </gazebo>
+    </xacro:macro>
+</robot>
+  

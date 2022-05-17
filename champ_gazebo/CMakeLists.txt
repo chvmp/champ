@@ -1,30 +1,30 @@
 
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(champ_gazebo)
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 find_package(gazebo REQUIRED)
 
-find_package(catkin 
-  REQUIRED 
-  COMPONENTS
-  roscpp
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(urdf REQUIRED)
+find_package(champ REQUIRED)
+find_package(champ_msgs REQUIRED)
+
+set(dependencies
+  rclcpp
   urdf
   champ
   champ_msgs
 )
 
-catkin_package(
-   CATKIN_DEPENDS 
-   roscpp
-)
 
 install(PROGRAMS
   scripts/imu_sensor.py
   scripts/odometry_tf.py
   scripts/odometry.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  DESTINATION bin
 )
 
 include_directories(
@@ -32,28 +32,29 @@ include_directories(
   ${champ_INCLUDE_DIRS}
   ${champ_INCLUDE_DIRS}/champ/
   ${champ_INCLUDE_DIRS}/champ/champ/
-  ${catkin_INCLUDE_DIRS}
   ${GAZEBO_INCLUDE_DIRS}
 )
 
-link_directories(${GAZEBO_LIBRARY_DIRS} ${catkin_LIBRARIES})
-list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
 
-add_executable(contact_sensor src/contact_sensor.cpp)
-target_link_libraries(contact_sensor ${GAZEBO_LIBRARIES} pthread ${catkin_LIBRARIES} )
-add_dependencies(contact_sensor ${catkin_EXPORTED_TARGETS})
+# add_executable(contact_sensor src/contact_sensor.cpp)
+# target_link_libraries(contact_sensor ${GAZEBO_LIBRARIES} pthread ${dependencies} )
+# ament_target_dependencies(contact_sensor ${dependencies})
 
-install(TARGETS 
-    contact_sensor
-    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+# install(TARGETS 
+#     contact_sensor
+#     ARCHIVE DESTINATION lib
+#     LIBRARY DESTINATION lib
+#     RUNTIME DESTINATION bin
+# )
 
-install(DIRECTORY launch config
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
 
-install(DIRECTORY worlds/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/worlds
-)
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY worlds DESTINATION share/${PROJECT_NAME})
+
+
+
+ament_export_include_directories(include)
+ament_export_dependencies(${dependencies})
+
+ament_package()

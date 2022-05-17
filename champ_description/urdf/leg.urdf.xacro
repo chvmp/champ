@@ -146,7 +146,7 @@
             <origin xyz="0 0 -${lower_leg_to_foot_distance}" rpy="0 0 0" />
         </joint>
 
-        <transmission name="${leg}_hip_joint_trans">
+        <!-- <transmission name="${leg}_hip_joint_trans">
             <type>transmission_interface/SimpleTransmission</type>
             <joint name="${leg}_hip_joint">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -177,6 +177,6 @@
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
-        </transmission>
+        </transmission> -->
     </xacro:macro>
 </robot>
