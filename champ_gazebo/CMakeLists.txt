@@ -11,12 +11,15 @@ find_package(rclcpp REQUIRED)
 find_package(urdf REQUIRED)
 find_package(champ REQUIRED)
 find_package(champ_msgs REQUIRED)
+find_package(gazebo_ros2_control REQUIRED)
+
 
 set(dependencies
   rclcpp
   urdf
   champ
   champ_msgs
+  gazebo_ros2_control
 )
 
 

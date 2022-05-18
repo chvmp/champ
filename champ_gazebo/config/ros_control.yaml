@@ -1,25 +1,35 @@
-"":
-  joint_states_controller:
-      type: joint_state_controller/JointStateController
-      publish_rate: 25
+controller_manager:
+  ros__parameters:
+    update_rate: 30  # Hz
+    joint_states_controller:
+        type: joint_state_broadcaster/JointStateBroadcaster
+    joint_group_position_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
 
-  joint_group_position_controller:
-      type: effort_controllers/JointTrajectoryController
-      joints:
-          - lf_hip_joint
-          - lf_upper_leg_joint
-          - lf_lower_leg_joint
-          - rf_hip_joint
-          - rf_upper_leg_joint
-          - rf_lower_leg_joint
-          - lh_hip_joint
-          - lh_upper_leg_joint
-          - lh_lower_leg_joint
-          - rh_hip_joint
-          - rh_upper_leg_joint
-          - rh_lower_leg_joint
+joint_group_position_controller:
+  ros__parameters:
+    type: joint_trajectory_controller/JointTrajectoryController
+    joints:
+        - lf_hip_joint
+        - lf_upper_leg_joint
+        - lf_lower_leg_joint
+        - rf_hip_joint
+        - rf_upper_leg_joint
+        - rf_lower_leg_joint
+        - lh_hip_joint
+        - lh_upper_leg_joint
+        - lh_lower_leg_joint
+        - rh_hip_joint
+        - rh_upper_leg_joint
+        - rh_lower_leg_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
 
-      gains:
+
+    gains:
         lf_hip_joint        : {p: 180, d: 0.9, i: 20}
         lf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
         lf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
@@ -32,3 +42,4 @@
         rh_hip_joint        : {p: 180, d: 0.9, i: 20}
         rh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
         rh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+

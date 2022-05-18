@@ -52,6 +52,11 @@ def generate_launch_description():
         "world_init_heading", default_value="0.6"
     )
 
+    pkg_share = launch_ros.substitutions.FindPackageShare(package="champ_description").find("champ_description")
+    default_model_path = os.path.join(pkg_share, "urdf/champ.urdf.xacro")
+
+    declare_description_path = DeclareLaunchArgument(name="description_path", default_value=default_model_path, description="Absolute path to robot urdf file")
+
     launch_dir = os.path.join(pkg_share, "launch")
     # Specify the actions
     start_gazebo_server_cmd = ExecuteProcess(
@@ -100,31 +105,20 @@ def generate_launch_description():
         ],
     )
 
-    control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        parameters=[robot_description, robot_controllers],
-        output={
-            "stdout": "screen",
-            "stderr": "screen",
-        },
+    robot_description = {"robot_description": Command(["xacro ", LaunchConfiguration("description_path")])}
+
+
+    load_joint_state_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
+             'joint_states_controller'],
+        output='screen'
     )
 
-    #  robot_description = {"robot_description": robot_description_content}
-
-    # robot_controllers = PathJoinSubstitution(
-    #     [
-    #         FindPackageShare(runtime_config_package),
-    #         "config",
-    #         controllers_file,
-    #     ]
-    # )
-
-    # robot_controller_spawner = Node(
-    #     package="controller_manager",
-    #     executable="spawner",
-    #     arguments=["joint_states_controller"],
-    # )
+    load_joint_trajectory_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
+             'joint_group_position_controller'],
+        output='screen'
+    )
 
     # joint_group_position_controller
     return LaunchDescription(
@@ -141,9 +135,11 @@ def generate_launch_description():
             declare_world_init_y,
             declare_world_init_z,
             declare_world_init_heading,
+            declare_description_path,
             start_gazebo_server_cmd,
             start_gazebo_client_cmd,
             start_gazebo_spawner_cmd,
-            robot_controller_spawner,
+            load_joint_state_controller,
+            load_joint_trajectory_controller
         ]
     )

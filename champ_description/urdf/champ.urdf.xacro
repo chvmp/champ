@@ -72,15 +72,11 @@
     </plugin>
     </gazebo>
 
-    <!-- <gazebo>
-        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <legacyModeNS>true</legacyModeNS>
-        </plugin>
-    </gazebo> -->
+
     <gazebo>
     <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-        <robot_param>robot_description</robot_param>
-        <robot_param_node>robot_state_publisher</robot_param_node>
+        <!-- <robot_param>/robot_description</robot_param>
+        <robot_param_node>/robot_state_publisher</robot_param_node> -->
         <parameters>$(find champ_gazebo)/config/ros_control.yaml</parameters>
       </plugin>
     </gazebo>
