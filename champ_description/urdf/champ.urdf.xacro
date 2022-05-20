@@ -5,6 +5,7 @@
     <material name="black"><color rgba="0.15 0.15 0.15 1.0" /></material>
     
     <link name="base_link">
+        
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
@@ -14,7 +15,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="file://$(find champ_description)/meshes/base.stl" scale="0.001 0.001 0.001" />
+                <mesh filename="file://$(find champ_description)/meshes/base_simple.stl" scale="0.001 0.001 0.001" />
             </geometry>
             <material name="black" />
         </visual>
@@ -34,26 +35,32 @@
         <origin rpy="0 0 0" xyz="0 0 0"/>  
     </joint>  
 
+    <!-- <link name="world"/>
+
+    <joint name="fixed" type="fixed">
+        <parent link="world"/>
+        <child link="base_link"/>
+      </joint> -->
     <gazebo reference="base_link">
         <material>Gazebo/FlatBlack</material>
     </gazebo>
 
     <xacro:include filename="$(find champ_description)/urdf/leg.urdf.xacro" />
 
-    <xacro:include filename="$(find champ_description)/urdf/accessories.urdf.xacro" />
+    <!-- <xacro:include filename="$(find champ_description)/urdf/accessories.urdf.xacro" /> -->
 
-    <xacro:accessories 
+    <!-- <xacro:accessories 
         base_name="base_link" 
         base_length="${base_x_length}"
         base_height="${base_z_length}"
-    />
+    /> -->
 
     <xacro:champ_leg leg="lf"/>
     <xacro:champ_leg leg="lh"/>
     <xacro:champ_leg leg="rf"/>
     <xacro:champ_leg leg="rh"/>
 
-    <gazebo>
+    <!-- <gazebo>
       <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
 
 
@@ -70,7 +77,7 @@
             <gaussian_noise>0.01</gaussian_noise>
     
     </plugin>
-    </gazebo>
+    </gazebo> -->
 
 
     <gazebo>
@@ -80,4 +87,11 @@
         <parameters>$(find champ_gazebo)/config/ros_control.yaml</parameters>
       </plugin>
     </gazebo>
+
+    <!-- <gazebo>
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+    
+            <parameters>$(find champ_gazebo)/config/ros_control.yaml</parameters>
+          </plugin>
+    </gazebo> -->
 </robot>

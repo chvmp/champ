@@ -97,15 +97,6 @@
                 <material name="black" />
             </visual>
         </link>
-        <gazebo reference="${leg}_lower_leg_link">
-            <kp>1000000.0</kp>
-            <kd>1.0</kd>
-            <mu1>0.8</mu1>
-            <mu2>0.8</mu2>
-            <maxVel>0.0</maxVel>
-            <minDepth>0.001</minDepth>
-            <material>Gazebo/FlatBlack</material>
-        </gazebo>
 
         <link name="${leg}_foot_link" />
 
@@ -149,27 +140,16 @@
         <ros2_control name="${leg}_hip" type="system">
 
             <hardware>
-              <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
             </hardware>
             
             <joint name="${leg}_hip_joint">
-                <!-- <command_interface name="effort">
-                    <param name="min">-1000</param>
-                    <param name="max">1000</param>
-                </command_interface>
-                <state_interface name="position"/>
-                <state_interface name="velocity"/>
-                <state_interface name="effort"/> -->
 
-                <command_interface name="position">
-                    <param name="min">-55</param>
-                    <param name="max">55</param>
-                </command_interface>
-                <state_interface name="position">
-                <param name="initial_value">1.0</param>
-                </state_interface>
+
+                <command_interface name="effort"/>
+                <state_interface name="position"/>
+
                 <state_interface name="velocity"/>
-                <state_interface name="effort"/>
 
             </joint>
         
@@ -178,19 +158,13 @@
         <ros2_control name="${leg}_upper_leg" type="system">
 
             <hardware>
-              <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
             </hardware>
             
             <joint name="${leg}_upper_leg_joint">
-                <command_interface name="position">
-                    <param name="min">-55</param>
-                    <param name="max">55</param>
-                </command_interface>
-                <state_interface name="position">
-                <param name="initial_value">1.0</param>
-                </state_interface>
+                <command_interface name="effort"/>
+                <state_interface name="position"/>
                 <state_interface name="velocity"/>
-                <state_interface name="effort"/>
             </joint>
         
         </ros2_control> 
@@ -202,15 +176,10 @@
             </hardware>
             
             <joint name="${leg}_lower_leg_joint">
-                <command_interface name="position">
-                    <param name="min">-55</param>
-                    <param name="max">55</param>
-                </command_interface>
-                <state_interface name="position">
-                <param name="initial_value">1.0</param>
-                </state_interface>
+                
+                <command_interface name="effort"/>
+                <state_interface name="position"/>
                 <state_interface name="velocity"/>
-                <state_interface name="effort"/>
             </joint>
         
         </ros2_control> 

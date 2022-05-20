@@ -4,7 +4,6 @@ project(champ_gazebo)
 
 add_compile_options(-std=c++14)
 
-find_package(gazebo REQUIRED)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)

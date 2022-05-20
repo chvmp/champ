@@ -27,10 +27,9 @@ def generate_launch_description():
     world_init_z = LaunchConfiguration("world_init_z")
     world_init_heading = LaunchConfiguration("world_init_heading")
 
-    pkg_share = launch_ros.substitutions.FindPackageShare(package="champ_gazebo").find(
+    gz_pkg_share = launch_ros.substitutions.FindPackageShare(package="champ_gazebo").find(
         "champ_gazebo"
     )
-    default_model_path = os.path.join(pkg_share, "urdf/champ.urdf.xacro")
 
     declare_robot_name = DeclareLaunchArgument("robot_name", default_value="champ")
     declare_use_sim_time = DeclareLaunchArgument("use_sim_time", default_value="True")
@@ -40,10 +39,10 @@ def generate_launch_description():
     declare_lite = DeclareLaunchArgument("lite", default_value="False")
     declare_ros_control_file = DeclareLaunchArgument(
         "ros_control_file",
-        default_value=os.path.join(pkg_share, "/config/ros_control.yaml"),
+        default_value=os.path.join(gz_pkg_share, "config/ros_control.yaml"),
     )
     declare_gazebo_world = DeclareLaunchArgument(
-        "gazebo_world", default_value=os.path.join(pkg_share, "/worlds/outdoor.world")
+        "gazebo_world", default_value=os.path.join(gz_pkg_share, "worlds/outdoor.world")
     )
     declare_world_init_x = DeclareLaunchArgument("world_init_x", default_value="0.0")
     declare_world_init_y = DeclareLaunchArgument("world_init_y", default_value="0.0")
@@ -56,6 +55,9 @@ def generate_launch_description():
     default_model_path = os.path.join(pkg_share, "urdf/champ.urdf.xacro")
 
     declare_description_path = DeclareLaunchArgument(name="description_path", default_value=default_model_path, description="Absolute path to robot urdf file")
+
+    print(os.path.join(gz_pkg_share, "worlds/world.sdf"))
+    print(gz_pkg_share)
 
     launch_dir = os.path.join(pkg_share, "launch")
     # Specify the actions
@@ -72,13 +74,19 @@ def generate_launch_description():
         output="screen",
     )
 
+
+    # Ignition gazebo
+    # start_gazebo_server_cmd = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(get_package_share_directory('ros_ign_gazebo'), 'launch', 'ign_gazebo.launch.py')),
+    #         launch_arguments={'ign_args': ('-r ', gazebo_world)}.items(),
+    # )
     start_gazebo_client_cmd = ExecuteProcess(
         condition=IfCondition(PythonExpression([" not ", headless])),
         cmd=["gzclient"],
         cwd=[launch_dir],
         output="screen",
     )
-
     start_gazebo_spawner_cmd = Node(
         package="gazebo_ros",
         executable="spawn_entity.py",
@@ -105,18 +113,34 @@ def generate_launch_description():
         ],
     )
 
+    # start_gazebo_spawner_cmd = Node(package='ros_ign_gazebo', executable='create',
+    #             arguments=[
+    #                 '-name', 'champ',
+    #                 '-x', '-3.2',
+    #                 '-z', '1.3',
+    #                 '-Y', '-1.4',
+    #                 '-topic', '/robot_description',
+    #                 ],
+    #             output='screen',
+    #             )
+
     robot_description = {"robot_description": Command(["xacro ", LaunchConfiguration("description_path")])}
 
 
     load_joint_state_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
              'joint_states_controller'],
-        output='screen'
+        output='screen',
     )
 
     load_joint_trajectory_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
              'joint_group_position_controller'],
+        output='screen'
+    )
+    load_joint_trajectory1_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
+             'joint_group_effort_controller'],
         output='screen'
     )
 
@@ -140,6 +164,7 @@ def generate_launch_description():
             start_gazebo_client_cmd,
             start_gazebo_spawner_cmd,
             load_joint_state_controller,
-            load_joint_trajectory_controller
+            load_joint_trajectory1_controller
+            # load_joint_trajectory1_controller
         ]
     )

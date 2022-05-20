@@ -24,32 +24,55 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-import rospy
+import array
+import os
+import sys
+
+import rclpy
 from champ_msgs.msg import Joints
+from rclpy.duration import Duration
+from rclpy.node import Node
 from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
-import rosparam
-import os, sys
 
-class JointsCalibratorRelay:
+class JointsCalibratorRelay(Node):
     def __init__(self):
-        rospy.Subscriber("joints_calibrator", JointState, self.joints_cmd_callback)
+        super().__init__('joints_calibrator_relay', automatically_declare_parameters_from_overrides=True)
+		
+        _ = self.create_subscription(JointState, "joints_calibrator", 
+                                                                  self.joints_cmd_callback, 1)
+		
+        # rospy.Subscriber("joints_calibrator", JointState, self.joints_cmd_callback)
 
-        joint_controller_topic = rospy.get_param('champ_controller/joint_controller_topic')
-        self.joint_minimal_pub = rospy.Publisher('cmd_joints', Joints, queue_size = 100)
-        self.joint_trajectory_pub = rospy.Publisher(joint_controller_topic, JointTrajectory, queue_size = 100)
+        # joint_controller_topic = rospy.get_param('champ_controller/joint_controller_topic')
+        # joint_controller_topic = self.get_parameter('champ_controller/joint_controller_topic').value
+
+        # TODO unhardcode
+        joint_controller_topic = "joint_group_effort_controller/joint_trajectory"
+        # self.joint_minimal_pub = rospy.Publisher('cmd_joints', Joints, queue_size = 100)
+        # self.joint_trajectory_pub = rospy.Publisher(joint_controller_topic, JointTrajectory, queue_size = 100)
+
+
+        self.joint_minimal_pub = self.create_publisher(Joints, "cmd_joints" ,100)
+        self.joint_trajectory_pub = self.create_publisher(JointTrajectory, joint_controller_topic ,100)
+        
 
         joints_map = [None,None,None,None]
-        joints_map[3] = rospy.get_param('/joints_map/left_front')
-        joints_map[2] = rospy.get_param('/joints_map/right_front')
-        joints_map[1] = rospy.get_param('/joints_map/left_hind')
-        joints_map[0] = rospy.get_param('/joints_map/right_hind')
+        # joints_map[3] = rospy.get_param('/joints_map/left_front')
+        # joints_map[2] = rospy.get_param('/joints_map/right_front')
+        # joints_map[1] = rospy.get_param('/joints_map/left_hind')
+        # joints_map[0] = rospy.get_param('/joints_map/right_hind')
+        joints_map[3] = self.get_parameter('left_front').value
+        joints_map[2] = self.get_parameter('right_front').value
+        joints_map[1] = self.get_parameter('left_hind').value
+        joints_map[0] = self.get_parameter('right_hind').value
 
         self.joint_names = []
         for leg in reversed(joints_map):
             for joint in leg:
-                self.joint_names.append(joint) 
+                if "foot" not in joint:
+                    self.joint_names.append(joint) 
 
     def joints_cmd_callback(self, joints):
         joint_minimal_msg = Joints()
@@ -62,14 +85,24 @@ class JointsCalibratorRelay:
         joint_trajectory_msg.joint_names = self.joint_names
 
         point = JointTrajectoryPoint()
-        point.time_from_start = rospy.Duration(1.0 / 60.0)
-        point.positions = joint_minimal_msg.position    
+        point.time_from_start = Duration(seconds=1.0 / 60.0).to_msg()
+        point.positions = array.array('d', joint_minimal_msg.position)   
         joint_trajectory_msg.points.append(point)
 
         self.joint_trajectory_pub.publish(joint_trajectory_msg)
 
 
-if __name__ == "__main__":
-    rospy.init_node('joints_calibrator_relay', anonymous=True)
+def main(args=None):
+    rclpy.init(args=args)
+
     j = JointsCalibratorRelay()
-    rospy.spin()
+
+    rclpy.spin(j)
+
+
+    j.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()

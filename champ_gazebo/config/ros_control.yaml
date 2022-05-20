@@ -1,13 +1,15 @@
 controller_manager:
   ros__parameters:
-    update_rate: 30  # Hz
+    use_sim_time: True
+    update_rate: 250  # Hz
     joint_states_controller:
-        type: joint_state_broadcaster/JointStateBroadcaster
-    joint_group_position_controller:
-        type: joint_trajectory_controller/JointTrajectoryController
+      type: joint_state_broadcaster/JointStateBroadcaster
+    joint_group_effort_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
 
-joint_group_position_controller:
+joint_group_effort_controller:
   ros__parameters:
+    use_sim_time: True
     type: joint_trajectory_controller/JointTrajectoryController
     joints:
         - lf_hip_joint
@@ -21,25 +23,77 @@ joint_group_position_controller:
         - lh_lower_leg_joint
         - rh_hip_joint
         - rh_upper_leg_joint
-        - rh_lower_leg_joint
+        - rh_lower_leg_joint 
     command_interfaces:
-      - position
+    # https://github.com/rohitmenon86/ros2_controllers on galactic possible only with that fork
+    # https://github.com/ros-controls/ros2_controllers/pull/225
+      - effort
     state_interfaces:
       - position
       - velocity
-
-
+    
     gains:
-        lf_hip_joint        : {p: 180, d: 0.9, i: 20}
-        lf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
-        lf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
-        rf_hip_joint        : {p: 180, d: 0.9, i: 20}
-        rf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
-        rf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
-        lh_hip_joint        : {p: 180, d: 0.9, i: 20}
-        lh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
-        lh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
-        rh_hip_joint        : {p: 180, d: 0.9, i: 20}
-        rh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
-        rh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+      lf_hip_joint        : {p: 37.5, d: 0.3, i: 0.0}
+      lf_upper_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
+      lf_lower_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
+      rf_hip_joint        : {p: 37.5, d: 0.3, i: 0.0}
+      rf_upper_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
+      rf_lower_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
+      lh_hip_joint        : {p: 37.5, d: 0.3, i: 0.0}
+      lh_upper_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
+      lh_lower_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
+      rh_hip_joint        : {p: 37.5, d: 0.3, i: 0.0}
+      rh_upper_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
+      rh_lower_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
+    # state_publish_rate: 25.0 # Defaults to 50
+    # action_monitor_rate: 10.0 # Defaults to 20
+    # open_loop_control: true
+    # allow_integration_in_goal_trajectories: true
+    # constraints:
+    #   stopped_velocity_tolerance: 0.01 # Defaults to 0.01
+    #   goal_time: 0.0 # Defaults to 0.0 (start immediately)
+
+# joint_group_position_controller:
+#   ros__parameters:
+#     use_sim_time: True
+#     type: joint_trajectory_controller/JointTrajectoryController
+#     joints:
+#         - lf_hip_joint
+#         - lf_upper_leg_joint
+#         - lf_lower_leg_joint
+#         - rf_hip_joint
+#         - rf_upper_leg_joint
+#         - rf_lower_leg_joint
+#         - lh_hip_joint
+#         - lh_upper_leg_joint
+#         - lh_lower_leg_joint
+#         - rh_hip_joint
+#         - rh_upper_leg_joint
+#         - rh_lower_leg_joint 
+#     command_interfaces:
+#       - position
+#     state_interfaces:
+#       - position
+#       - velocity
+    
+#     # state_publish_rate: 25.0 # Defaults to 50
+#     # action_monitor_rate: 10.0 # Defaults to 20
+#     open_loop_control: true
+#     allow_integration_in_goal_trajectories: true
+#     constraints:
+#       stopped_velocity_tolerance: 0.01 # Defaults to 0.01
+#       goal_time: 0.0 # Defaults to 0.0 (start immediately)
+    # gains:
+    #     lf_hip_joint        : {p: 180, d: 0.9, i: 20}
+    #     lf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+    #     lf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+    #     rf_hip_joint        : {p: 180, d: 0.9, i: 20}
+    #     rf_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+    #     rf_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+    #     lh_hip_joint        : {p: 180, d: 0.9, i: 20}
+    #     lh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+    #     lh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
+    #     rh_hip_joint        : {p: 180, d: 0.9, i: 20}
+    #     rh_upper_leg_joint  : {p: 180, d: 0.9, i: 20}
+    #     rh_lower_leg_joint  : {p: 180, d: 0.9, i: 20}
 
