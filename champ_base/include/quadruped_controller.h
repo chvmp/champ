@@ -61,7 +61,8 @@ class QuadrupedController: public rclcpp::Node
     rclcpp::Publisher<champ_msgs::msg::ContactsStamped>::SharedPtr foot_contacts_publisher_;
 
     rclcpp::TimerBase::SharedPtr loop_timer_;
-
+    rclcpp::Clock clock_;
+    
     champ::Velocities req_vel_;
     champ::Pose req_pose_;
 

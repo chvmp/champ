@@ -164,7 +164,7 @@ def generate_launch_description():
             start_gazebo_client_cmd,
             start_gazebo_spawner_cmd,
             load_joint_state_controller,
-            load_joint_trajectory1_controller
             # load_joint_trajectory1_controller
+            load_joint_trajectory1_controller
         ]
     )

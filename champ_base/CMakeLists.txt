@@ -96,6 +96,14 @@ install(TARGETS
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
+
+
+install(TARGETS 
+    quadruped_controller_node
+    message_relay_node
+    state_estimation_node
+    DESTINATION lib/${PROJECT_NAME}
+)
 ament_export_include_directories(include)
 ament_export_dependencies(${dependencies})
 

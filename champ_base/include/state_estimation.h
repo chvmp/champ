@@ -83,6 +83,8 @@ class StateEstimation: public rclcpp::Node
 
     rclcpp::Time last_vel_time_;
     rclcpp::Time last_sync_time_;
+    rclcpp::Clock clock_;
+    
     sensor_msgs::msg::Imu::SharedPtr last_imu_;
 
     champ::GaitConfig gait_config_;
@@ -100,8 +102,8 @@ class StateEstimation: public rclcpp::Node
 
     void publishFootprintToOdom_();
     void publishBaseToFootprint_();
-    void synchronized_callback_(const sensor_msgs::msg::JointState::ConstSharedPtr joints_msg, 
-                                const champ_msgs::msg::ContactsStamped::ConstSharedPtr contacts_msg);
+    void synchronized_callback_(const std::shared_ptr<sensor_msgs::msg::JointState const>& joints_msg, 
+                                const std::shared_ptr<champ_msgs::msg::ContactsStamped const>& contacts_msg);
     void imu_callback_(const sensor_msgs::msg::Imu::SharedPtr msg);
 
     visualization_msgs::msg::Marker createMarker_(geometry::Transformation foot_pos, int id, std::string frame_id);

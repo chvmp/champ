@@ -34,25 +34,36 @@ champ::PhaseGenerator::Time rosTimeToChampTime(const rclcpp::Time& time)
 }
 
 QuadrupedController::QuadrupedController():
-    Node("quadruped_controller_node"),
+    Node("quadruped_controller_node",rclcpp::NodeOptions()
+                        .allow_undeclared_parameters(true)
+                        .automatically_declare_parameters_from_overrides(true)),
+    clock_(rclcpp::Clock()),
     body_controller_(base_),
-    leg_controller_(base_, rosTimeToChampTime(this->get_clock()->now())),
+    leg_controller_(base_, rosTimeToChampTime(clock_.now())),
     kinematics_(base_)
 {
     std::string joint_control_topic = "joint_group_position_controller/command";
     std::string knee_orientation;
     double loop_rate = 200.0;
 
-    this->get_parameter("gait/pantograph_leg",         gait_config_.pantograph_leg);
-    this->get_parameter("gait/max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
-    this->get_parameter("gait/max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
-    this->get_parameter("gait/max_angular_velocity_z", gait_config_.max_angular_velocity_z);
-    this->get_parameter("gait/com_x_translation",      gait_config_.com_x_translation);
-    this->get_parameter("gait/swing_height",           gait_config_.swing_height);
-    this->get_parameter("gait/stance_depth",           gait_config_.stance_depth);
-    this->get_parameter("gait/stance_duration",        gait_config_.stance_duration);
-    this->get_parameter("gait/nominal_height",         gait_config_.nominal_height);
-    this->get_parameter("gait/knee_orientation",       knee_orientation);
+    // this->declare_parameter<bool>("publish_joint_control", true);
+    // this->declare_parameter<bool>("publish_joint_states", true);
+    // this->declare_parameter<bool>("publish_foot_contacts", true);
+    // this->declare_parameter<bool>("gazebo", true);
+    // this->declare_parameter<std::string>("joint_controller_topic", joint_control_topic);
+    // this->declare_parameter<double>("loop_rate", loop_rate);
+    
+    // this->declare_parameter<std::vector<std::string>>("links_map.left_front", {});
+    this->get_parameter("gait.pantograph_leg",         gait_config_.pantograph_leg);
+    this->get_parameter("gait.max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
+    this->get_parameter("gait.max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
+    this->get_parameter("gait.max_angular_velocity_z", gait_config_.max_angular_velocity_z);
+    this->get_parameter("gait.com_x_translation",      gait_config_.com_x_translation);
+    this->get_parameter("gait.swing_height",           gait_config_.swing_height);
+    this->get_parameter("gait.stance_depth",           gait_config_.stance_depth);
+    this->get_parameter("gait.stance_duration",        gait_config_.stance_duration);
+    this->get_parameter("gait.nominal_height",         gait_config_.nominal_height);
+    this->get_parameter("gait.knee_orientation",       knee_orientation);
     this->get_parameter("publish_foot_contacts",       publish_foot_contacts_);
     this->get_parameter("publish_joint_states",        publish_joint_states_);
     this->get_parameter("publish_joint_control",       publish_joint_control_);
@@ -99,9 +110,26 @@ void QuadrupedController::controlLoop_()
     bool foot_contacts[4];
 
     body_controller_.poseCommand(target_foot_positions, req_pose_);
-    leg_controller_.velocityCommand(target_foot_positions, req_vel_, rosTimeToChampTime(this->get_clock()->now()));
+
+    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, "Positions");
+    std::string s1;
+    for (auto foot: target_foot_positions){
+        s1.append(std::to_string(foot.X()) + " ");
+        
+    }
+    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, s1.c_str());
+
+    leg_controller_.velocityCommand(target_foot_positions, req_vel_, rosTimeToChampTime(clock_.now()));
     kinematics_.inverse(target_joint_positions, target_foot_positions);
-    
+
+    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, "Joints");
+    std::string s2;
+    for (auto joint: target_joint_positions){
+        
+        s2.append(std::to_string(joint) + " ");
+    }
+    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, s2.c_str());
+
     publishFootContacts_(foot_contacts);
     publishJoints_(target_joint_positions);
 }
@@ -137,10 +165,14 @@ void QuadrupedController::cmdPoseCallback_(const geometry_msgs::msg::Pose::Share
 
 void QuadrupedController::publishJoints_(float target_joints[12])
 {
+    // RCLCPP_INFO(this->get_logger(), std::to_string(publish_joint_control_).c_str());
+        
     if(publish_joint_control_)
     {
+        // RCLCPP_INFO(this->get_logger(), "joint");
+        
         trajectory_msgs::msg::JointTrajectory joints_cmd_msg;
-        joints_cmd_msg.header.stamp = this->get_clock()->now();
+        joints_cmd_msg.header.stamp = clock_.now();
         joints_cmd_msg.joint_names = joint_names_;
 
         trajectory_msgs::msg::JointTrajectoryPoint point;
@@ -160,7 +192,7 @@ void QuadrupedController::publishJoints_(float target_joints[12])
     {
         sensor_msgs::msg::JointState joints_msg;
 
-        joints_msg.header.stamp = this->get_clock()->now();
+        joints_msg.header.stamp = clock_.now();
         joints_msg.name.resize(joint_names_.size());
         joints_msg.position.resize(joint_names_.size());
         joints_msg.name = joint_names_;
@@ -176,20 +208,26 @@ void QuadrupedController::publishJoints_(float target_joints[12])
 
 void QuadrupedController::publishFootContacts_(bool foot_contacts[4])
 {
+    // RCLCPP_INFO(this->get_logger(), "foot1");
+        
     if(publish_foot_contacts_ && !in_gazebo_)
     {
-        champ_msgs::msg::ContactsStamped contacts_msg;
-        contacts_msg.header.stamp = this->get_clock()->now();
-        contacts_msg.contacts.resize(4);
+        // RCLCPP_INFO(this->get_logger(), "foot2");
 
-        for(size_t i = 0; i < 4; i++)
+        champ_msgs::msg::ContactsStamped contacts_msg;
+        contacts_msg.header.stamp = clock_.now();
+        contacts_msg.contacts.resize(4);
+        
+        std::string s2;
+       for(size_t i = 0; i < 4; i++)
         {
             //This is only published when there's no feedback on the robot
             //that a leg is in contact with the ground
             //For such cases, we use the stance phase in the gait for foot contacts
             contacts_msg.contacts[i] = base_.legs[i]->gait_phase();
+            s2.append(std::to_string(contacts_msg.contacts[i]) + " ");
         }
-
+         RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, s2.c_str());
         foot_contacts_publisher_->publish(contacts_msg);
     }
 }

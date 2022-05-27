@@ -47,20 +47,20 @@
 
     <xacro:include filename="$(find champ_description)/urdf/leg.urdf.xacro" />
 
-    <!-- <xacro:include filename="$(find champ_description)/urdf/accessories.urdf.xacro" /> -->
+    <xacro:include filename="$(find champ_description)/urdf/accessories.urdf.xacro" />
 
-    <!-- <xacro:accessories 
+    <xacro:accessories 
         base_name="base_link" 
         base_length="${base_x_length}"
         base_height="${base_z_length}"
-    /> -->
+    />
 
     <xacro:champ_leg leg="lf"/>
     <xacro:champ_leg leg="lh"/>
     <xacro:champ_leg leg="rf"/>
     <xacro:champ_leg leg="rh"/>
 
-    <!-- <gazebo>
+    <gazebo>
       <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
 
 
@@ -77,13 +77,12 @@
             <gaussian_noise>0.01</gaussian_noise>
     
     </plugin>
-    </gazebo> -->
+    </gazebo>
 
 
     <gazebo>
     <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-        <!-- <robot_param>/robot_description</robot_param>
-        <robot_param_node>/robot_state_publisher</robot_param_node> -->
+
         <parameters>$(find champ_gazebo)/config/ros_control.yaml</parameters>
       </plugin>
     </gazebo>

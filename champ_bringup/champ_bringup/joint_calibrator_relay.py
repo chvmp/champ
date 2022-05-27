@@ -63,10 +63,10 @@ class JointsCalibratorRelay(Node):
         # joints_map[2] = rospy.get_param('/joints_map/right_front')
         # joints_map[1] = rospy.get_param('/joints_map/left_hind')
         # joints_map[0] = rospy.get_param('/joints_map/right_hind')
-        joints_map[3] = self.get_parameter('left_front').value
-        joints_map[2] = self.get_parameter('right_front').value
-        joints_map[1] = self.get_parameter('left_hind').value
-        joints_map[0] = self.get_parameter('right_hind').value
+        joints_map[3] = self.get_parameter('joints_map.left_front').value
+        joints_map[2] = self.get_parameter('joints_map.right_front').value
+        joints_map[1] = self.get_parameter('joints_map.left_hind').value
+        joints_map[0] = self.get_parameter('joints_map.right_hind').value
 
         self.joint_names = []
         for leg in reversed(joints_map):
