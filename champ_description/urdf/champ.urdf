@@ -11,13 +11,13 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://champ_description/meshes/base.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="$(find champ_description)/meshes/base.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://champ_description/meshes/base.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="$(find champ_description)/meshes/base.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -51,7 +51,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hector_sensors_description/meshes/hokuyo_utm30lx/hokuyo_utm_30lx.dae"/>
+        <mesh filename="$(find champ_description)/meshes/hokuyo_utm_30lx.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -88,10 +88,15 @@
           <stddev>0.004</stddev>
         </noise>
       </ray>
-      <plugin filename="libgazebo_ros_laser.so" name="gazebo_ros_hokuyo_controller">
-        <topicName>scan</topicName>
-        <frameName>hokuyo_frame</frameName>
+
+      <plugin name="ackermann_scan" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>hokuyo_frame</frame_name>
       </plugin>
+
     </sensor>
   </gazebo>
   <joint name="camera_joint" type="fixed">
@@ -108,7 +113,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hector_sensors_description/meshes/asus_camera/asus_camera_simple.dae"/>
+        <mesh filename="$(find champ_description)/meshes/asus_camera_simple.dae"/>
       </geometry>
     </visual>
     <!--        
@@ -122,7 +127,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://hector_sensors_description/meshes/asus_camera/asus_camera_simple.dae"/>
+        <mesh filename="$(find champ_description)/meshes/asus_camera_simple.dae"/>
       </geometry>
     </collision>
   </link>
@@ -779,4 +784,3 @@
     </plugin>
   </gazebo>
 </robot>
-

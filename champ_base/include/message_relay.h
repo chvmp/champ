@@ -28,38 +28,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MESSAGE_RELAY_H
 #define QUADRUPED_CONTROLLER_H
 
-#include "ros/ros.h"
+#include "rclcpp/rclcpp.hpp"
 
-#include <champ_msgs/Joints.h>
-#include <champ_msgs/Imu.h>
-#include <champ_msgs/Contacts.h>
-#include <champ_msgs/ContactsStamped.h>
+
+#include <champ_msgs/msg/joints.hpp>
+#include <champ_msgs/msg/imu.hpp>
+#include <champ_msgs/msg/contacts.hpp>
+#include <champ_msgs/msg/contacts_stamped.hpp>
 
 #include <champ/utils/urdf_loader.h>
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
-#include <nav_msgs/Odometry.h>
+#include <nav_msgs/msg/odometry.hpp>
 
-#include <sensor_msgs/JointState.h>
-#include <sensor_msgs/Imu.h>
-#include <sensor_msgs/MagneticField.h>
-#include <trajectory_msgs/JointTrajectory.h>
-#include <trajectory_msgs/JointTrajectoryPoint.h>
+#include <sensor_msgs/msg/joint_state.hpp>
+
+#include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/magnetic_field.hpp>
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
+#include <trajectory_msgs/msg/joint_trajectory_point.hpp>
+
 #include <tf2_ros/transform_broadcaster.h>
-#include <geometry_msgs/Quaternion.h>
+#include <geometry_msgs/msg/quaternion.hpp>
 
-class MessageRelay
+class MessageRelay: public rclcpp::Node
 {
-    ros::Subscriber imu_raw_subscriber_;
-    ros::Subscriber joints_raw_subscriber_;
-    ros::Subscriber foot_contacts_subscriber_;
 
-    ros::Publisher imu_publisher_;
-    ros::Publisher mag_publisher_;
-    ros::Publisher joint_states_publisher_;   
-    ros::Publisher joint_commands_publisher_;   
-    ros::Publisher foot_contacts_publisher_;
+    rclcpp::Subscription<champ_msgs::msg::Imu>::SharedPtr imu_raw_subscription_;
+    rclcpp::Subscription<champ_msgs::msg::Joints>::SharedPtr joints_raw_subscription_;
+    rclcpp::Subscription<champ_msgs::msg::Contacts>::SharedPtr foot_contacts_subscription_;
+    
+    rclcpp::Publisher<champ_msgs::msg::ContactsStamped>::SharedPtr foot_contacts_publisher_;
+    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_states_publisher_;
+    rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_commands_publisher_;
+    rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_publisher_;
+    rclcpp::Publisher<sensor_msgs::msg::MagneticField>::SharedPtr mag_publisher_;
 
     std::vector<std::string> joint_names_;
     std::string node_namespace_;
@@ -68,14 +72,14 @@ class MessageRelay
     bool in_gazebo_;
     bool has_imu_;
 
-    sensor_msgs::Imu imu_data_;
+    sensor_msgs::msg::Imu imu_data_;
 
-    void IMURawCallback_(const champ_msgs::Imu::ConstPtr& msg);
-    void jointStatesRawCallback_(const champ_msgs::Joints::ConstPtr& msg);
-    void footContactCallback_(const champ_msgs::Contacts::ConstPtr& msg);
+    void IMURawCallback_(const champ_msgs::msg::Imu::SharedPtr msg);
+    void jointStatesRawCallback_(const champ_msgs::msg::Joints::SharedPtr msg);
+    void footContactCallback_(const champ_msgs::msg::Contacts::SharedPtr msg);
 
     public:
-        MessageRelay(ros::NodeHandle *nh, ros::NodeHandle *pnh);
+        MessageRelay();
 };
 
 #endif

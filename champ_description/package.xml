@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>champ_description</name>
   <version>0.1.0</version>
   <description>CHAMP Description Package</description>
@@ -9,16 +9,23 @@
 
   <license>BSD</license>
   
-  <buildtool_depend>catkin</buildtool_depend>
-  <exec_depend>roslaunch</exec_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <build_depend>launch_ros</build_depend>
+
+  <exec_depend>launch_ros</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>joint_state_publisher</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
-  <exec_depend>rviz</exec_depend>
+  <exec_depend>rviz2</exec_depend>
   <exec_depend>gazebo_plugins</exec_depend>
   <exec_depend>hector_gazebo_plugins</exec_depend>
   <exec_depend>hector_sensors_description</exec_depend>
   <exec_depend>velodyne_gazebo_plugins</exec_depend>
+
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 
 </package>

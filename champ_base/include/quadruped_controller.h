@@ -28,37 +28,41 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef QUADRUPED_CONTROLLER_H
 #define QUADRUPED_CONTROLLER_H
 
-#include "ros/ros.h"
+#include "rclcpp/rclcpp.hpp"
 
-#include <champ_msgs/Joints.h>
-#include <champ_msgs/Pose.h>
-#include <champ_msgs/PointArray.h>
-#include <champ_msgs/ContactsStamped.h>
+#include <champ_msgs/msg/joints.hpp>
+#include <champ_msgs/msg/pose.hpp>
+#include <champ_msgs/msg/point_array.hpp>
+#include <champ_msgs/msg/contacts_stamped.hpp>
 
-#include <champ/utils/urdf_loader.h>
 #include <champ/body_controller/body_controller.h>
+#include <champ/utils/urdf_loader.h>
 #include <champ/leg_controller/leg_controller.h>
 #include <champ/kinematics/kinematics.h>
 
-#include <geometry_msgs/Twist.h>
-#include <geometry_msgs/Pose.h>
-#include "tf/transform_datatypes.h"
+#include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/pose.hpp>
+#include "tf2/transform_datatypes.h"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2/LinearMath/Matrix3x3.h"
 
-#include <sensor_msgs/JointState.h>
-#include <trajectory_msgs/JointTrajectory.h>
-#include <trajectory_msgs/JointTrajectoryPoint.h>
+#include <sensor_msgs/msg/joint_state.hpp>
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
+#include <trajectory_msgs/msg/joint_trajectory_point.hpp>
 
-class QuadrupedController
+class QuadrupedController: public rclcpp::Node
 {
-    ros::Subscriber cmd_vel_subscriber_;
-    ros::Subscriber cmd_pose_subscriber_;
+    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_subscription_;
+    rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr cmd_pose_subscription_;
     
-    ros::Publisher joint_states_publisher_;   
-    ros::Publisher joint_commands_publisher_;   
-    ros::Publisher foot_contacts_publisher_;
 
-    ros::Timer loop_timer_;
+    rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_commands_publisher_;
+    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_states_publisher_;
+    rclcpp::Publisher<champ_msgs::msg::ContactsStamped>::SharedPtr foot_contacts_publisher_;
 
+    rclcpp::TimerBase::SharedPtr loop_timer_;
+    rclcpp::Clock clock_;
+    
     champ::Velocities req_vel_;
     champ::Pose req_pose_;
 
@@ -76,16 +80,16 @@ class QuadrupedController
     bool publish_joint_control_;
     bool in_gazebo_;
 
-    void controlLoop_(const ros::TimerEvent& event);
+    void controlLoop_();
     
     void publishJoints_(float target_joints[12]);
     void publishFootContacts_(bool foot_contacts[4]);
 
-    void cmdVelCallback_(const geometry_msgs::Twist::ConstPtr& msg);
-    void cmdPoseCallback_(const geometry_msgs::Pose::ConstPtr& msg);
+    void cmdVelCallback_(const geometry_msgs::msg::Twist::SharedPtr msg);
+    void cmdPoseCallback_(const geometry_msgs::msg::Pose::SharedPtr msg);
 
     public:
-        QuadrupedController(ros::NodeHandle *nh, ros::NodeHandle *pnh);
+        QuadrupedController();
 };
 
 #endif

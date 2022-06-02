@@ -1,22 +1,28 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(champ_msgs)
 
-find_package(catkin REQUIRED COMPONENTS message_generation message_runtime std_msgs geometry_msgs)
+find_package(ament_cmake REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
-add_message_files(
-  DIRECTORY msg
-  FILES
-  Velocities.msg
-  PID.msg
-  Imu.msg
-  Point.msg
-  PointArray.msg
-  Joints.msg
-  Contacts.msg
-  ContactsStamped.msg
-  Pose.msg
-)
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/Velocities.msg"
+  "msg/PID.msg"
+  "msg/Imu.msg"
+  "msg/Point.msg"
+  "msg/PointArray.msg"
+  "msg/Joints.msg"
+  "msg/Contacts.msg"
+  "msg/ContactsStamped.msg"
+  "msg/Pose.msg"
+  DEPENDENCIES std_msgs geometry_msgs
+  )
 
-generate_messages(DEPENDENCIES std_msgs geometry_msgs)
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
 
-catkin_package(CATKIN_DEPENDS message_runtime std_msgs geometry_msgs)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()

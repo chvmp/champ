@@ -6,25 +6,25 @@
     <xacro:property name="upper_leg_to_lower_leg_distance" value="0.141" />
     <xacro:property name="lower_leg_to_foot_distance" value="0.141" />
 
-    <xacro:property name="hip_mesh_path" value="package://champ_description/meshes/hip.stl" />
+    <xacro:property name="hip_mesh_path" value="file://$(find champ_description)/meshes/hip.stl" />
     <xacro:property name="hip_mass" value="0.250" />
     <xacro:property name="hip_x_length" value="0.112" />
     <xacro:property name="hip_y_length" value="0.08" />
     <xacro:property name="hip_z_length" value="0.130" />
 
-    <xacro:property name="upper_leg_mesh_path" value="package://champ_description/meshes/upper_leg.stl" />
+    <xacro:property name="upper_leg_mesh_path" value="file://$(find champ_description)/meshes/upper_leg_simple.stl" />
     <xacro:property name="upper_leg_mass" value="0.125" />
     <xacro:property name="upper_leg_x_length" value="0.05" />
     <xacro:property name="upper_leg_y_length" value="0.03" />
     <xacro:property name="upper_leg_z_length" value="0.1905" />
 
-    <xacro:property name="lower_leg_mesh_path" value="package://champ_description/meshes/lower_leg.stl" />
+    <xacro:property name="lower_leg_mesh_path" value="file://$(find champ_description)/meshes/lower_leg_simple.stl" />
     <xacro:property name="lower_leg_mass" value="0.125" />
     <xacro:property name="lower_leg_x_length" value="0.039" />
     <xacro:property name="lower_leg_y_length" value="0.022" />
     <xacro:property name="lower_leg_z_length" value="0.156" />
 
-    <xacro:property name="base_mesh_path" value="package://champ_description/meshes/base.stl" />
+    <xacro:property name="base_mesh_path" value="file://$(find champ_description)/meshes/base_simple.stl" />
     <xacro:property name="base_mass" value="2.0" />
     <xacro:property name="base_x_length" value="0.5" />
     <xacro:property name="base_y_length" value="0.29" />

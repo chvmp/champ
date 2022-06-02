@@ -25,18 +25,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "ros/ros.h"
 #include "state_estimation.h"
 
 int main(int argc, char** argv )
 {
-    ros::init(argc, argv, "state_estimation_node");
-
-    ros::NodeHandle nh("");
-    ros::NodeHandle nh_private("~");
-    
-    StateEstimation state_estimator(&nh, &nh_private);
-    
-    ros::spin();
-    return 0;
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<StateEstimation>());
+  rclcpp::shutdown();
+  return 0;
 }

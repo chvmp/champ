@@ -5,6 +5,7 @@
     <material name="black"><color rgba="0.15 0.15 0.15 1.0" /></material>
     
     <link name="base_link">
+        
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
@@ -14,7 +15,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://champ_description/meshes/base.stl" scale="0.001 0.001 0.001" />
+                <mesh filename="file://$(find champ_description)/meshes/base_simple.stl" scale="0.001 0.001 0.001" />
             </geometry>
             <material name="black" />
         </visual>
@@ -34,6 +35,12 @@
         <origin rpy="0 0 0" xyz="0 0 0"/>  
     </joint>  
 
+    <!-- <link name="world"/>
+
+    <joint name="fixed" type="fixed">
+        <parent link="world"/>
+        <child link="base_link"/>
+      </joint> -->
     <gazebo reference="base_link">
         <material>Gazebo/FlatBlack</material>
     </gazebo>
@@ -55,20 +62,35 @@
 
     <gazebo>
       <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
-            <alwaysOn>true</alwaysOn>
-            <updateRate>10.0</updateRate>
-            <bodyName>base_link</bodyName>
-            <topicName>odom/ground_truth</topicName>
-            <gaussianNoise>0.01</gaussianNoise>
-            <frameName>world</frameName>
-            <xyzOffsets>0 0 0</xyzOffsets>
-            <rpyOffsets>0 0 0</rpyOffsets>
-        </plugin>
+
+
+            <ros>
+                <namespace>/demo</namespace>
+                <argument>odom:=odom/ground_truth</argument>
+            </ros>
+    
+            <body_name>base_link</body_name>
+            <frame_name>world</frame_name>
+            <update_rate>10.0</update_rate>
+            <xyz_offset>0 0 0</xyz_offset>
+            <rpy_offset>0 0 0</rpy_offset>
+            <gaussian_noise>0.01</gaussian_noise>
+    
+    </plugin>
     </gazebo>
 
+
     <gazebo>
-        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <legacyModeNS>true</legacyModeNS>
-        </plugin>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+
+        <parameters>$(find champ_gazebo)/config/ros_control.yaml</parameters>
+      </plugin>
     </gazebo>
+
+    <!-- <gazebo>
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+    
+            <parameters>$(find champ_gazebo)/config/ros_control.yaml</parameters>
+          </plugin>
+    </gazebo> -->
 </robot>

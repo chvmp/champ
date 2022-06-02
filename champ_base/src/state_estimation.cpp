@@ -27,36 +27,72 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <state_estimation.h>
 
-champ::Odometry::Time rosTimeToChampTime(const ros::Time& time)
+champ::Odometry::Time rosTimeToChampTime(const rclcpp::Time& time)
 {
-  return time.toNSec() / 1000ul;
+  return time.nanoseconds() / 1000.0;
 }
 
-StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
-    odometry_(base_, rosTimeToChampTime(ros::Time::now()))
+StateEstimation::StateEstimation():
+    Node("state_estimation_node",rclcpp::NodeOptions()
+                        .allow_undeclared_parameters(true)
+                        .automatically_declare_parameters_from_overrides(true)),
+    clock_(rclcpp::Clock()),
+    odometry_(base_, rosTimeToChampTime(clock_.now()))
 {
-    joint_states_subscriber_.subscribe(*nh, "joint_states", 1);
-    foot_contacts_subscriber_ .subscribe(*nh, "foot_contacts", 1);
+    // clock_ = rclcpp::Clock();
 
-    sync.reset(new Sync(SyncPolicy(10), joint_states_subscriber_, foot_contacts_subscriber_));
-    sync->registerCallback(boost::bind(&StateEstimation::synchronized_callback_, this, _1, _2));
+
+    last_vel_time_ = clock_.now();
+    last_sync_time_ = clock_.now();
+    base_broadcaster_ =
+      std::make_unique<tf2_ros::TransformBroadcaster>(*this);
+      
+    joint_states_subscriber_.subscribe(reinterpret_cast<rclcpp::Node*>(this),  "joint_states");
+    foot_contacts_subscriber_.subscribe(reinterpret_cast<rclcpp::Node*>(this), "foot_contacts");
+
+    this->sync = std::make_unique<Sync>(
+        SyncPolicy(10), 
+        this->joint_states_subscriber_, 
+        this->foot_contacts_subscriber_
+    );
     
-    footprint_to_odom_publisher_  = nh->advertise<nav_msgs::Odometry>("odom/raw", 1);
-    base_to_footprint_publisher_  = nh->advertise<geometry_msgs::PoseWithCovarianceStamped>("base_to_footprint_pose", 1);
-    foot_publisher_   = nh->advertise<visualization_msgs::MarkerArray>("foot", 1);
+    // Register callback functions
+    this->sync->registerCallback(
+        std::bind(
+            &StateEstimation::synchronized_callback_, 
+            this,
+            std::placeholders::_1, std::placeholders::_2
+        )
+    );
 
-    nh->getParam("links_map/base", base_name_);
-    nh->getParam("gait/odom_scaler", gait_config_.odom_scaler);
-    pnh->param("orientation_from_imu", orientation_from_imu_, false);
+    footprint_to_odom_publisher_ = this->create_publisher<nav_msgs::msg::Odometry>("odom/raw", 1);
+    base_to_footprint_publisher_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("base_to_footprint_pose", 1);
+    foot_publisher_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("foot", 1);
+
+    orientation_from_imu_ = false;
+
+    this->get_parameter("links_map.base",    base_name_);
+    this->get_parameter("gait.odom_scaler",  gait_config_.odom_scaler);
+    this->get_parameter("orientation_from_imu",  orientation_from_imu_);
+
+    this->get_parameter("gait.pantograph_leg",         gait_config_.pantograph_leg);
+    this->get_parameter("gait.max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
+    this->get_parameter("gait.max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
+    this->get_parameter("gait.max_angular_velocity_z", gait_config_.max_angular_velocity_z);
+    this->get_parameter("gait.com_x_translation",      gait_config_.com_x_translation);
+    this->get_parameter("gait.swing_height",           gait_config_.swing_height);
+    this->get_parameter("gait.stance_depth",           gait_config_.stance_depth);
+    this->get_parameter("gait.stance_duration",        gait_config_.stance_duration);
+    this->get_parameter("gait.nominal_height",         gait_config_.nominal_height);
 
     if (orientation_from_imu_)
-      imu_subscriber_ = nh->subscribe<sensor_msgs::Imu>("imu/data", 1, &StateEstimation::imu_callback_, this);
-
+      imu_subscriber_ = this->create_subscription<sensor_msgs::msg::Imu>(
+        "imu/data", 1, std::bind(&StateEstimation::imu_callback_, this,  std::placeholders::_1));
     base_.setGaitConfig(gait_config_);
-    champ::URDF::loadFromServer(base_, nh);
-    joint_names_ = champ::URDF::getJointNames(nh);
+    champ::URDF::loadFromServer(base_, this->get_node_parameters_interface());
+    joint_names_ = champ::URDF::getJointNames(this->get_node_parameters_interface());
 
-    node_namespace_ = ros::this_node::getNamespace();
+    node_namespace_ = this->get_namespace();
     if(node_namespace_.length() > 1)
     {
         node_namespace_.replace(0, 1, "");
@@ -71,25 +107,37 @@ StateEstimation::StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh):
     base_footprint_frame_ = node_namespace_ + "base_footprint";
     base_link_frame_ = node_namespace_ + base_name_;
 
-    odom_data_timer_ = pnh->createTimer(ros::Duration(0.02),
-                                        &StateEstimation::publishFootprintToOdom_, 
-                                        this);
+    std::chrono::milliseconds period(static_cast<int>(1000/50));
 
-    base_pose_timer_ = pnh->createTimer(ros::Duration(0.02),
-                                            &StateEstimation::publishBaseToFootprint_, 
-                                            this);
+    odom_data_timer_ = this->create_wall_timer(
+         std::chrono::duration_cast<std::chrono::milliseconds>(period),
+         std::bind(&StateEstimation::publishFootprintToOdom_, this));
+
+    base_pose_timer_ = this->create_wall_timer(
+         std::chrono::duration_cast<std::chrono::milliseconds>(period),
+         std::bind(&StateEstimation::publishBaseToFootprint_, this));
 }
 
-void StateEstimation::synchronized_callback_(const sensor_msgs::JointStateConstPtr& joints_msg, const champ_msgs::ContactsStampedConstPtr& contacts_msg)
+void StateEstimation::synchronized_callback_(const std::shared_ptr<sensor_msgs::msg::JointState const>& joints_msg, 
+                                const std::shared_ptr<champ_msgs::msg::ContactsStamped const>& contacts_msg)
 {
-    last_sync_time_ = ros::Time::now();
+
+    // RCLCPP_INFO(this->get_logger(),"yay");
+    last_sync_time_ = clock_.now();
 
     float current_joint_positions[12];
 
     for(size_t i = 0; i < joints_msg->name.size(); i++)
     {
-        std::vector<std::string>::iterator itr = std::find(joint_names_.begin(), joint_names_.end(), joints_msg->name[i]);
+      // RCLCPP_INFO(this->get_logger(),joints_msg->name[i].c_str());
 
+      // for (auto val: joint_names_){
+      //   RCLCPP_INFO(this->get_logger(),val.c_str());
+      // }
+      // RCLCPP_INFO(this->get_logger(),"\n\n");
+        std::vector<std::string>::iterator itr = std::find(joint_names_.begin(), joint_names_.end(), joints_msg->name[i]);
+        if (itr==joint_names_.end())
+           RCLCPP_INFO(this->get_logger(),"bruh");
         int index = std::distance(joint_names_.begin(), itr);
         current_joint_positions[index] = joints_msg->position[i];
     }
@@ -102,20 +150,22 @@ void StateEstimation::synchronized_callback_(const sensor_msgs::JointStateConstP
     }
 }
 
-void StateEstimation::imu_callback_(const sensor_msgs::ImuConstPtr& msg)
+void StateEstimation::imu_callback_(const sensor_msgs::msg::Imu::SharedPtr msg)
 {
   last_imu_ = msg;
 }
 
-void StateEstimation::publishFootprintToOdom_(const ros::TimerEvent& event)
+void StateEstimation::publishFootprintToOdom_()
 {
-    odometry_.getVelocities(current_velocities_, rosTimeToChampTime(ros::Time::now()));
+    odometry_.getVelocities(current_velocities_, rosTimeToChampTime(clock_.now()));
 
-    ros::Time current_time = ros::Time::now();
+    rclcpp::Time current_time = clock_.now();
 
-    double vel_dt = (current_time - last_vel_time_).toSec();
+    double vel_dt = (current_time - last_vel_time_).seconds();
     last_vel_time_ = current_time;
-
+    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0,("dt: " + std::to_string(vel_dt)).c_str());
+    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0,("vel: " + std::to_string(current_velocities_.angular.x)).c_str());
+    
     //rotate in the z axis
     //https://en.wikipedia.org/wiki/Rotation_matrix
     double delta_heading = current_velocities_.angular.z * vel_dt; 
@@ -131,7 +181,7 @@ void StateEstimation::publishFootprintToOdom_(const ros::TimerEvent& event)
     tf2::Quaternion odom_quat;
     odom_quat.setRPY(0, 0, heading_);
 
-    nav_msgs::Odometry odom;
+    nav_msgs::msg::Odometry odom;
     odom.header.stamp = current_time;
     odom.header.frame_id = odom_frame_;
     odom.child_frame_id = base_footprint_frame_;
@@ -161,17 +211,17 @@ void StateEstimation::publishFootprintToOdom_(const ros::TimerEvent& event)
     odom.twist.covariance[7] = 0.3;
     odom.twist.covariance[35] = 0.017;
     
-    footprint_to_odom_publisher_.publish(odom);
+    footprint_to_odom_publisher_->publish(odom);
 }
 
-visualization_msgs::Marker StateEstimation::createMarker_(geometry::Transformation foot_pos, int id, std::string frame_id)
+visualization_msgs::msg::Marker StateEstimation::createMarker_(geometry::Transformation foot_pos, int id, std::string frame_id)
 {
-    visualization_msgs::Marker foot_marker;
+    visualization_msgs::msg::Marker foot_marker;
 
     foot_marker.header.frame_id = frame_id;
 
-    foot_marker.type = visualization_msgs::Marker::SPHERE;
-    foot_marker.action = visualization_msgs::Marker::ADD;
+    foot_marker.type = visualization_msgs::msg::Marker::SPHERE;
+    foot_marker.action = visualization_msgs::msg::Marker::ADD;
     foot_marker.id = id;
 
     foot_marker.pose.position.x = foot_pos.X();
@@ -195,11 +245,11 @@ visualization_msgs::Marker StateEstimation::createMarker_(geometry::Transformati
     return foot_marker;
 }
 
-void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
+void StateEstimation::publishBaseToFootprint_()
 {
     base_.getFootPositions(current_foot_positions_);
 
-    visualization_msgs::MarkerArray marker_array;
+    visualization_msgs::msg::MarkerArray marker_array;
     float robot_height = 0.0, all_height = 0.0;
     int foot_in_contact = 0;
     geometry::Transformation touching_feet[4];
@@ -226,9 +276,9 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
         touching_feet[i] = current_foot_positions_[i];
     }
 
-	if(foot_publisher_.getNumSubscribers())
+	if(foot_publisher_->get_subscription_count())
     {
-        foot_publisher_.publish(marker_array);
+        foot_publisher_->publish(marker_array);
     }
 
     tf2::Vector3 x_axis(1, 0, 0);
@@ -356,9 +406,9 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
     rotationMatrix.getRotation(quaternion);
     quaternion.normalize();
 
-    geometry_msgs::PoseWithCovarianceStamped pose_msg;
+    geometry_msgs::msg::PoseWithCovarianceStamped pose_msg;
     pose_msg.header.frame_id = base_footprint_frame_;
-    pose_msg.header.stamp = ros::Time::now();
+    pose_msg.header.stamp = clock_.now();
 
     pose_msg.pose.covariance[0] = 0.001;
     pose_msg.pose.covariance[7] = 0.001;
@@ -376,5 +426,5 @@ void StateEstimation::publishBaseToFootprint_(const ros::TimerEvent& event)
     pose_msg.pose.pose.orientation.z = quaternion.z();
     pose_msg.pose.pose.orientation.w = -quaternion.w();
 
-    base_to_footprint_publisher_.publish(pose_msg);
+    base_to_footprint_publisher_->publish(pose_msg);
 }

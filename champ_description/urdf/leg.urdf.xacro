@@ -97,6 +97,7 @@
                 <material name="black" />
             </visual>
         </link>
+        
         <gazebo reference="${leg}_lower_leg_link">
             <kp>1000000.0</kp>
             <kd>1.0</kd>
@@ -108,6 +109,7 @@
         </gazebo>
 
         <link name="${leg}_foot_link" />
+        <!-- <link name="${leg}_foot_link_debug" /> -->
 
         <joint name="${leg}_debug_joint" type="fixed">
             <parent link="base_link" />
@@ -142,41 +144,61 @@
         <joint name="${leg}_foot_joint" type="fixed">
             <parent link="${leg}_lower_leg_link" />
             <child link="${leg}_foot_link" />
-            <!-- <origin xyz="0.00325 0 -${lower_leg_to_foot_distance}" rpy="0 0 0" /> -->
-            <origin xyz="0 0 -${lower_leg_to_foot_distance}" rpy="0 0 0" />
+            <origin xyz="0.00325 0 -${lower_leg_to_foot_distance}" rpy="0 0 0" />
+            <!-- <origin xyz="0 0 -${lower_leg_to_foot_distance}" rpy="0 0 0" /> -->
         </joint>
+        
+        <!-- <joint name="${leg}_debug_joint_foot" type="fixed">
+            <parent link="${leg}_foot_link" />
+            <child link="${leg}_foot_link_debug" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </joint> -->
 
-        <transmission name="${leg}_hip_joint_trans">
-            <type>transmission_interface/SimpleTransmission</type>
+        <ros2_control name="${leg}_hip" type="system">
+
+            <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+            
             <joint name="${leg}_hip_joint">
-                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-            </joint>
-            <actuator name="${leg}_hip_joint_motor">
-                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-                <mechanicalReduction>1</mechanicalReduction>
-            </actuator>
-        </transmission>
 
-        <transmission name="${leg}_upper_leg_joint_trans">
-            <type>transmission_interface/SimpleTransmission</type>
+
+                <command_interface name="effort"/>
+                <state_interface name="position"/>
+
+                <state_interface name="velocity"/>
+
+            </joint>
+        
+        </ros2_control> 
+        
+        <ros2_control name="${leg}_upper_leg" type="system">
+
+            <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+            
             <joint name="${leg}_upper_leg_joint">
-                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <command_interface name="effort"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
             </joint>
-            <actuator name="${leg}_upper_leg_joint_motor">
-                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-                <mechanicalReduction>1</mechanicalReduction>
-            </actuator>
-        </transmission>
+        
+        </ros2_control> 
 
-        <transmission name="${leg}_lower_leg_joint_trans">
-            <type>transmission_interface/SimpleTransmission</type>
+        <ros2_control name="${leg}_lower_leg" type="system">
+
+            <hardware>
+              <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+            
             <joint name="${leg}_lower_leg_joint">
-                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                
+                <command_interface name="effort"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
             </joint>
-            <actuator name="${leg}_lower_joint_motor">
-                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-                <mechanicalReduction>1</mechanicalReduction>
-            </actuator>
-        </transmission>
+        
+        </ros2_control> 
     </xacro:macro>
 </robot>

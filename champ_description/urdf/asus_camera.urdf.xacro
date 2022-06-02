@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+  
+    <!--
+     The asus_camera_model macro only adds the model, it does not also add
+     the openni gazebo plugin. See the 'asus_camera' macro below for that
+    -->
+    <xacro:macro name="asus_camera_model" params="name parent *origin">
+      <joint name="${name}_joint" type="fixed">
+        <xacro:insert_block name="origin" />
+        <parent link="${parent}"/>
+        <child link="${name}_link"/>
+      </joint>
+      
+      <link name="${name}_link">
+        <inertial>
+          <mass value="0.200" />
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <inertia ixx="5.8083e-4" ixy="0" ixz="0" iyy="3.0833e-5" iyz="0" izz="5.9083e-4" />
+        </inertial>
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="file://$(find champ_description)/meshes/asus_camera_simple.dae"/>
+          </geometry>
+        </visual>
+       <!--        
+       <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.035 0.185 0.025"/>
+          </geometry>
+        </collision>
+        -->
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="file://$(find champ_description)/meshes/asus_camera_simple.dae"/>
+          </geometry>
+        </collision>
+
+      </link>
+
+      <joint name="${name}_depth_joint" type="fixed">
+        <origin xyz="0.0 0.049 0.0" rpy="0 0 0" />
+        <parent link="${name}_link" />
+        <child link="${name}_depth_frame"/>
+      </joint>
+
+      <link name="${name}_depth_frame"/>
+
+      <joint name="${name}_depth_optical_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="${-M_PI/2} 0.0 ${-M_PI/2}" />
+        <parent link="${name}_depth_frame" />
+        <child link="${name}_depth_optical_frame"/>
+      </joint>
+
+      <link name="${name}_depth_optical_frame"/>
+
+      <joint name="${name}_rgb_joint" type="fixed">
+        <origin xyz="0.0 0.022 0.0" rpy="0 0 0" />
+        <parent link="${name}_link" />
+        <child link="${name}_rgb_frame"/>
+      </joint>
+
+      <link name="${name}_rgb_frame"/>
+
+      <joint name="${name}_rgb_optical_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="${-M_PI/2} 0.0 ${-M_PI/2}" />
+        <parent link="${name}_rgb_frame" />
+        <child link="${name}_rgb_optical_frame"/>
+      </joint>
+
+      <link name="${name}_rgb_optical_frame"/>
+    </xacro:macro>
+
+    <!--
+     The asus_camera macro only adds the model, and also adds
+     the openni gazebo plugin.
+    -->
+    <xacro:macro name="asus_camera" params="name parent *origin">
+      <xacro:asus_camera_model name="${name}" parent="${parent}">
+        <xacro:insert_block name="origin" />
+      </xacro:asus_camera_model>
+  
+      <!-- ASUS Xtion PRO camera for simulation -->
+      <gazebo reference="${name}_depth_frame">
+        <sensor type="depth" name="${name}">
+          <update_rate>20</update_rate>
+          <camera name="${name}_depth_frame_camera">
+            <horizontal_fov>${62.8 * M_PI/180.0}</horizontal_fov>
+            <image>
+              <format>R8G8B8</format>
+              <width>640</width>
+              <height>480</height>
+            </image>
+            <clip>
+              <near>0.5</near>
+              <far>9</far>
+            </clip>
+          </camera>
+
+          <!-- Set always_on only sensor, not on plugin -->
+          <always_on>1</always_on>
+
+          <!-- Set update_rate only sensor, not on plugin -->
+          <update_rate>30</update_rate>
+
+          
+          <plugin name="${name}_camera_controller" filename="libgazebo_ros_camera.so">
+            <ros>
+              <!-- <namespace>custom_ns</namespace> -->
+              <argument>custom_camera/image_raw:=${name}/rgb/image_raw</argument>
+              <argument>custom_camera/image_depth:=${name}/depth/image_raw</argument>
+              <argument>custom_camera/camera_info:=custom_camera/custom_info_raw</argument>
+              <argument>custom_camera/camera_info_depth:=${name}/depth/camera_info</argument>
+              <argument>custom_camera/points:=${name}/depth/points</argument>
+
+
+              
+            </ros>
+            <qos>
+              <topic name="/${name}/image_raw">
+                  <publisher>
+                      <reliability>reliable</reliability>
+                      <durability>volatile</durability>
+                      <history>keep_all</history>
+                      <deadline>123</deadline> <!-- milliseconds -->
+                      <lifespan>42</lifespan> <!-- milliseconds -->
+                      <liveliness>manual_by_topic</liveliness>
+                      <liveliness_lease_duration>1000</liveliness_lease_duration> <!-- milliseconds -->
+                  </publisher>
+                  <subscription>
+
+                      <reliability>reliable</reliability>
+                      <durability>volatile</durability>
+                      <history depth="3">keep_last</history>
+                  </subscription>
+              </topic>
+
+              <topic name="/${name}/depth/image_raw">
+                  <publisher>
+                      <reliability>reliable</reliability>
+                      <durability>volatile</durability>
+                      <history>keep_all</history>
+
+                  </publisher>
+                  <subscription>
+
+                      <reliability>reliable</reliability>
+                      <durability>volatile</durability>
+                      <history depth="3">keep_last</history>
+                  </subscription>
+              </topic>
+
+
+              <topic name="/${name}/depth/camera_info">
+                  <publisher>
+                      <reliability>reliable</reliability>
+                      <durability>volatile</durability>
+                      <history>keep_all</history>
+                      <deadline>123</deadline> <!-- milliseconds -->
+                      <lifespan>42</lifespan> <!-- milliseconds -->
+                      <liveliness>manual_by_topic</liveliness>
+                      <liveliness_lease_duration>1000</liveliness_lease_duration> <!-- milliseconds -->
+                  </publisher>
+                  <subscription>
+
+                      <reliability>reliable</reliability>
+                      <durability>volatile</durability>
+                      <history depth="3">keep_last</history>
+                  </subscription>
+              </topic>
+
+              <topic name="/${name}/camera_info">
+                  <publisher>
+                      <reliability>reliable</reliability>
+                      <durability>volatile</durability>
+                      <history>keep_all</history>
+                      <deadline>123</deadline> <!-- milliseconds -->
+                      <lifespan>42</lifespan> <!-- milliseconds -->
+                      <liveliness>manual_by_topic</liveliness>
+                      <liveliness_lease_duration>1000</liveliness_lease_duration> <!-- milliseconds -->
+                  </publisher>
+                  <subscription>
+
+                      <reliability>reliable</reliability>
+                      <durability>volatile</durability>
+                      <history depth="3">keep_last</history>
+                  </subscription>
+              </topic>
+              
+            </qos>
+            <!-- Set camera name. If empty, defaults to sensor name (i.e. "sensor_name") -->
+            <!-- <camera_name>custom_camera</camera_name> -->
+
+            <!-- Set TF frame name. If empty, defaults to link name (i.e. "link_name") -->
+            <frame_name>${name}_depth_optical_frame</frame_name>
+
+            <hack_baseline>0.07</hack_baseline>
+
+            <!-- No need to repeat distortion parameters or to set autoDistortion -->
+
+            <min_depth>0.001</min_depth>
+            <max_depth>20.0</max_depth>
+          </plugin>
+        </sensor>
+      </gazebo>
+    </xacro:macro>
+  </robot>
+  

@@ -1,13 +1,14 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(champ_bringup)
 
-find_package(catkin 
-    REQUIRED 
-    COMPONENTS 
+find_package(ament_cmake REQUIRED)
+
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+
+ament_python_install_package(${PROJECT_NAME})
+install(PROGRAMS
+  champ_bringup/joint_calibrator_relay.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
-catkin_package()
-
-install(DIRECTORY launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
+ament_package()

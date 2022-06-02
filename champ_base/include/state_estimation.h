@@ -28,48 +28,50 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef STATE_ESTIMATION_H
 #define STATE_ESTIMATION_H
 
-#include "ros/ros.h"
+#include "rclcpp/rclcpp.hpp"
 
-#include <champ_msgs/ContactsStamped.h>
+#include <champ_msgs/msg/contacts_stamped.hpp>
 
 #include <champ/odometry/odometry.h>
 #include <champ/utils/urdf_loader.h>
 
 #include <tf2/LinearMath/Quaternion.h>
-#include <nav_msgs/Odometry.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <nav_msgs/msg/odometry.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 
-#include <geometry_msgs/TransformStamped.h>
-#include <sensor_msgs/JointState.h>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
 
-#include <visualization_msgs/Marker.h>
-#include <visualization_msgs/MarkerArray.h>
+#include <visualization_msgs/msg/marker.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
-#include <sensor_msgs/Imu.h>
+#include <sensor_msgs/msg/imu.hpp>
 
-class StateEstimation
+class StateEstimation: public rclcpp::Node
 {
-    typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::JointState, champ_msgs::ContactsStamped> SyncPolicy;
+    typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::msg::JointState, champ_msgs::msg::ContactsStamped> SyncPolicy;
     typedef message_filters::Synchronizer<SyncPolicy> Sync;
-    boost::shared_ptr<Sync> sync;
+    std::unique_ptr<Sync> sync;
 
-    message_filters::Subscriber<sensor_msgs::JointState> joint_states_subscriber_;
-    message_filters::Subscriber<champ_msgs::ContactsStamped> foot_contacts_subscriber_;
-    ros::Subscriber imu_subscriber_;
+    message_filters::Subscriber<sensor_msgs::msg::JointState> joint_states_subscriber_;
+    message_filters::Subscriber<champ_msgs::msg::ContactsStamped> foot_contacts_subscriber_;
+    rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_subscriber_;
 
-    ros::Publisher footprint_to_odom_publisher_;
-    ros::Publisher base_to_footprint_publisher_;
-    ros::Publisher foot_publisher_;
 
-    tf2_ros::TransformBroadcaster base_broadcaster_;
+    rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr footprint_to_odom_publisher_;
+    rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr base_to_footprint_publisher_;
+    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr foot_publisher_;
+    
 
-    ros::Timer odom_data_timer_;
-    ros::Timer base_pose_timer_;
+    std::unique_ptr<tf2_ros::TransformBroadcaster> base_broadcaster_;
+    
+    rclcpp::TimerBase::SharedPtr odom_data_timer_;
+    rclcpp::TimerBase::SharedPtr base_pose_timer_;
 
     champ::Velocities current_velocities_;
     geometry::Transformation current_foot_positions_[4];
@@ -78,9 +80,12 @@ class StateEstimation
     float x_pos_;
     float y_pos_;
     float heading_;
-    ros::Time last_vel_time_;
-    ros::Time last_sync_time_;
-    sensor_msgs::ImuConstPtr last_imu_;
+
+    rclcpp::Time last_vel_time_;
+    rclcpp::Time last_sync_time_;
+    rclcpp::Clock clock_;
+    
+    sensor_msgs::msg::Imu::SharedPtr last_imu_;
 
     champ::GaitConfig gait_config_;
 
@@ -95,15 +100,16 @@ class StateEstimation
     std::string base_link_frame_;
     bool orientation_from_imu_;
 
-    void publishFootprintToOdom_(const ros::TimerEvent& event);
-    void publishBaseToFootprint_(const ros::TimerEvent& event);
-    void synchronized_callback_(const sensor_msgs::JointStateConstPtr&, const champ_msgs::ContactsStampedConstPtr&);
-    void imu_callback_(const sensor_msgs::ImuConstPtr&);
+    void publishFootprintToOdom_();
+    void publishBaseToFootprint_();
+    void synchronized_callback_(const std::shared_ptr<sensor_msgs::msg::JointState const>& joints_msg, 
+                                const std::shared_ptr<champ_msgs::msg::ContactsStamped const>& contacts_msg);
+    void imu_callback_(const sensor_msgs::msg::Imu::SharedPtr msg);
 
-    visualization_msgs::Marker createMarker_(geometry::Transformation foot_pos, int id, std::string frame_id);
+    visualization_msgs::msg::Marker createMarker_(geometry::Transformation foot_pos, int id, std::string frame_id);
 
     public:
-        StateEstimation(ros::NodeHandle *nh, ros::NodeHandle *pnh);
+        StateEstimation();
 };
 
 #endif
