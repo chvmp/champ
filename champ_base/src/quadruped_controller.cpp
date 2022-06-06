@@ -46,14 +46,6 @@ QuadrupedController::QuadrupedController():
     std::string knee_orientation;
     double loop_rate = 200.0;
 
-    // this->declare_parameter<bool>("publish_joint_control", true);
-    // this->declare_parameter<bool>("publish_joint_states", true);
-    // this->declare_parameter<bool>("publish_foot_contacts", true);
-    // this->declare_parameter<bool>("gazebo", true);
-    // this->declare_parameter<std::string>("joint_controller_topic", joint_control_topic);
-    // this->declare_parameter<double>("loop_rate", loop_rate);
-    
-    // this->declare_parameter<std::vector<std::string>>("links_map.left_front", {});
     this->get_parameter("gait.pantograph_leg",         gait_config_.pantograph_leg);
     this->get_parameter("gait.max_linear_velocity_x",  gait_config_.max_linear_velocity_x);
     this->get_parameter("gait.max_linear_velocity_y",  gait_config_.max_linear_velocity_y);
@@ -111,24 +103,8 @@ void QuadrupedController::controlLoop_()
 
     body_controller_.poseCommand(target_foot_positions, req_pose_);
 
-    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, "Positions");
-    std::string s1;
-    for (auto foot: target_foot_positions){
-        s1.append(std::to_string(foot.X()) + " ");
-        
-    }
-    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, s1.c_str());
-
     leg_controller_.velocityCommand(target_foot_positions, req_vel_, rosTimeToChampTime(clock_.now()));
     kinematics_.inverse(target_joint_positions, target_foot_positions);
-
-    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, "Joints");
-    std::string s2;
-    for (auto joint: target_joint_positions){
-        
-        s2.append(std::to_string(joint) + " ");
-    }
-    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, s2.c_str());
 
     publishFootContacts_(foot_contacts);
     publishJoints_(target_joint_positions);
@@ -164,15 +140,14 @@ void QuadrupedController::cmdPoseCallback_(const geometry_msgs::msg::Pose::Share
 }
 
 void QuadrupedController::publishJoints_(float target_joints[12])
-{
-    // RCLCPP_INFO(this->get_logger(), std::to_string(publish_joint_control_).c_str());
-        
+{   
     if(publish_joint_control_)
     {
-        // RCLCPP_INFO(this->get_logger(), "joint");
-        
         trajectory_msgs::msg::JointTrajectory joints_cmd_msg;
         joints_cmd_msg.header.stamp = clock_.now();
+        joints_cmd_msg.header.stamp.sec = 0;
+        joints_cmd_msg.header.stamp.nanosec = 0;
+        
         joints_cmd_msg.joint_names = joint_names_;
 
         trajectory_msgs::msg::JointTrajectoryPoint point;
@@ -193,6 +168,8 @@ void QuadrupedController::publishJoints_(float target_joints[12])
         sensor_msgs::msg::JointState joints_msg;
 
         joints_msg.header.stamp = clock_.now();
+        joints_msg.header.stamp.sec = 0;
+        joints_msg.header.stamp.nanosec = 0;
         joints_msg.name.resize(joint_names_.size());
         joints_msg.position.resize(joint_names_.size());
         joints_msg.name = joint_names_;
@@ -208,12 +185,8 @@ void QuadrupedController::publishJoints_(float target_joints[12])
 
 void QuadrupedController::publishFootContacts_(bool foot_contacts[4])
 {
-    // RCLCPP_INFO(this->get_logger(), "foot1");
-        
     if(publish_foot_contacts_ && !in_gazebo_)
     {
-        // RCLCPP_INFO(this->get_logger(), "foot2");
-
         champ_msgs::msg::ContactsStamped contacts_msg;
         contacts_msg.header.stamp = clock_.now();
         contacts_msg.contacts.resize(4);
@@ -227,7 +200,6 @@ void QuadrupedController::publishFootContacts_(bool foot_contacts[4])
             contacts_msg.contacts[i] = base_.legs[i]->gait_phase();
             s2.append(std::to_string(contacts_msg.contacts[i]) + " ");
         }
-         RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0, s2.c_str());
         foot_contacts_publisher_->publish(contacts_msg);
     }
 }

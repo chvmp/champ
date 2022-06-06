@@ -1,4 +1,3 @@
-
 import os
 
 import launch_ros
@@ -6,8 +5,11 @@ from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 
 from launch import LaunchDescription
-from launch.actions import (DeclareLaunchArgument, ExecuteProcess,
-                            IncludeLaunchDescription)
+from launch.actions import (
+    DeclareLaunchArgument,
+    ExecuteProcess,
+    IncludeLaunchDescription,
+)
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
@@ -15,51 +17,119 @@ from launch.substitutions import Command, LaunchConfiguration
 
 def generate_launch_description():
 
-    use_sim_time = LaunchConfiguration("use_sim_time")
-    description_path = LaunchConfiguration("description_path")
-    base_frame = 'base_link'
-
-    config_pkg_share = launch_ros.substitutions.FindPackageShare(package="champ_config").find("champ_config")
-    descr_pkg_share = launch_ros.substitutions.FindPackageShare(package="champ_description").find("champ_description")
+    config_pkg_share = launch_ros.substitutions.FindPackageShare(
+        package="champ_config"
+    ).find("champ_config")
+    descr_pkg_share = launch_ros.substitutions.FindPackageShare(
+        package="champ_description"
+    ).find("champ_description")
     joints_config = os.path.join(config_pkg_share, "config/joints/joints.yaml")
-    gait_config = os.path.join(config_pkg_share, 'config/gait/gait.yaml')
-    links_config = os.path.join(config_pkg_share, 'config/links/links.yaml')
+    gait_config = os.path.join(config_pkg_share, "config/gait/gait.yaml")
+    links_config = os.path.join(config_pkg_share, "config/links/links.yaml")
     default_model_path = os.path.join(descr_pkg_share, "urdf/champ.urdf.xacro")
 
-
-    declare_use_sim_time = DeclareLaunchArgument("use_sim_time", default_value="false", description="Use simulation (Gazebo) clock if true")
-    declare_description_path = DeclareLaunchArgument(name="description_path", default_value=default_model_path, description="Absolute path to robot urdf file")
-
-
-    # declare_description_path = DeclareLaunchArgument(name="description_path", default_value=default_model_path, description="Absolute path to robot urdf file")
-
-    description_ld = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('champ_description'), 'launch', 'description.launch.py')),
-            launch_arguments={'use_sim_time': use_sim_time,
-                              'description_path': description_path}.items(),
+    declare_use_sim_time = DeclareLaunchArgument(
+        "use_sim_time",
+        default_value="false",
+        description="Use simulation (Gazebo) clock if true",
+    )
+    declare_description_path = DeclareLaunchArgument(
+        name="description_path",
+        default_value=default_model_path,
+        description="Absolute path to robot urdf file",
     )
 
-    print(links_config)
+    declare_rviz = DeclareLaunchArgument(
+        "rviz", default_value="false", description="Launch rviz"
+    )
+    declare_rviz_ref_frame = DeclareLaunchArgument(
+        "rviz_ref_frame", default_value="odom", description="Rviz ref frame"
+    )
+    declare_robot_name = DeclareLaunchArgument(
+        "robot_name", default_value="/", description="Robot name"
+    )
+    declare_base_link_frame = DeclareLaunchArgument(
+        "base_link_frame", default_value="base_link", description="Base link frame"
+    )
+    declare_lite = DeclareLaunchArgument(
+        "lite", default_value="false", description="Lite"
+    )
+
+    declare_gazebo = DeclareLaunchArgument(
+        "gazebo", default_value="false", description="If in gazebo"
+    )
+    declare_has_imu = DeclareLaunchArgument(
+        "has_imu", default_value="true", description="If in gazebo"
+    )
+    declare_laser = DeclareLaunchArgument(
+        "laser", default_value="sim", description="Laser name"
+    )
+    declare_joint_controller_topic = DeclareLaunchArgument(
+        "joint_controller_topic",
+        default_value="joint_group_effort_controller/joint_trajectory",
+        description="Joint controller topic",
+    )
+    declare_hardware_connected = DeclareLaunchArgument(
+        "joint_hardware_connected",
+        default_value="false",
+        description="Whether hardware is connected",
+    )
+    declare_publish_joint_control = DeclareLaunchArgument(
+        "publish_joint_control",
+        default_value="true",
+        description="Publish joint control",
+    )
+    declare_publish_joint_states = DeclareLaunchArgument(
+        "publish_joint_states",
+        default_value="true",
+        description="Publish joint control",
+    )
+    declare_publish_foot_contacts = DeclareLaunchArgument(
+        "publish_foot_contacts",
+        default_value="true",
+        description="Publish foot contacts",
+    )
+    declare_publish_odom_tf = DeclareLaunchArgument(
+        "publish_odom_tf",
+        default_value="true",
+        description="Publish odom tf from cmd_vel estimation",
+    )
+    declare_close_loop_odom = DeclareLaunchArgument(
+        "close_loop_odom", default_value="false", description=""
+    )
+
+    
+    description_ld = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory("champ_description"),
+                "launch",
+                "description.launch.py",
+            )
+        ),
+        launch_arguments={
+            "use_sim_time": LaunchConfiguration("use_sim_time"),
+            "description_path": LaunchConfiguration("description_path"),
+        }.items(),
+    )
+
     quadruped_controller_node = Node(
         package="champ_base",
         executable="quadruped_controller_node",
         output="screen",
         # prefix=['xterm -e gdb -ex run --args'],
         parameters=[
-            {'use_sim_time': use_sim_time},
-            {'gazebo': False},
-            {'publish_joint_states': True},
-            {'publish_joint_control': True},
-            {'publish_foot_contacts': True},
-            {'joint_controller_topic': "joint_group_effort_controller/joint_trajectory"},
+            {"use_sim_time": LaunchConfiguration("use_sim_time")},
+            {"gazebo": LaunchConfiguration("gazebo")},
+            {"publish_joint_states": LaunchConfiguration("publish_joint_states")},
+            {"publish_joint_control": LaunchConfiguration("publish_joint_control")},
+            {"publish_foot_contacts": LaunchConfiguration("publish_foot_contacts")},
+            {"joint_controller_topic": LaunchConfiguration("joint_controller_topic")},
             links_config,
             joints_config,
-            gait_config
-            ],
-        remappings=[
-            ('/cmd_vel/smooth', '/cmd_vel')
-        ]
+            gait_config,
+        ],
+        remappings=[("/cmd_vel/smooth", "/cmd_vel")],
     )
 
     state_estimator_node = Node(
@@ -68,51 +138,73 @@ def generate_launch_description():
         output="screen",
         # prefix=['xterm -e gdb -ex run --args'],
         parameters=[
-            {'use_sim_time': use_sim_time},
-            {'orientation_from_imu': True},
+            {"use_sim_time": LaunchConfiguration("use_sim_time")},
+            {"orientation_from_imu": LaunchConfiguration("has_imu")},
             links_config,
             joints_config,
-            gait_config
-            ]
+            gait_config,
+        ],
     )
 
     base_to_footprint_ekf = Node(
-            package='robot_localization',
-            executable='ekf_node',
-            name='base_to_footprint_ekf',
-            output='screen',
-            parameters=[
-                {'base_link_frame': base_frame},
-                {'use_sim_time': use_sim_time},
-                os.path.join(get_package_share_directory("champ_base"), 'config', 'ekf', 'base_to_footprint.yaml'),],
-            remappings=[
-                ('odometry/filtered', 'odom/local')
-            ]
-           )
+        package="robot_localization",
+        executable="ekf_node",
+        name="base_to_footprint_ekf",
+        output="screen",
+        parameters=[
+            {"base_link_frame": LaunchConfiguration("base_link_frame")},
+            {"use_sim_time": LaunchConfiguration("use_sim_time")},
+            os.path.join(
+                get_package_share_directory("champ_base"),
+                "config",
+                "ekf",
+                "base_to_footprint.yaml",
+            ),
+        ],
+        remappings=[("odometry/filtered", "odom/local")],
+    )
 
     footprint_to_odom_ekf = Node(
-            package='robot_localization',
-            executable='ekf_node',
-            name='footprint_to_odom_ekf',
-            output='screen',
-            parameters=[
-                {'base_link_frame': base_frame},
-                {'use_sim_time': use_sim_time},
-                os.path.join(get_package_share_directory("champ_base"), 'config', 'ekf', 'footprint_to_odom.yaml')],
-            remappings=[
-                ('odometry/filtered', 'odom')
-            ]
-           )
-
+        package="robot_localization",
+        executable="ekf_node",
+        name="footprint_to_odom_ekf",
+        output="screen",
+        parameters=[
+            {"base_link_frame": LaunchConfiguration("base_link_frame")},
+            {"use_sim_time": LaunchConfiguration("use_sim_time")},
+            os.path.join(
+                get_package_share_directory("champ_base"),
+                "config",
+                "ekf",
+                "footprint_to_odom.yaml",
+            ),
+        ],
+        remappings=[("odometry/filtered", "odom")],
+    )
 
     return LaunchDescription(
         [
             declare_use_sim_time,
             declare_description_path,
+            declare_rviz,
+            declare_rviz_ref_frame,
+            declare_robot_name,
+            declare_base_link_frame,
+            declare_lite,
+            declare_gazebo,
+            declare_has_imu,
+            declare_laser,
+            declare_joint_controller_topic,
+            declare_hardware_connected,
+            declare_publish_joint_control,
+            declare_publish_joint_states,
+            declare_publish_foot_contacts,
+            declare_publish_odom_tf,
+            declare_close_loop_odom,
             description_ld,
             quadruped_controller_node,
             state_estimator_node,
             base_to_footprint_ekf,
-            footprint_to_odom_ekf
+            footprint_to_odom_ekf,
         ]
     )

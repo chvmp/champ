@@ -28,7 +28,7 @@ def generate_launch_description():
         executable="joint_calibrator_relay.py",
         output="screen",
         parameters=[
-            {'use_sim_time': use_sim_time},
+            # {'use_sim_time': use_sim_time},
             config
             ]
     )
@@ -38,13 +38,13 @@ def generate_launch_description():
         executable="joint_state_publisher_gui",
         
         parameters=[
-            {'use_sim_time': use_sim_time}
+            # {'use_sim_time': use_sim_time}
             ],
         remappings=[("joint_states", "joints_calibrator")],
     )
     return LaunchDescription(
         [
-            declare_use_sim_time,
+            # declare_use_sim_time,
             joint_state_publisher_gui_node,
             joints_calibrator_relay_node
         ]
