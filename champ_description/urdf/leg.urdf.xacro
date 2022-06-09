@@ -99,12 +99,11 @@
         </link>
         
         <gazebo reference="${leg}_lower_leg_link">
-            <kp>10000000.0</kp>
+            <kp>10000000000.0</kp>
             <kd>100.0</kd>
             <mu1>0.8</mu1>
             <mu2>0.8</mu2>
-            <maxVel>0.0</maxVel>
-            <minDepth>0.001</minDepth>
+            <minDepth>0.05</minDepth>
             <material>Gazebo/FlatBlack</material>
         </gazebo>
 

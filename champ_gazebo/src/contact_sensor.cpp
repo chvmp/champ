@@ -31,12 +31,10 @@ class ContactSensor: public rclcpp::Node
 	std::vector<std::string> foot_links_;
 	rclcpp::Publisher<champ_msgs::msg::ContactsStamped>::SharedPtr contacts_publisher_;
 	gazebo::transport::SubscriberPtr gazebo_sub;
-	rclcpp::Clock clock_;
     
 	public:
 		ContactSensor():
 			foot_contacts_ {false,false,false,false},
-			clock_(rclcpp::Clock()),
 			Node("contacts_sensor",rclcpp::NodeOptions()
                         .allow_undeclared_parameters(true)
                         .automatically_declare_parameters_from_overrides(true))
@@ -49,27 +47,12 @@ class ContactSensor: public rclcpp::Node
 			foot_links_.push_back(joint_names[10]);
 			foot_links_.push_back(joint_names[14]);
 
-			// contacts_publisher_ = nh->advertise<champ_msgs::msg::ContactsStamped>("foot_contacts", 10);
 			contacts_publisher_   = this->create_publisher<champ_msgs::msg::ContactsStamped>("foot_contacts", 10);
 			
 			gazebo::client::setup();
 			gazebo::transport::NodePtr node(new gazebo::transport::Node());
 			node->Init();
-			// auto manager = std::make_unique<gazebo::physics::ContactManager>();
-			// gazebo::physics::World world();
-			// manager->Init(gazebo)
-			// std::vector<std::string> collision_names(4,"");
-			// collision_names[0] = "champ::rh_lower_leg_link::rh_lower_leg_link_collision";
-			// collision_names[1] = "champ::lf_lower_leg_link::rh_lower_leg_link_collision";
-			// collision_names[2] = "champ::lh_lower_leg_link::rh_lower_leg_link_collision";
-			// collision_names[3] = "champ::rf_lower_leg_link::rh_lower_leg_link_collision";
 
-			// std::string topic =
-			// manager->CreateFilter(
-			// 	"~/physics/leg_contacts", collision_names);
-			
-			// this->dataPtr->audioContactsSub = this->node->Subscribe(topic,
-			// &Link::OnCollision, this);
 			gazebo_sub = node->Subscribe("~/physics/contacts", &ContactSensor::gazeboCallback_, this);
 		}
 
@@ -101,7 +84,7 @@ class ContactSensor: public rclcpp::Node
 		void publishContacts()	
 		{
 			champ_msgs::msg::ContactsStamped contacts_msg;
-			contacts_msg.header.stamp = clock_.now();
+			contacts_msg.header.stamp = this->get_clock()->now();
 			contacts_msg.contacts.resize(4);
 
 			for(size_t i = 0; i < 4; i++)
@@ -123,8 +106,7 @@ int main(int argc, char **argv)
 {
 	rclcpp::init(argc, argv);
 	auto node = std::make_shared<ContactSensor>();
-	// rclcpp::spin(node);
-	rclcpp::Rate loop_rate(1);
+	rclcpp::Rate loop_rate(50);
 
 	while (rclcpp::ok())
 	{

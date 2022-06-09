@@ -37,7 +37,7 @@ QuadrupedController::QuadrupedController():
     Node("quadruped_controller_node",rclcpp::NodeOptions()
                         .allow_undeclared_parameters(true)
                         .automatically_declare_parameters_from_overrides(true)),
-    clock_(rclcpp::Clock()),
+    clock_(*this->get_clock()),
     body_controller_(base_),
     leg_controller_(base_, rosTimeToChampTime(clock_.now())),
     kinematics_(base_)
@@ -168,8 +168,7 @@ void QuadrupedController::publishJoints_(float target_joints[12])
         sensor_msgs::msg::JointState joints_msg;
 
         joints_msg.header.stamp = clock_.now();
-        joints_msg.header.stamp.sec = 0;
-        joints_msg.header.stamp.nanosec = 0;
+
         joints_msg.name.resize(joint_names_.size());
         joints_msg.position.resize(joint_names_.size());
         joints_msg.name = joint_names_;

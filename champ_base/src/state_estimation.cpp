@@ -29,14 +29,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 champ::Odometry::Time rosTimeToChampTime(const rclcpp::Time& time)
 {
-  return time.nanoseconds() / 1000.0;
+  return time.nanoseconds() / 1000ul;
 }
 
 StateEstimation::StateEstimation():
     Node("state_estimation_node",rclcpp::NodeOptions()
                         .allow_undeclared_parameters(true)
                         .automatically_declare_parameters_from_overrides(true)),
-    clock_(rclcpp::Clock()),
+    clock_(*this->get_clock()),
     odometry_(base_, rosTimeToChampTime(clock_.now()))
 {
     last_vel_time_ = clock_.now();
@@ -148,9 +148,8 @@ void StateEstimation::publishFootprintToOdom_()
 
     rclcpp::Time current_time = clock_.now();
 
-    double vel_dt = (current_time - last_vel_time_).seconds();
+    double vel_dt = (current_time - last_vel_time_).nanoseconds()/1e-9;
     last_vel_time_ = current_time;
-
     //rotate in the z axis
     //https://en.wikipedia.org/wiki/Rotation_matrix
     double delta_heading = current_velocities_.angular.z * vel_dt; 

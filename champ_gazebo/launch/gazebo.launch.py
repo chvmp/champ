@@ -42,7 +42,7 @@ def generate_launch_description():
         default_value=os.path.join(gz_pkg_share, "config/ros_control.yaml"),
     )
     declare_gazebo_world = DeclareLaunchArgument(
-        "gazebo_world", default_value=os.path.join(gz_pkg_share, "worlds/outdoor.world")
+        "gazebo_world", default_value=os.path.join(gz_pkg_share, "worlds/default.world")
     )
     declare_world_init_x = DeclareLaunchArgument("world_init_x", default_value="0.0")
     declare_world_init_y = DeclareLaunchArgument("world_init_y", default_value="0.0")
@@ -61,7 +61,9 @@ def generate_launch_description():
     ).find("champ_config")
     
     links_config = os.path.join(config_pkg_share, "config/links/links.yaml")
-
+    gazebo_config = os.path.join(launch_ros.substitutions.FindPackageShare(
+        package="champ_gazebo"
+    ).find("champ_gazebo"), "config/gazebo.yaml")
     launch_dir = os.path.join(pkg_share, "launch")
     # Specify the actions
     start_gazebo_server_cmd = ExecuteProcess(
@@ -72,6 +74,9 @@ def generate_launch_description():
             "-s",
             "libgazebo_ros_factory.so",
             gazebo_world,
+            '--ros-args',
+            '--params-file',
+            gazebo_config
         ],
         cwd=[launch_dir],
         output="screen",
@@ -117,7 +122,7 @@ def generate_launch_description():
         package="champ_gazebo",
         executable="contact_sensor",
         output="screen",
-        parameters=[links_config],
+        parameters=[{"use_sim_time": LaunchConfiguration("use_sim_time")},links_config],
         # prefix=['xterm -e gdb -ex run --args'],
     )
 
@@ -163,6 +168,6 @@ def generate_launch_description():
             load_joint_state_controller,
             # load_joint_trajectory1_controller
             load_joint_trajectory1_controller,
-            # contact_sensor
+            contact_sensor
         ]
     )
