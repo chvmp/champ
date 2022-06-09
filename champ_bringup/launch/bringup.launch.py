@@ -1,6 +1,7 @@
 import os
-
+import xacro
 import launch_ros
+import xml.etree.ElementTree as ET
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 
@@ -9,7 +10,11 @@ from launch.actions import (
     DeclareLaunchArgument,
     ExecuteProcess,
     IncludeLaunchDescription,
+    GroupAction,
+    RegisterEventHandler
 )
+from launch.event_handlers.on_process_exit import OnProcessExit
+from launch.event_handlers.on_execution_complete import OnExecutionComplete
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
@@ -99,6 +104,14 @@ def generate_launch_description():
     )
 
     
+    # Save xacro to urdf
+    doc = xacro.parse(open(default_model_path))
+    xacro.process_doc(doc)
+    urdf_file = open("/tmp/generated.urdf", "w+")
+    urdf_file.write(doc.toxml())
+
+
+
     description_ld = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
@@ -117,7 +130,6 @@ def generate_launch_description():
         package="champ_base",
         executable="quadruped_controller_node",
         output="screen",
-        # prefix=['xterm -e gdb -ex run --args'],
         parameters=[
             {"use_sim_time": LaunchConfiguration("use_sim_time")},
             {"gazebo": LaunchConfiguration("gazebo")},
@@ -125,6 +137,7 @@ def generate_launch_description():
             {"publish_joint_control": LaunchConfiguration("publish_joint_control")},
             {"publish_foot_contacts": LaunchConfiguration("publish_foot_contacts")},
             {"joint_controller_topic": LaunchConfiguration("joint_controller_topic")},
+            {"urdf_path": "/tmp/generated.urdf"},
             links_config,
             joints_config,
             gait_config,
@@ -136,10 +149,10 @@ def generate_launch_description():
         package="champ_base",
         executable="state_estimation_node",
         output="screen",
-        # prefix=['xterm -e gdb -ex run --args'],
         parameters=[
             {"use_sim_time": LaunchConfiguration("use_sim_time")},
             {"orientation_from_imu": LaunchConfiguration("has_imu")},
+            {"urdf_path": "/tmp/generated.urdf"},
             links_config,
             joints_config,
             gait_config,
@@ -182,6 +195,7 @@ def generate_launch_description():
         remappings=[("odometry/filtered", "odom")],
     )
 
+    
     return LaunchDescription(
         [
             declare_use_sim_time,
@@ -201,10 +215,10 @@ def generate_launch_description():
             declare_publish_foot_contacts,
             declare_publish_odom_tf,
             declare_close_loop_odom,
-            description_ld,
+            description_ld,        
             quadruped_controller_node,
             state_estimator_node,
             base_to_footprint_ekf,
-            footprint_to_odom_ekf,
+            footprint_to_odom_ekf
         ]
     )

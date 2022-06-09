@@ -65,6 +65,8 @@ StateEstimation::StateEstimation():
     footprint_to_odom_publisher_ = this->create_publisher<nav_msgs::msg::Odometry>("odom/raw", 1);
     base_to_footprint_publisher_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("base_to_footprint_pose", 1);
     foot_publisher_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("foot", 1);
+    
+    std::string urdf_path = "";
 
     orientation_from_imu_ = false;
 
@@ -81,12 +83,13 @@ StateEstimation::StateEstimation():
     this->get_parameter("gait.stance_depth",           gait_config_.stance_depth);
     this->get_parameter("gait.stance_duration",        gait_config_.stance_duration);
     this->get_parameter("gait.nominal_height",         gait_config_.nominal_height);
+    this->get_parameter("urdf_path",                   urdf_path);
 
     if (orientation_from_imu_)
       imu_subscriber_ = this->create_subscription<sensor_msgs::msg::Imu>(
         "imu/data", 1, std::bind(&StateEstimation::imu_callback_, this,  std::placeholders::_1));
     base_.setGaitConfig(gait_config_);
-    champ::URDF::loadFromServer(base_, this->get_node_parameters_interface());
+    champ::URDF::loadFromFile(base_, this->get_node_parameters_interface(), urdf_path);
     joint_names_ = champ::URDF::getJointNames(this->get_node_parameters_interface());
 
     node_namespace_ = this->get_namespace();
