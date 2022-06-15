@@ -33,20 +33,22 @@ joint_group_effort_controller:
       - velocity
     
     gains:
-      lf_hip_joint        : {p: 37.5, d: 0.3, i: 0.0}
-      lf_upper_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
-      lf_lower_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
-      rf_hip_joint        : {p: 37.5, d: 0.3, i: 0.0}
-      rf_upper_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
-      rf_lower_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
-      lh_hip_joint        : {p: 37.5, d: 0.3, i: 0.0}
-      lh_upper_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
-      lh_lower_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
-      rh_hip_joint        : {p: 37.5, d: 0.3, i: 0.0}
-      rh_upper_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
-      rh_lower_leg_joint  : {p: 37.5, d: 0.3, i: 0.0}
-    # state_publish_rate: 25.0 # Defaults to 50
+      lf_hip_joint        : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      lf_upper_leg_joint  : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      lf_lower_leg_joint  : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      rf_hip_joint        : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      rf_upper_leg_joint  : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      rf_lower_leg_joint  : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      lh_hip_joint        : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      lh_upper_leg_joint  : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      lh_lower_leg_joint  : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      rh_hip_joint        : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      rh_upper_leg_joint  : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      rh_lower_leg_joint  : {p: 100.0, i: 0.2, d: 1.0, i_clamp: 2.5}
+      
+      # {p: 67.5, d: 0.3, i: 0.1, i_clamp: 1.5}
     # action_monitor_rate: 10.0 # Defaults to 20
+    # state_publish_rate: 10.0 # Defaults to 50
     # open_loop_control: true
     # allow_integration_in_goal_trajectories: true
     # constraints:

@@ -59,7 +59,7 @@
     <xacro:champ_leg leg="lh"/>
     <xacro:champ_leg leg="rf"/>
     <xacro:champ_leg leg="rh"/>
-
+    
     <gazebo>
       <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
 

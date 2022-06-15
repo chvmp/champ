@@ -42,7 +42,7 @@ def generate_launch_description():
         default_value=os.path.join(gz_pkg_share, "config/ros_control.yaml"),
     )
     declare_gazebo_world = DeclareLaunchArgument(
-        "gazebo_world", default_value=os.path.join(gz_pkg_share, "worlds/outdoor.world")
+        "gazebo_world", default_value=os.path.join(gz_pkg_share, "worlds/default.world")
     )
     declare_world_init_x = DeclareLaunchArgument("world_init_x", default_value="0.0")
     declare_world_init_y = DeclareLaunchArgument("world_init_y", default_value="0.0")
@@ -56,9 +56,14 @@ def generate_launch_description():
 
     declare_description_path = DeclareLaunchArgument(name="description_path", default_value=default_model_path, description="Absolute path to robot urdf file")
 
-    print(os.path.join(gz_pkg_share, "worlds/world.sdf"))
-    print(gz_pkg_share)
-
+    config_pkg_share = launch_ros.substitutions.FindPackageShare(
+        package="champ_config"
+    ).find("champ_config")
+    
+    links_config = os.path.join(config_pkg_share, "config/links/links.yaml")
+    gazebo_config = os.path.join(launch_ros.substitutions.FindPackageShare(
+        package="champ_gazebo"
+    ).find("champ_gazebo"), "config/gazebo.yaml")
     launch_dir = os.path.join(pkg_share, "launch")
     # Specify the actions
     start_gazebo_server_cmd = ExecuteProcess(
@@ -69,18 +74,15 @@ def generate_launch_description():
             "-s",
             "libgazebo_ros_factory.so",
             gazebo_world,
+            '--ros-args',
+            '--params-file',
+            gazebo_config
         ],
         cwd=[launch_dir],
         output="screen",
     )
 
 
-    # Ignition gazebo
-    # start_gazebo_server_cmd = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(get_package_share_directory('ros_ign_gazebo'), 'launch', 'ign_gazebo.launch.py')),
-    #         launch_arguments={'ign_args': ('-r ', gazebo_world)}.items(),
-    # )
     start_gazebo_client_cmd = ExecuteProcess(
         condition=IfCondition(PythonExpression([" not ", headless])),
         cmd=["gzclient"],
@@ -113,16 +115,16 @@ def generate_launch_description():
         ],
     )
 
-    # start_gazebo_spawner_cmd = Node(package='ros_ign_gazebo', executable='create',
-    #             arguments=[
-    #                 '-name', 'champ',
-    #                 '-x', '-3.2',
-    #                 '-z', '1.3',
-    #                 '-Y', '-1.4',
-    #                 '-topic', '/robot_description',
-    #                 ],
-    #             output='screen',
-    #             )
+    # TODO as for right now, running contact sensor results in RTF being reduced by factor of 2x.
+    # So it needs to be fixed before using that. Unsure what it does actually because even without it
+    # Champ seems to be all right
+    contact_sensor = Node(
+        package="champ_gazebo",
+        executable="contact_sensor",
+        output="screen",
+        parameters=[{"use_sim_time": LaunchConfiguration("use_sim_time")},links_config],
+        # prefix=['xterm -e gdb -ex run --args'],
+    )
 
     robot_description = {"robot_description": Command(["xacro ", LaunchConfiguration("description_path")])}
 
@@ -165,6 +167,7 @@ def generate_launch_description():
             start_gazebo_spawner_cmd,
             load_joint_state_controller,
             # load_joint_trajectory1_controller
-            load_joint_trajectory1_controller
+            load_joint_trajectory1_controller,
+            contact_sensor
         ]
     )

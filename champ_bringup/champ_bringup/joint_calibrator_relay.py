@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''
 Copyright (c) 2019-2020, Juan Miguel Jimeno
 All rights reserved.
@@ -38,20 +38,13 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 class JointsCalibratorRelay(Node):
     def __init__(self):
-        super().__init__('joints_calibrator_relay', automatically_declare_parameters_from_overrides=True)
+        super().__init__('joints_calibrator_relay')
 		
         _ = self.create_subscription(JointState, "joints_calibrator", 
                                                                   self.joints_cmd_callback, 1)
-		
-        # rospy.Subscriber("joints_calibrator", JointState, self.joints_cmd_callback)
-
-        # joint_controller_topic = rospy.get_param('champ_controller/joint_controller_topic')
-        # joint_controller_topic = self.get_parameter('champ_controller/joint_controller_topic').value
 
         # TODO unhardcode
         joint_controller_topic = "joint_group_effort_controller/joint_trajectory"
-        # self.joint_minimal_pub = rospy.Publisher('cmd_joints', Joints, queue_size = 100)
-        # self.joint_trajectory_pub = rospy.Publisher(joint_controller_topic, JointTrajectory, queue_size = 100)
 
 
         self.joint_minimal_pub = self.create_publisher(Joints, "cmd_joints" ,100)
@@ -59,10 +52,11 @@ class JointsCalibratorRelay(Node):
         
 
         joints_map = [None,None,None,None]
-        # joints_map[3] = rospy.get_param('/joints_map/left_front')
-        # joints_map[2] = rospy.get_param('/joints_map/right_front')
-        # joints_map[1] = rospy.get_param('/joints_map/left_hind')
-        # joints_map[0] = rospy.get_param('/joints_map/right_hind')
+        self.declare_parameter('joints_map.left_front',  rclpy.Parameter.Type.STRING_ARRAY)
+        self.declare_parameter('joints_map.right_front', rclpy.Parameter.Type.STRING_ARRAY)
+        self.declare_parameter('joints_map.left_hind', rclpy.Parameter.Type.STRING_ARRAY)
+        self.declare_parameter('joints_map.right_hind', rclpy.Parameter.Type.STRING_ARRAY)
+
         joints_map[3] = self.get_parameter('joints_map.left_front').value
         joints_map[2] = self.get_parameter('joints_map.right_front').value
         joints_map[1] = self.get_parameter('joints_map.left_hind').value

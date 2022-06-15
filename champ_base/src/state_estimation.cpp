@@ -29,19 +29,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 champ::Odometry::Time rosTimeToChampTime(const rclcpp::Time& time)
 {
-  return time.nanoseconds() / 1000.0;
+  return time.nanoseconds() / 1000ul;
 }
 
 StateEstimation::StateEstimation():
     Node("state_estimation_node",rclcpp::NodeOptions()
                         .allow_undeclared_parameters(true)
                         .automatically_declare_parameters_from_overrides(true)),
-    clock_(rclcpp::Clock()),
+    clock_(*this->get_clock()),
     odometry_(base_, rosTimeToChampTime(clock_.now()))
 {
-    // clock_ = rclcpp::Clock();
-
-
     last_vel_time_ = clock_.now();
     last_sync_time_ = clock_.now();
     base_broadcaster_ =
@@ -68,6 +65,8 @@ StateEstimation::StateEstimation():
     footprint_to_odom_publisher_ = this->create_publisher<nav_msgs::msg::Odometry>("odom/raw", 1);
     base_to_footprint_publisher_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("base_to_footprint_pose", 1);
     foot_publisher_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("foot", 1);
+    
+    std::string urdf_path = "";
 
     orientation_from_imu_ = false;
 
@@ -84,12 +83,13 @@ StateEstimation::StateEstimation():
     this->get_parameter("gait.stance_depth",           gait_config_.stance_depth);
     this->get_parameter("gait.stance_duration",        gait_config_.stance_duration);
     this->get_parameter("gait.nominal_height",         gait_config_.nominal_height);
+    this->get_parameter("urdf_path",                   urdf_path);
 
     if (orientation_from_imu_)
       imu_subscriber_ = this->create_subscription<sensor_msgs::msg::Imu>(
         "imu/data", 1, std::bind(&StateEstimation::imu_callback_, this,  std::placeholders::_1));
     base_.setGaitConfig(gait_config_);
-    champ::URDF::loadFromServer(base_, this->get_node_parameters_interface());
+    champ::URDF::loadFromFile(base_, this->get_node_parameters_interface(), urdf_path);
     joint_names_ = champ::URDF::getJointNames(this->get_node_parameters_interface());
 
     node_namespace_ = this->get_namespace();
@@ -121,23 +121,13 @@ StateEstimation::StateEstimation():
 void StateEstimation::synchronized_callback_(const std::shared_ptr<sensor_msgs::msg::JointState const>& joints_msg, 
                                 const std::shared_ptr<champ_msgs::msg::ContactsStamped const>& contacts_msg)
 {
-
-    // RCLCPP_INFO(this->get_logger(),"yay");
     last_sync_time_ = clock_.now();
 
     float current_joint_positions[12];
 
     for(size_t i = 0; i < joints_msg->name.size(); i++)
     {
-      // RCLCPP_INFO(this->get_logger(),joints_msg->name[i].c_str());
-
-      // for (auto val: joint_names_){
-      //   RCLCPP_INFO(this->get_logger(),val.c_str());
-      // }
-      // RCLCPP_INFO(this->get_logger(),"\n\n");
         std::vector<std::string>::iterator itr = std::find(joint_names_.begin(), joint_names_.end(), joints_msg->name[i]);
-        if (itr==joint_names_.end())
-           RCLCPP_INFO(this->get_logger(),"bruh");
         int index = std::distance(joint_names_.begin(), itr);
         current_joint_positions[index] = joints_msg->position[i];
     }
@@ -161,11 +151,8 @@ void StateEstimation::publishFootprintToOdom_()
 
     rclcpp::Time current_time = clock_.now();
 
-    double vel_dt = (current_time - last_vel_time_).seconds();
+    double vel_dt = (current_time - last_vel_time_).nanoseconds()/1e-9;
     last_vel_time_ = current_time;
-    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0,("dt: " + std::to_string(vel_dt)).c_str());
-    RCLCPP_INFO_THROTTLE(this->get_logger(),clock_,1000.0,("vel: " + std::to_string(current_velocities_.angular.x)).c_str());
-    
     //rotate in the z axis
     //https://en.wikipedia.org/wiki/Rotation_matrix
     double delta_heading = current_velocities_.angular.z * vel_dt; 

@@ -29,32 +29,34 @@
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <inertia ixx="1e-09" ixy="0.0" ixz="0.0" iyy="1e-09" iyz="0.0" izz="1e-09"/>
             </inertial>
-
-            <sensor name="imu_controller" type="imu">
-                <always_on>true</always_on>
-                <update_rate>50</update_rate>
-                <plugin name="gazebo_ros_imu_sensor" filename="libgazebo_ros_imu_sensor.so">
-                    <ros>
-                        <namespace>/imu</namespace>
-                        <argument>~/out:=data</argument>
-                    </ros>
-                    <!-- <updateRate>50.0</updateRate>
-                    <bodyName>imu_link</bodyName>
-                    <topicName>imu/data</topicName>
-                    <accelDrift>0.005 0.005 0.005</accelDrift>
-                    <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
-                    <rateDrift>0.005 0.005 0.005 </rateDrift>
-                    <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise>
-                    <headingDrift>0.005</headingDrift>
-                    <headingGaussianNoise>0.005</headingGaussianNoise> -->
-                </plugin>
-            </sensor>
+            
         </link>
         <joint name="imu_joint" type="fixed">
             <parent link="${base_name}" />
             <child link="imu_link" />
         </joint>
-
+        
+        <gazebo reference="imu_link">
+                <sensor name="imu_controller" type="imu">
+                    <always_on>true</always_on>
+                    <update_rate>50</update_rate>
+                    <plugin name="gazebo_ros_imu_sensor" filename="libgazebo_ros_imu_sensor.so">
+                        <ros>
+                            <namespace>/imu</namespace>
+                            <argument>~/out:=data</argument>
+                        </ros>
+                        <!-- <updateRate>50.0</updateRate>
+                        <bodyName>imu_link</bodyName>
+                        <topicName>imu/data</topicName>
+                        <accelDrift>0.005 0.005 0.005</accelDrift>
+                        <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
+                        <rateDrift>0.005 0.005 0.005 </rateDrift>
+                        <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise>
+                        <headingDrift>0.005</headingDrift>
+                        <headingGaussianNoise>0.005</headingGaussianNoise> -->
+                    </plugin>
+                </sensor>
+            </gazebo>
         <!-- <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
         <xacro:VLP-16 parent="${base_name}" name="velodyne" topic="velodyne_points" hz="10" samples="1024" gpu="false" lasers="16" max_range="100">
             <origin xyz="0 0 ${base_height / 2}" rpy="0 0 0" />
