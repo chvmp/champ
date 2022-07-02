@@ -37,7 +37,7 @@ include_directories(
 )
 
 link_directories(${GAZEBO_LIBRARY_DIRS} ${catkin_LIBRARIES})
-list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
+add_compile_options("${GAZEBO_CXX_FLAGS}")
 
 add_executable(contact_sensor src/contact_sensor.cpp)
 target_link_libraries(contact_sensor ${GAZEBO_LIBRARIES} pthread ${catkin_LIBRARIES} )
