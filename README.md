@@ -20,6 +20,21 @@ Tested on:
 
 - Ubuntu 16.04 (ROS Kinetic)
 - Ubuntu 18.04 (ROS Melodic)
+- Ubuntu 20.04 (ROS2 Galactic)
+
+Current state of ROS2 port:
+
+*ros2_controllers official upstream repo doesn't have effort controller implemented yet. Right now sticked to [ros2-controllers repo](https://github.com/rohitmenon86/ros2_controllers). See [issue](https://github.com/ros-controls/ros2_controllers/pull/225).*
+
+- &check; Port libchamp.
+- &cross; Port velocity smoother.
+- &check; Working Gazebo empty world, without velocity control, just standing still robot with effort controllers centered.
+- &check; Working rviz only demo.
+- &check; Working Gazebo with teleoperated robot.
+- &cross; Working Gazebo demo with SLAM.
+- &cross; Working Gazebo demo with nav2 integration.
+- &cross; Code clean-up and refactoring.
+- &cross; Testing with real robot.
 
 ## 1. Installation
 
@@ -27,8 +42,9 @@ Tested on:
 
     sudo apt install -y python-rosdep
     cd <your_ws>/src
-    git clone --recursive https://github.com/chvmp/champ
-    git clone https://github.com/chvmp/champ_teleop
+    git clone https://github.com/rohitmenon86/ros2_controllers -b galactic
+    git clone --recursive https://github.com/chvmp/champ -b ros2
+    git clone https://github.com/chvmp/champ_teleop -b ros2
     cd ..
     rosdep install --from-paths src --ignore-src -r -y
 
@@ -37,8 +53,8 @@ If you want to use any of the pre-configured robots like Anymal, Mini Cheetah, o
 ### 1.2 Build your workspace:
 
     cd <your_ws>
-    catkin_make
-    source <your_ws>/devel/setup.bash
+    colcon build
+    . <your_ws>/install/setup.bash
 
 ## 2. Quick Start
 
@@ -48,20 +64,24 @@ You don't need a physical robot to run the following demos. If you're building a
 
 #### 2.1.1 Run the base driver:
 
-    roslaunch champ_config bringup.launch rviz:=true
+    ros2 launch champ_config bringup.launch 
+
+    (In another terminal) rviz2 -d src/champ/champ_description/rviz/urdf_viewer.rviz
 
 #### 2.1.2 Run the teleop node:
 
-    roslaunch champ_teleop teleop.launch
+    ros2 launch champ_teleop teleop.launch.py 
 
 If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepads/f710-wireless-gamepad.html) add joy:=true as an argument.
 
 
-### 2.2 SLAM demo:
+### 2.2 Gazebo demo:
 
 #### 2.2.1 Run the Gazebo environment:
+    
+    ros2 launch champ_config gazebo.launch.py 
 
-    roslaunch champ_config gazebo.launch 
+# All below is not yet ported for ROS2
 
 #### 2.2.2 Run gmapping package and move_base:
 
