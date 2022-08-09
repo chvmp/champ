@@ -35,6 +35,13 @@ Current state of ROS2 port:
 - &check; Working Gazebo demo with nav2 integration.
 - &cross; Code clean-up and refactoring.
 - &cross; Testing with real robot.
+- &cross; Setup-Assistant.
+- &cross; Robots Configurations.
+    - &cross; Porting of robot description packages to ROS 2.
+    - &cross; Porting of robot URDF to ROS2 (add new ros2_control tag).
+    - &cross; Porting of robot configurationf to ROS2.
+    - &cross; Porting of robot launch Files to ROS2.
+
 
 ## 1. Installation
 
