@@ -1,29 +1,19 @@
 <?xml version="1.0"?>
-<package format="2">
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>champ_navigation</name>
-  <version>0.1.0</version>
-  <description>Champ Navigation Files</description>
-
+  <version>0.0.0</version>
+    <description>CHAMP Navigation Package</description>
   <maintainer email="jimenojmm@gmail.com">Juan Miguel Jimeno</maintainer>
-  <author>Juan Miguel Jimeno</author>
-
-  <license>BSD</license>
-
-  <buildtool_depend>catkin</buildtool_depend>
-  <exec_depend>roslaunch</exec_depend>
-  <exec_depend>gmapping</exec_depend>
-  <exec_depend>hector_mapping</exec_depend>
-  <exec_depend>octomap</exec_depend>
-  <exec_depend>octomap_server</exec_depend>
-  <exec_depend>map_server</exec_depend>
-  <exec_depend>move_base</exec_depend>
-  <exec_depend>global_planner</exec_depend>
-  <exec_depend>navfn</exec_depend>
-  <exec_depend>dwa_local_planner</exec_depend>
-  <exec_depend>base_local_planner</exec_depend>
-  <exec_depend>amcl</exec_depend>
-  <exec_depend>pointcloud_to_laserscan</exec_depend>
-
+  <license>Apache 2.0</license>
+  <url type="website">linorobot.org</url>
+  <url type="repository">https://github.com/linorobot/linorobot2</url>
+  <url type="bugtracker">https://github.com/linorobot/linorobot2/issues</url>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>nav2_bringup</exec_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+    <exec_depend>nav2_bringup</exec_depend>
+    <exec_depend>slam_toolbox</exec_depend>
+  </export>
 </package>
-
-
