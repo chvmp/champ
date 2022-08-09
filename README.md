@@ -31,8 +31,8 @@ Current state of ROS2 port:
 - &check; Working Gazebo empty world, without velocity control, just standing still robot with effort controllers centered.
 - &check; Working rviz only demo.
 - &check; Working Gazebo with teleoperated robot.
-- &cross; Working Gazebo demo with SLAM.
-- &cross; Working Gazebo demo with nav2 integration.
+- &check; Working Gazebo demo with SLAM.
+- &check; Working Gazebo demo with nav2 integration.
 - &cross; Code clean-up and refactoring.
 - &cross; Testing with real robot.
 
