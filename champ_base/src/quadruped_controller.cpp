@@ -44,7 +44,7 @@ QuadrupedController::QuadrupedController():
 {
     std::string joint_control_topic = "joint_group_position_controller/command";
     std::string knee_orientation;
-    std::string urdf_path = "";
+    std::string urdf = "";
 
     double loop_rate = 200.0;
 
@@ -64,9 +64,8 @@ QuadrupedController::QuadrupedController():
     this->get_parameter("gazebo",                      in_gazebo_);
     this->get_parameter("joint_controller_topic",      joint_control_topic);
     this->get_parameter("loop_rate",                   loop_rate);
-    this->get_parameter("urdf_path",                   urdf_path);
+    this->get_parameter("urdf",                        urdf);
     
-
     cmd_vel_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
         "cmd_vel/smooth", 10, std::bind(&QuadrupedController::cmdVelCallback_, this,  std::placeholders::_1));
     cmd_pose_subscription_ = this->create_subscription<geometry_msgs::msg::Pose>(
@@ -90,7 +89,7 @@ QuadrupedController::QuadrupedController():
     gait_config_.knee_orientation = knee_orientation.c_str();
     
     base_.setGaitConfig(gait_config_);
-    champ::URDF::loadFromFile(base_, this->get_node_parameters_interface(), urdf_path);
+    champ::URDF::loadFromString(base_, this->get_node_parameters_interface(), urdf);
     joint_names_ = champ::URDF::getJointNames(this->get_node_parameters_interface());
     std::chrono::milliseconds period(static_cast<int>(1000/loop_rate));
 
