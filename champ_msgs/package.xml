@@ -14,7 +14,6 @@
   <build_depend>builtin_interfaces</build_depend>
   <build_depend>common_interfaces</build_depend>
 
-  <depend>message_runtime</depend>
   <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
   
