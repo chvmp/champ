@@ -4,7 +4,7 @@ project(champ_config)
 find_package(ament_cmake REQUIRED)
 
 install(
-  DIRECTORY launch config maps
+  DIRECTORY launch config maps worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

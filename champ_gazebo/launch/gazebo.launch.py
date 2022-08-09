@@ -21,12 +21,11 @@ def generate_launch_description():
     paused = LaunchConfiguration("paused")
     lite = LaunchConfiguration("lite")
     ros_control_file = LaunchConfiguration("ros_control_file")
-    gazebo_world = LaunchConfiguration("gazebo_world")
     world_init_x = LaunchConfiguration("world_init_x")
     world_init_y = LaunchConfiguration("world_init_y")
     world_init_z = LaunchConfiguration("world_init_z")
     world_init_heading = LaunchConfiguration("world_init_heading")
-
+    gazebo_world = LaunchConfiguration("world")
     gz_pkg_share = launch_ros.substitutions.FindPackageShare(package="champ_gazebo").find(
         "champ_gazebo"
     )
@@ -42,7 +41,7 @@ def generate_launch_description():
         default_value=os.path.join(gz_pkg_share, "config/ros_control.yaml"),
     )
     declare_gazebo_world = DeclareLaunchArgument(
-        "gazebo_world", default_value=os.path.join(gz_pkg_share, "worlds/default.world")
+        "world", default_value=os.path.join(gz_pkg_share, "worlds/default.world")
     )
     declare_world_init_x = DeclareLaunchArgument("world_init_x", default_value="0.0")
     declare_world_init_y = DeclareLaunchArgument("world_init_y", default_value="0.0")
