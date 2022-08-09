@@ -65,7 +65,6 @@
           </ray>
           <plugin name="gazebo_ros_${name}_controller" filename="libgazebo_ros_ray_sensor.so">
             <ros>
-              <namespace>${name}_frame</namespace>
               <argument>~/out:=${ros_topic}</argument>
             </ros>
             <!-- Set output to sensor_msgs/PointCloud to get same output type as gazebo_ros_block_laser -->
@@ -111,14 +110,9 @@
           </ray>
           <plugin name="gazebo_ros_${name}_controller" filename="libgazebo_ros_ray_sensor.so">
             <ros>
-              <namespace>${name}_frame</namespace>
               <argument>~/out:=${ros_topic}</argument>
             </ros>
-            <!-- Set output to sensor_msgs/PointCloud to get same output type as gazebo_ros_block_laser -->
             <output_type>sensor_msgs/LaserScan</output_type>
-            <!-- <frame_name> ommited, will default to block_laser_link -->
-      
-            <!-- min_intensity instead of hokuyoMinIntensity -->
             <min_intensity>100.0</min_intensity>
           </plugin>
         </sensor>

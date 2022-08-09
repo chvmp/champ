@@ -153,51 +153,27 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
         </joint> -->
 
-        <ros2_control name="${leg}_hip" type="system">
-
+        <ros2_control name="${leg}" type="system">
             <hardware>
                 <plugin>gazebo_ros2_control/GazeboSystem</plugin>
             </hardware>
-            
             <joint name="${leg}_hip_joint">
-
-
                 <command_interface name="effort"/>
                 <state_interface name="position"/>
-
                 <state_interface name="velocity"/>
-
             </joint>
         
-        </ros2_control> 
-        
-        <ros2_control name="${leg}_upper_leg" type="system">
-
-            <hardware>
-                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-            </hardware>
-            
             <joint name="${leg}_upper_leg_joint">
                 <command_interface name="effort"/>
                 <state_interface name="position"/>
                 <state_interface name="velocity"/>
             </joint>
         
-        </ros2_control> 
-
-        <ros2_control name="${leg}_lower_leg" type="system">
-
-            <hardware>
-              <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-            </hardware>
-            
             <joint name="${leg}_lower_leg_joint">
-                
                 <command_interface name="effort"/>
                 <state_interface name="position"/>
                 <state_interface name="velocity"/>
             </joint>
-        
         </ros2_control> 
     </xacro:macro>
 </robot>

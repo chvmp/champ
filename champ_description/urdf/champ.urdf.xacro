@@ -62,35 +62,22 @@
     
     <gazebo>
       <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+        <ros>
+            <argument>odom:=odom/ground_truth</argument>
+        </ros>
 
-
-            <ros>
-                <namespace>/demo</namespace>
-                <argument>odom:=odom/ground_truth</argument>
-            </ros>
-    
-            <body_name>base_link</body_name>
-            <frame_name>world</frame_name>
-            <update_rate>10.0</update_rate>
-            <xyz_offset>0 0 0</xyz_offset>
-            <rpy_offset>0 0 0</rpy_offset>
-            <gaussian_noise>0.01</gaussian_noise>
-    
+        <body_name>base_link</body_name>
+        <frame_name>world</frame_name>
+        <update_rate>10.0</update_rate>
+        <xyz_offset>0 0 0</xyz_offset>
+        <rpy_offset>0 0 0</rpy_offset>
+        <gaussian_noise>0.01</gaussian_noise>
     </plugin>
     </gazebo>
 
-
     <gazebo>
-    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-
+        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
         <parameters>$(find champ_gazebo)/config/ros_control.yaml</parameters>
       </plugin>
     </gazebo>
-
-    <!-- <gazebo>
-        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-    
-            <parameters>$(find champ_gazebo)/config/ros_control.yaml</parameters>
-          </plugin>
-    </gazebo> -->
 </robot>
