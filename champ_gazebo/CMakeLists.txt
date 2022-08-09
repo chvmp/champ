@@ -6,7 +6,7 @@ set(ROS2_CONTROL_DOWNLOAD_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 set(ROS2_CONTROL_DEPENDENCY_PATH ${ROS2_CONTROL_DOWNLOAD_PATH}/ros2_controllers)
 
 if (NOT EXISTS "${ROS2_CONTROL_DEPENDENCY_PATH}")
-  message(STATUS "Downloading ROS2_CONTROL_velocity_smoother")
+  message(STATUS "Downloading ros2_controllers")
   message(STATUS "${ROS2_CONTROL_DOWNLOAD_PATH}")
 
   execute_process(
@@ -15,7 +15,12 @@ if (NOT EXISTS "${ROS2_CONTROL_DEPENDENCY_PATH}")
 
   execute_process(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../..
-    COMMAND catkin_make --pkg ros2_controllers
+    COMMAND rosdep install --from-paths src -i -r -y
+  )
+
+  execute_process(
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../..
+    COMMAND colcon build --packages-select joint_trajectory_controller
   )
 endif()
 

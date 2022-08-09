@@ -42,7 +42,6 @@ Current state of ROS2 port:
 
     sudo apt install -y python-rosdep
     cd <your_ws>/src
-    git clone https://github.com/rohitmenon86/ros2_controllers -b galactic
     git clone --recursive https://github.com/chvmp/champ -b ros2
     git clone https://github.com/chvmp/champ_teleop -b ros2
     cd ..
