@@ -38,24 +38,51 @@ def generate_launch_description():
         default_value="false",
         description="Use simulation (Gazebo) clock if true",
     )
+
     declare_description_path = DeclareLaunchArgument(
         name="description_path",
         default_value=default_model_path,
         description="Absolute path to robot urdf file",
     )
 
+    declare_joints_map_path = DeclareLaunchArgument(
+        name="joints_map_path",
+        default_value='',
+        description="Absolute path to robot urdf file",
+    )
+
+    declare_links_map_path = DeclareLaunchArgument(
+        name="links_map_path",
+        default_value='',
+        description="Absolute path to robot urdf file",
+    )
+
+    declare_gait_config_path = DeclareLaunchArgument(
+        name="gait_config_path",
+        default_value='',
+        description="Absolute path to robot urdf file",
+    )
+
+    declare_orientation_from_imu = DeclareLaunchArgument(
+        "orientation_from_imu", default_value="false", description="Take orientation from IMU data"
+    )
+
     declare_rviz = DeclareLaunchArgument(
         "rviz", default_value="false", description="Launch rviz"
     )
+
     declare_rviz_ref_frame = DeclareLaunchArgument(
         "rviz_ref_frame", default_value="odom", description="Rviz ref frame"
     )
+
     declare_robot_name = DeclareLaunchArgument(
         "robot_name", default_value="/", description="Robot name"
     )
+
     declare_base_link_frame = DeclareLaunchArgument(
         "base_link_frame", default_value="base_link", description="Base link frame"
     )
+
     declare_lite = DeclareLaunchArgument(
         "lite", default_value="false", description="Lite"
     )
@@ -63,54 +90,46 @@ def generate_launch_description():
     declare_gazebo = DeclareLaunchArgument(
         "gazebo", default_value="false", description="If in gazebo"
     )
-    declare_has_imu = DeclareLaunchArgument(
-        "has_imu", default_value="true", description="If in gazebo"
-    )
-    declare_laser = DeclareLaunchArgument(
-        "laser", default_value="sim", description="Laser name"
-    )
+
     declare_joint_controller_topic = DeclareLaunchArgument(
         "joint_controller_topic",
         default_value="joint_group_effort_controller/joint_trajectory",
         description="Joint controller topic",
     )
+
     declare_hardware_connected = DeclareLaunchArgument(
         "joint_hardware_connected",
         default_value="false",
         description="Whether hardware is connected",
     )
+
     declare_publish_joint_control = DeclareLaunchArgument(
         "publish_joint_control",
         default_value="true",
         description="Publish joint control",
     )
+
     declare_publish_joint_states = DeclareLaunchArgument(
         "publish_joint_states",
         default_value="true",
         description="Publish joint control",
     )
+
     declare_publish_foot_contacts = DeclareLaunchArgument(
         "publish_foot_contacts",
         default_value="true",
         description="Publish foot contacts",
     )
+
     declare_publish_odom_tf = DeclareLaunchArgument(
         "publish_odom_tf",
         default_value="true",
         description="Publish odom tf from cmd_vel estimation",
     )
+
     declare_close_loop_odom = DeclareLaunchArgument(
         "close_loop_odom", default_value="false", description=""
     )
-
-    
-    # Save xacro to urdf
-    doc = xacro.parse(open(default_model_path))
-    xacro.process_doc(doc)
-    urdf_file = open("/tmp/generated.urdf", "w+")
-    urdf_file.write(doc.toxml())
-
-
 
     description_ld = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -137,10 +156,10 @@ def generate_launch_description():
             {"publish_joint_control": LaunchConfiguration("publish_joint_control")},
             {"publish_foot_contacts": LaunchConfiguration("publish_foot_contacts")},
             {"joint_controller_topic": LaunchConfiguration("joint_controller_topic")},
-            {"urdf_path": "/tmp/generated.urdf"},
-            links_config,
-            joints_config,
-            gait_config,
+            {"urdf": Command(['xacro ', LaunchConfiguration('description_path')])},
+            LaunchConfiguration('joints_map_path'),
+            LaunchConfiguration('links_map_path'),
+            LaunchConfiguration('gait_config_path'),
         ],
         remappings=[("/cmd_vel/smooth", "/cmd_vel")],
     )
@@ -151,11 +170,11 @@ def generate_launch_description():
         output="screen",
         parameters=[
             {"use_sim_time": LaunchConfiguration("use_sim_time")},
-            {"orientation_from_imu": LaunchConfiguration("has_imu")},
-            {"urdf_path": "/tmp/generated.urdf"},
-            links_config,
-            joints_config,
-            gait_config,
+            {"orientation_from_imu": LaunchConfiguration("orientation_from_imu")},
+            {"urdf": Command(['xacro ', LaunchConfiguration('description_path')])},
+            LaunchConfiguration('joints_map_path'),
+            LaunchConfiguration('links_map_path'),
+            LaunchConfiguration('gait_config_path'),
         ],
     )
 
@@ -194,20 +213,21 @@ def generate_launch_description():
         ],
         remappings=[("odometry/filtered", "odom")],
     )
-
     
     return LaunchDescription(
         [
             declare_use_sim_time,
             declare_description_path,
+            declare_joints_map_path, 
+            declare_links_map_path, 
+            declare_gait_config_path, 
+            declare_orientation_from_imu,
             declare_rviz,
             declare_rviz_ref_frame,
             declare_robot_name,
             declare_base_link_frame,
             declare_lite,
             declare_gazebo,
-            declare_has_imu,
-            declare_laser,
             declare_joint_controller_topic,
             declare_hardware_connected,
             declare_publish_joint_control,

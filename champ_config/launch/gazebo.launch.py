@@ -78,6 +78,9 @@ def generate_launch_description():
         ),
         launch_arguments={
             "description_path": default_model_path,
+            "joints_map_path": joints_config,
+            "links_map_path": links_config,
+            "gait_config_path": gait_config,
             "use_sim_time": LaunchConfiguration("use_sim_time"),
             "robot_name": LaunchConfiguration("robot_name"),
             "gazebo": "true",
