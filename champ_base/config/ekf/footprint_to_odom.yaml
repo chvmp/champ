@@ -20,12 +20,12 @@ footprint_to_odom_ekf:
                   false, false, true,
                   false, false, false]
 
-    # imu0: imu/data
-    # imu0_config: [false, false, false,
-    #               false, false, true,
-    #               false, false, false,
-    #               false, false,  true,
-    #               false, false, false]
+    imu0: imu/data
+    imu0_config: [false, false, false,
+                  false, false, true,
+                  false, false, false,
+                  false, false,  true,
+                  false, false, false]
 
     odom_frame: odom
     base_link_frame: base_footprint
