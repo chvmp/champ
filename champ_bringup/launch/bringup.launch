@@ -16,6 +16,8 @@
     <arg name="publish_joint_control"  default="true" />
     <arg name="publish_foot_contacts"  default="true" />
     <arg name="publish_odom_tf"        default="true" />
+    <arg name="publish_local_odom_tf"  default="true" />
+    <arg name="run_state_estimation"   default="true" />
     <arg name="close_loop_odom"        default="false" />
 
     <group ns="$(arg robot_name)">
@@ -58,12 +60,12 @@
         </node>
 
         <!-- ==================== STATE ESTIMATION ==================== -->
-        <node pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen">
+        <node if="$(arg run_state_estimation)" pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen">
             <param if="$(arg hardware_connected)" name="orientation_from_imu" value="true"/>
             <param if="$(arg gazebo)" name="orientation_from_imu" value="true"/>            
         </node>
 
-        <node pkg="robot_localization" type="ekf_localization_node" name="base_to_footprint_ekf"> 
+        <node if="$(arg publish_local_odom_tf)" pkg="robot_localization" type="ekf_localization_node" name="base_to_footprint_ekf"> 
             <remap from="odometry/filtered" to="odom/local" />
             <param name="base_link_frame" value="$(arg base_frame)" />
             <rosparam command="load" file="$(find champ_base)/config/ekf/base_to_footprint.yaml" />
