@@ -12,6 +12,7 @@
     <arg name="world_init_z"          default="0.6" />
     <arg name="world_init_heading"    default="0.0" />
     <arg name="enable_contact_sensor" default="true" />
+    <arg name="respawn_controller"    default="false"/>
 
     <!-- this should be only called once on multi-robot simulation -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -28,10 +29,8 @@
         -x $(arg world_init_x) -y $(arg world_init_y) -z $(arg world_init_z) -Y $(arg world_init_heading)" />
 
         <rosparam file="$(arg ros_control_file)" command="load"/>
-        <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
-            joint_states_controller
-            joint_group_position_controller
-            ">
+        <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="$(arg respawn_controller)"
+            output="screen" args="joint_states_controller joint_group_position_controller">
         </node>
 
         <node if="$(arg enable_contact_sensor)"  pkg="champ_gazebo" name="contact_sensor" type="contact_sensor" output="screen"/>
