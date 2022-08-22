@@ -70,9 +70,7 @@ You don't need a physical robot to run the following demos. If you're building a
 
 #### 2.1.1 Run the base driver:
 
-    ros2 launch champ_config bringup.launch 
-
-    (In another terminal) rviz2 -d src/champ/champ_description/rviz/urdf_viewer.rviz
+    ros2 launch champ_config bringup.launch.py rviz:=true
 
 #### 2.1.2 Run the teleop node:
 
@@ -84,7 +82,7 @@ If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepad
 ### 2.2 Gazebo demo:
 
 #### 2.2.1 Run the Gazebo environment:
-    
+
     ros2 launch champ_config gazebo.launch.py 
 
 # All below is not yet ported for ROS2
@@ -167,7 +165,7 @@ Example Usage:
 View your newly configured robot:
 
     roslaunch <myrobot_config> bringup.launch rviz:true
-    
+
 Run real robot with a microcontroller:
 
     roslaunch <myrobot_config> bringup.launch lite:=true
@@ -248,7 +246,8 @@ Spawning a robot:
 
     roslaunch champ_config spawn_robot.launch robot_name:=<unique_robot_name> world_init_x:=<x_position> world_init_y:=<y_position>
 
-    
+
+​    
 * Every instance of the spawned robot must have a unique robot name to prevent the topics and transforms from clashing.
 
 

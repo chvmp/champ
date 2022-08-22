@@ -18,15 +18,20 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.substitutions import FindPackageShare
-
+from ament_index_python.packages import get_package_share_directory
+from launch_ros.actions import Node
+from launch.conditions import IfCondition
 
 def generate_launch_description():
     this_package = FindPackageShare('champ_config')
-
+    
     bringup_launch_path = PathJoinSubstitution(
         [FindPackageShare('champ_bringup'), 'launch', 'bringup.launch.py']
     )
 
+    base_path = os.path.realpath(get_package_share_directory('champ_description'))
+    rviz_path=base_path+'/rviz/urdf_viewer.rviz'
+    
     return LaunchDescription([
         DeclareLaunchArgument(
             name='robot_name', 
@@ -51,6 +56,12 @@ def generate_launch_description():
             default_value='false',
             description='Set to true if connected to a physical robot'
         ),
+        
+        DeclareLaunchArgument(
+            name='rviz', 
+            default_value='false',
+            description='Set to true you want to visualize the robot'
+        ),
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(bringup_launch_path),
@@ -64,5 +75,14 @@ def generate_launch_description():
                 "close_loop_odom": "true",
                 "joint_controller_topic": "joint_group_effort_controller/joint_trajectory"
             }.items(),
+        ),
+        
+        Node(
+            package='rviz2',
+            namespace='',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d', str(rviz_path)],
+            condition=IfCondition(LaunchConfiguration("rviz"))
         )
     ])

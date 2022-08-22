@@ -47,19 +47,19 @@ def generate_launch_description():
 
     declare_joints_map_path = DeclareLaunchArgument(
         name="joints_map_path",
-        default_value='',
+        default_value=joints_config,
         description="Absolute path to robot urdf file",
     )
 
     declare_links_map_path = DeclareLaunchArgument(
         name="links_map_path",
-        default_value='',
+        default_value=links_config,
         description="Absolute path to robot urdf file",
     )
 
     declare_gait_config_path = DeclareLaunchArgument(
         name="gait_config_path",
-        default_value='',
+        default_value=gait_config,
         description="Absolute path to robot urdf file",
     )
 
