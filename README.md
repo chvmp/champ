@@ -70,7 +70,7 @@ You don't need a physical robot to run the following demos. If you're building a
 
 #### 2.1.1 Run the base driver:
 
-    ros2 launch champ_config bringup.launch 
+    ros2 launch champ_config bringup.launch.py
 
     (In another terminal) rviz2 -d src/champ/champ_description/rviz/urdf_viewer.rviz
 
