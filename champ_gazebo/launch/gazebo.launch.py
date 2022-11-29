@@ -134,13 +134,13 @@ def generate_launch_description():
         output='screen',
     )
 
-    load_joint_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
+    load_joint_trajectory_position_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
              'joint_group_position_controller'],
         output='screen'
     )
-    load_joint_trajectory1_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
+    load_joint_trajectory_effort_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
              'joint_group_effort_controller'],
         output='screen'
     )
@@ -165,8 +165,8 @@ def generate_launch_description():
             start_gazebo_client_cmd,
             start_gazebo_spawner_cmd,
             load_joint_state_controller,
-            # load_joint_trajectory1_controller
-            load_joint_trajectory1_controller,
+            # load_joint_trajectory_position_controller
+            load_joint_trajectory_effort_controller,
             contact_sensor
         ]
     )
