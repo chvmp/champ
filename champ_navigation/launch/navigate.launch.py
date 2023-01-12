@@ -14,7 +14,7 @@
 
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.conditions import IfCondition
@@ -32,19 +32,15 @@ def generate_launch_description():
         [FindPackageShare('champ_navigation'), 'rviz', 'navigation.rviz']
     )
 
-    default_map_path = PathJoinSubstitution(
-        [FindPackageShare('champ_navigation'), 'maps', f'{MAP_NAME}.yaml']
-    )
-
-    nav2_config_path = PathJoinSubstitution(
-        [FindPackageShare('champ_navigation'), 'config', 'navigation.yaml']
-    )
-
     return LaunchDescription([
         DeclareLaunchArgument(
-            name='config', 
-            default_value='',
-            description='Navigation2 Configuration File'
+            name='map', 
+            description='Navigation map path'
+        ),
+
+        DeclareLaunchArgument(
+            name='params_file', 
+            description='Navigation2 params file'
         ),
 
         DeclareLaunchArgument(
@@ -59,20 +55,17 @@ def generate_launch_description():
             description='Run rviz'
         ),
 
-       DeclareLaunchArgument(
-            name='map', 
-            default_value=default_map_path,
-            description='Navigation map path'
-        ),
-
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(nav2_launch_path),
             launch_arguments={
                 'map': LaunchConfiguration("map"),
-                'use_sim_time': LaunchConfiguration("sim"),
-                'params_file': nav2_config_path
+                'params_file': LaunchConfiguration("params_file"),
+                'use_sim_time': LaunchConfiguration("sim")
             }.items()
         ),
+
+        LogInfo(msg=LaunchConfiguration('map')),
+        LogInfo(msg=LaunchConfiguration('params_file')),
 
         Node(
             package='rviz2',

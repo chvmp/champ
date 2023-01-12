@@ -24,10 +24,10 @@ def generate_launch_description():
     this_package = FindPackageShare('champ_config')
 
     default_map_path = PathJoinSubstitution(
-        [this_package, 'maps', 'playground.yaml']
+        [this_package, 'maps', 'map.yaml']
     )
 
-    nav2_config_path = PathJoinSubstitution(
+    default_params_file_path = PathJoinSubstitution(
         [this_package, 'config/autonomy', 'navigation.yaml']
     )
 
@@ -36,6 +36,18 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            name='map', 
+            default_value=default_map_path,
+            description='Navigation map path'
+        ),
+        
+        DeclareLaunchArgument(
+            name='params_file', 
+            default_value=default_params_file_path,
+            description='Navigation2 params file'
+        ),
+
         DeclareLaunchArgument(
             name='sim', 
             default_value='false',
@@ -48,17 +60,11 @@ def generate_launch_description():
             description='Run rviz'
         ),
 
-        DeclareLaunchArgument(
-            name='map', 
-            default_value=default_map_path,
-            description='Navigation map path'
-        ),
-
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(nav2_launch_path),
             launch_arguments={
-                'config': nav2_config_path,
                 'map': LaunchConfiguration("map"),
+                'params_file': LaunchConfiguration("params_file"),
                 'sim': LaunchConfiguration("sim"),
                 'rviz': LaunchConfiguration("rviz")
             }.items()
