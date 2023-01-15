@@ -45,7 +45,7 @@ Current state of ROS2 port:
 
 ### 1.1 Clone and install all dependencies:
 
-    sudo apt-get -y install python3-rosdep2
+    sudo apt install -y python3-rosdep
     rosdep update
 
     cd <your_ws>/src
