@@ -98,8 +98,8 @@ To start mapping:
 
 - Save the map by running:
 
-      roscd champ_config/maps
-      rosrun map_server map_saver
+      cd <your_ws>/src/champ/champ_config/maps
+      ros2 run nav2_map_server map_saver_cli -f new_map
 
 ### 2.3 Autonomous Navigation:
 
