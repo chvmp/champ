@@ -20,11 +20,9 @@ Tested on:
 
 - Ubuntu 16.04 (ROS Kinetic)
 - Ubuntu 18.04 (ROS Melodic)
-- Ubuntu 20.04 (ROS2 Galactic)
+- Ubuntu 22.04 (ROS2 Humble)
 
 Current state of ROS2 port:
-
-*ros2_controllers official upstream repo doesn't have effort controller implemented yet. Right now sticked to [ros2-controllers repo](https://github.com/rohitmenon86/ros2_controllers). See [issue](https://github.com/ros-controls/ros2_controllers/pull/225).*
 
 - &check; Port libchamp.
 - &cross; Port velocity smoother.
@@ -47,7 +45,9 @@ Current state of ROS2 port:
 
 ### 1.1 Clone and install all dependencies:
 
-    sudo apt install -y python-rosdep
+    sudo apt install -y python3-rosdep
+    rosdep update
+
     cd <your_ws>/src
     git clone --recursive https://github.com/chvmp/champ -b ros2
     git clone https://github.com/chvmp/champ_teleop -b ros2
@@ -70,9 +70,7 @@ You don't need a physical robot to run the following demos. If you're building a
 
 #### 2.1.1 Run the base driver:
 
-    ros2 launch champ_config bringup.launch.py
-
-    (In another terminal) rviz2 -d src/champ/champ_description/rviz/urdf_viewer.rviz
+    ros2 launch champ_config bringup.launch.py rviz:=true 
 
 #### 2.1.2 Run the teleop node:
 
@@ -87,11 +85,9 @@ If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepad
     
     ros2 launch champ_config gazebo.launch.py 
 
-# All below is not yet ported for ROS2
+#### 2.2.2 Run gmapping package and move_base: (Still need to fix sth, will make it work in next PR)
 
-#### 2.2.2 Run gmapping package and move_base:
-
-    roslaunch champ_config slam.launch rviz:=true
+    ros2 launch champ_config slam.launch.py rviz:=true 
 
 To start mapping:
 
@@ -102,18 +98,18 @@ To start mapping:
 
 - Save the map by running:
 
-      roscd champ_config/maps
-      rosrun map_server map_saver
+      cd <your_ws>/src/champ/champ_config/maps
+      ros2 run nav2_map_server map_saver_cli -f new_map
 
 ### 2.3 Autonomous Navigation:
 
 #### 2.3.1 Run the Gazebo environment: 
 
-    roslaunch champ_config gazebo.launch 
+    ros2 launch champ_config gazebo.launch.py
 
-#### 2.3.2 Run amcl and move_base:
+#### 2.3.2 Run nav2:
 
-    roslaunch champ_config navigate.launch rviz:=true
+    ros2 launch champ_config navigate.launch.py rviz:=true
 
 To navigate:
 
@@ -121,6 +117,8 @@ To navigate:
 - Click and drag at the position you want the robot to go.
 
    ![champ](https://raw.githubusercontent.com/chvmp/champ/master/docs/images/navigation.gif)
+
+# All below is not yet ported for ROS2
 
 ## 3. Running your own robot:
 

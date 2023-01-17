@@ -28,10 +28,12 @@ def generate_launch_description():
     descr_pkg_share = launch_ros.substitutions.FindPackageShare(
         package="champ_description"
     ).find("champ_description")
+
     joints_config = os.path.join(config_pkg_share, "config/joints/joints.yaml")
     gait_config = os.path.join(config_pkg_share, "config/gait/gait.yaml")
     links_config = os.path.join(config_pkg_share, "config/links/links.yaml")
-    rviz_config = os.path.join(descr_pkg_share, "rviz/urdf_viewer.rviz")
+
+    default_rviz_path = os.path.join(descr_pkg_share, "rviz/urdf_viewer.rviz")
     default_model_path = os.path.join(descr_pkg_share, "urdf/champ.urdf.xacro")
 
     declare_use_sim_time = DeclareLaunchArgument(
@@ -46,22 +48,28 @@ def generate_launch_description():
         description="Absolute path to robot urdf file",
     )
 
+    declare_rviz_path = DeclareLaunchArgument(
+        name="rviz_path",
+        default_value=default_rviz_path,
+        description="Absolute path to rviz file",
+    )
+
     declare_joints_map_path = DeclareLaunchArgument(
         name="joints_map_path",
         default_value='',
-        description="Absolute path to robot urdf file",
+        description="Absolute path to joints map file",
     )
 
     declare_links_map_path = DeclareLaunchArgument(
         name="links_map_path",
         default_value='',
-        description="Absolute path to robot urdf file",
+        description="Absolute path to links map file",
     )
 
     declare_gait_config_path = DeclareLaunchArgument(
         name="gait_config_path",
         default_value='',
-        description="Absolute path to robot urdf file",
+        description="Absolute path to gait config file",
     )
 
     declare_orientation_from_imu = DeclareLaunchArgument(
@@ -113,7 +121,7 @@ def generate_launch_description():
     declare_publish_joint_states = DeclareLaunchArgument(
         "publish_joint_states",
         default_value="true",
-        description="Publish joint control",
+        description="Publish joint states",
     )
 
     declare_publish_foot_contacts = DeclareLaunchArgument(
@@ -220,7 +228,7 @@ def generate_launch_description():
         namespace='',
         executable='rviz2',
         name='rviz2',
-        arguments=['-d', rviz_config],
+        arguments=['-d', LaunchConfiguration("rviz_path")],
         condition=IfCondition(LaunchConfiguration("rviz"))
     )
 
@@ -229,6 +237,7 @@ def generate_launch_description():
         [
             declare_use_sim_time,
             declare_description_path,
+            declare_rviz_path,
             declare_joints_map_path,
             declare_links_map_path,
             declare_gait_config_path,
