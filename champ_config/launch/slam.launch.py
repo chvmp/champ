@@ -21,8 +21,10 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    slam_config_path = PathJoinSubstitution(
-        [FindPackageShare('champ_config'), 'config/autonomy', 'slam.yaml']
+    this_package = FindPackageShare('champ_config')
+
+    default_params_file_path = PathJoinSubstitution(
+        [this_package, 'config/autonomy', 'slam.yaml']
     )
 
     slam_launch_path = PathJoinSubstitution(
@@ -30,6 +32,12 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            name='slam_params_file',
+            default_value=default_params_file_path,
+            description='Navigation2 slam params file'
+        ),
+
         DeclareLaunchArgument(
             name='sim', 
             default_value='false',
@@ -45,7 +53,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(slam_launch_path),
             launch_arguments={
-                'config': slam_config_path,
+                'slam_params_file': LaunchConfiguration("slam_params_file"),
                 'sim': LaunchConfiguration("sim"),
                 'rviz': LaunchConfiguration("rviz")
             }.items()

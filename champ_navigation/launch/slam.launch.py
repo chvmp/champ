@@ -24,6 +24,10 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
+    navigation_launch_path = PathJoinSubstitution(
+        [FindPackageShare('nav2_bringup'), 'launch', 'navigation_launch.py']
+    )
+
     slam_launch_path = PathJoinSubstitution(
         [FindPackageShare('slam_toolbox'), 'launch', 'online_async_launch.py']
     )
@@ -32,19 +36,7 @@ def generate_launch_description():
         [FindPackageShare('champ_navigation'), 'rviz', 'slam.rviz']
     )
 
-    ros_distro = EnvironmentVariable('ROS_DISTRO')
-    if ros_distro == 'foxy': 
-        slam_param_name = 'params_file'
-    else:
-        slam_param_name = 'slam_params_file'
-
     return LaunchDescription([
-        DeclareLaunchArgument(
-            name='config', 
-            default_value='',
-            description='SLAM Toolbox Configuration File'
-        ),
-
         DeclareLaunchArgument(
             name='sim', 
             default_value='false',
@@ -58,10 +50,17 @@ def generate_launch_description():
         ),
 
         IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(navigation_launch_path),
+            launch_arguments={
+                'use_sim_time': LaunchConfiguration("sim")
+            }.items()
+        ),
+
+        IncludeLaunchDescription(
             PythonLaunchDescriptionSource(slam_launch_path),
             launch_arguments={
                 'use_sim_time': LaunchConfiguration("sim"),
-                slam_param_name: LaunchConfiguration("config")
+                'slam_params_file': LaunchConfiguration("slam_params_file")
             }.items()
         ),
 
