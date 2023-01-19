@@ -85,7 +85,7 @@ If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepad
     
     ros2 launch champ_config gazebo.launch.py 
 
-#### 2.2.2 Run nav2's navigation and slam_box:
+#### 2.2.2 Run [Nav2](https://navigation.ros.org/)'s navigation and [slam_toolbox](https://github.com/SteveMacenski/slam_toolbox):
 
     ros2 launch champ_config slam.launch.py rviz:=true 
 
@@ -109,7 +109,7 @@ After this, you can use the new_map to do pure navigation.
 
     ros2 launch champ_config gazebo.launch.py
 
-#### 2.3.2 Run nav2:
+#### 2.3.2 Run [Nav2](https://navigation.ros.org/):
 
     ros2 launch champ_config navigate.launch.py rviz:=true
 
