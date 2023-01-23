@@ -139,6 +139,17 @@ def generate_launch_description():
     declare_close_loop_odom = DeclareLaunchArgument(
         "close_loop_odom", default_value="false", description=""
     )
+    
+    velocity_smoother_ld = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory("champ_bringup"),
+                "launch",
+                "include",
+                "velocity_smoother.launch.py",
+            )
+        )
+    )
 
     description_ld = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -154,6 +165,7 @@ def generate_launch_description():
         }.items(),
     )
 
+    # ToDo: publish_joint_states requires conditional arg based on joint_hardware_connected (ROS2 doesn't support such style yet)
     quadruped_controller_node = Node(
         package="champ_base",
         executable="quadruped_controller_node",
@@ -173,6 +185,7 @@ def generate_launch_description():
         remappings=[("/cmd_vel/smooth", "/cmd_vel")],
     )
 
+    # ToDo: orientation_from_imu requires conditional arg based on joint_hardware_connected (ROS2 doesn't support such style yet)
     state_estimator_node = Node(
         package="champ_base",
         executable="state_estimation_node",
@@ -255,6 +268,7 @@ def generate_launch_description():
             declare_publish_foot_contacts,
             declare_publish_odom_tf,
             declare_close_loop_odom,
+            velocity_smoother_ld,
             description_ld,
             quadruped_controller_node,
             state_estimator_node,
