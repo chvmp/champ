@@ -16,12 +16,12 @@
   <exec_depend>champ_base</exec_depend>
   <exec_depend>robot_localization</exec_depend>
   <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>yocs_velocity_smoother</exec_depend>
 
   <build_export_depend>rclcpp</build_export_depend>
   <build_export_depend>pluginlib</build_export_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
   <build_export_depend>nav_msgs</build_export_depend>
-  <build_export_depend>ecl_threads</build_export_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
