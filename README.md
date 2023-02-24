@@ -85,7 +85,7 @@ If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepad
     
     ros2 launch champ_config gazebo.launch.py 
 
-#### 2.2.2 Run gmapping package and move_base: (Still need to fix sth, will make it work in next PR)
+#### 2.2.2 Run [Nav2](https://navigation.ros.org/)'s navigation and [slam_toolbox](https://github.com/SteveMacenski/slam_toolbox):
 
     ros2 launch champ_config slam.launch.py rviz:=true 
 
@@ -101,13 +101,15 @@ To start mapping:
       cd <your_ws>/src/champ/champ_config/maps
       ros2 run nav2_map_server map_saver_cli -f new_map
 
+After this, you can use the new_map to do pure navigation.
+
 ### 2.3 Autonomous Navigation:
 
 #### 2.3.1 Run the Gazebo environment: 
 
     ros2 launch champ_config gazebo.launch.py
 
-#### 2.3.2 Run nav2:
+#### 2.3.2 Run [Nav2](https://navigation.ros.org/):
 
     ros2 launch champ_config navigate.launch.py rviz:=true
 
