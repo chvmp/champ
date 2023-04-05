@@ -59,7 +59,14 @@ def generate_launch_description():
         package="champ_config"
     ).find("champ_config")
     
-    links_config = os.path.join(config_pkg_share, "config/links/links.yaml")
+    default_links_config = os.path.join(config_pkg_share, "config/links/links.yaml")
+
+    declare_links_map_path = DeclareLaunchArgument(
+        name="links_map_path",
+        default_value=default_links_config,
+        description="Absolute path to links map file"
+    )
+
     gazebo_config = os.path.join(launch_ros.substitutions.FindPackageShare(
         package="champ_gazebo"
     ).find("champ_gazebo"), "config/gazebo.yaml")
@@ -121,7 +128,10 @@ def generate_launch_description():
         package="champ_gazebo",
         executable="contact_sensor",
         output="screen",
-        parameters=[{"use_sim_time": LaunchConfiguration("use_sim_time")},links_config],
+        parameters=[
+            {"use_sim_time": LaunchConfiguration("use_sim_time")},
+            LaunchConfiguration('links_map_path')
+        ]
         # prefix=['xterm -e gdb -ex run --args'],
     )
 
@@ -161,6 +171,7 @@ def generate_launch_description():
             declare_world_init_z,
             declare_world_init_heading,
             declare_description_path,
+            declare_links_map_path,
             start_gazebo_server_cmd,
             start_gazebo_client_cmd,
             start_gazebo_spawner_cmd,
