@@ -103,6 +103,8 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
+            "description_path": default_model_path,
+            "links_map_path": links_config,
             "use_sim_time": LaunchConfiguration("use_sim_time"),
             "robot_name": LaunchConfiguration("robot_name"),
             "world": LaunchConfiguration("world"),
