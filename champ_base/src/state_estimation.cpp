@@ -36,6 +36,9 @@ StateEstimation::StateEstimation():
     Node("state_estimation_node",rclcpp::NodeOptions()
                         .allow_undeclared_parameters(true)
                         .automatically_declare_parameters_from_overrides(true)),
+    x_pos_(0.0),
+    y_pos_(0.0),
+    heading_(0.0),
     clock_(*this->get_clock()),
     odometry_(base_, rosTimeToChampTime(clock_.now()))
 {
@@ -151,7 +154,7 @@ void StateEstimation::publishFootprintToOdom_()
 
     rclcpp::Time current_time = clock_.now();
 
-    double vel_dt = (current_time - last_vel_time_).nanoseconds()/1e-9;
+    double vel_dt = (current_time - last_vel_time_).nanoseconds() * 1e-9; //s
     last_vel_time_ = current_time;
     //rotate in the z axis
     //https://en.wikipedia.org/wiki/Rotation_matrix
