@@ -236,7 +236,7 @@ The gait configuration for your robot can be found in <my_robot_config>/gait/gai
 
 - **Max Linear Velocity X** (meters/second) - Robot's maximum forward/reverse speed.
 
-- **Max Linear Velocity Y** (meteres/second) - Robot's maximum speed when moving sideways.
+- **Max Linear Velocity Y** (meters/second) - Robot's maximum speed when moving sideways.
 
 - **Max Angular Velocity Z** (radians/second)- Robot's maximum rotational speed.
 
