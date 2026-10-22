@@ -4,29 +4,12 @@ ROS Packages for CHAMP Quadruped Controller.
 
 ![champ](https://raw.githubusercontent.com/chvmp/champ/master/docs/images/robots.gif)
 
-CHAMP is an open source development framework for building new quadrupedal robots and developing new control algorithms. The control framework is based on [*"Hierarchical controller for highly dynamic locomotion utilizing pattern modulation and impedance control : implementation on the MIT Cheetah robot"*](https://dspace.mit.edu/handle/1721.1/85490).
-
-Core Features:
-
-- Fully Autonomous (using ROS navigation Stack).
-- [Setup-assistant](https://github.com/chvmp/champ_setup_assistant) to configure newly built robots.
-- Collection of pre-configured [URDFs](https://github.com/chvmp/robots) like Anymal, MIT Mini Cheetah, Boston Dynamic's Spot and LittleDog. 
-- Gazebo simulation environment.
-- Compatible with DIY quadruped projects like [SpotMicroAI](https://spotmicroai.readthedocs.io/en/latest/) and [OpenQuadruped](https://github.com/adham-elarabawy/open-quadruped).
-- Demo Applications like [TOWR](https://github.com/ethz-adrl/towr) and [chicken head](https://github.com/chvmp/chicken_head) stabilization.
-- Lightweight C++ header-only [library](https://github.com/chvmp/libchamp) that can run on both SBC and micro-controllers.
-
-Tested on:
-
-- Ubuntu 16.04 (ROS Kinetic)
-- Ubuntu 18.04 (ROS Melodic)
-
 ## 1. Installation
 
 ### 1.1 Clone and install all dependencies:
 
     sudo apt install -y python-rosdep
-    cd <your_ws>/src
+    cd champ_ws/src
     git clone --recursive https://github.com/chvmp/champ
     git clone https://github.com/chvmp/champ_teleop
     cd ..
@@ -36,9 +19,9 @@ If you want to use any of the pre-configured robots like Anymal, Mini Cheetah, o
 
 ### 1.2 Build your workspace:
 
-    cd <your_ws>
+    cd champ_ws
     catkin_make
-    source <your_ws>/devel/setup.bash
+    source champ_ws/devel/setup.bash
 
 ## 2. Quick Start
 
@@ -62,6 +45,9 @@ If you want to use a [joystick](https://www.logitechg.com/en-hk/products/gamepad
 #### 2.2.1 Run the Gazebo environment:
 
     roslaunch champ_config gazebo.launch 
+you should see robot in the middle of a jungle like the image below:![Screenshot from 2024-11-08 21-33-51](https://github.com/user-attachments/assets/1ffa9b5e-446c-41ba-a04c-d7d361baab18)
+
+
 
 #### 2.2.2 Run gmapping package and move_base:
 
@@ -72,7 +58,8 @@ To start mapping:
 - Click '2D Nav Goal'.
 - Click and drag at the position you want the robot to go.
 
-   ![champ](https://raw.githubusercontent.com/chvmp/champ/master/docs/images/slam.gif)
+   
+![GIF_20241108_215936_155](https://github.com/user-attachments/assets/0bc86ace-e2ff-432b-9b3a-24c58ee33326)
 
 - Save the map by running:
 
